@@ -1,0 +1,551 @@
+@font-face {
+    font-family: extrabold;
+    src: url('../font/ProximaNova-Extrabold.otf');
+}
+
+@font-face {
+    font-family: bold;
+    src: url('../font/ProximaNova-bold.otf');
+}
+
+@font-face {
+    font-family: light;
+    src: url('../font/ProximaNova-Light.otf');
+}
+
+@font-face {
+    font-family: regular;
+    src: url('../font/ProximaNova-Regular.otf');
+}
+
+#slideshow {
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+  float: right;
+  height: 360px;
+  margin-bottom: 5vh;
+  text-align: center;
+}
+
+#slideshow > div {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+}
+
+.jarak{
+    /*max-width: 200px;*/
+    height: 200px;
+}
+
+.item .row{
+    float: right;
+}
+
+.mySlides {display:none;}
+
+div{
+    /*border-style: solid;*/
+}
+
+.tes p{
+    margin-top: -10px;
+}
+
+.tes2{
+    padding-top: 20px;
+}
+
+.tab{
+    margin-bottom: 50px;
+}
+
+.gass{
+    display: none;
+}
+
+.testimoni{
+    display: none;
+}
+
+.manager{
+    display: none;
+}
+
+.tab button:focus {
+    outline: 0;
+    border-bottom-color: #3B5A9A;
+}
+
+.tab button{
+    border-style: none;
+    background-color: white;
+    font-family: regular;
+    font-size: 18px;
+    color: #3B5A9A;
+    padding: 8px 15px;
+    border-bottom: solid;
+    border-bottom-color: transparent;
+}
+
+.tab button:hover{
+    border-bottom-color: #3B5A9A;
+}
+
+.description{
+    height: 200px;
+    overflow-y: auto;
+}
+
+.isiReview{
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 30px;
+}
+
+.outter-box{
+    padding: 10px 10px;
+    margin: 10px 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.font-box{
+    font-family:bold; 
+    text-align:center; 
+    margin-top: 10px; 
+    font-size: 20px;
+}
+
+.caption{
+    width: 100%;
+    padding-top: 10px;
+}
+
+.judul-berita{
+    font-family: bold;
+    font-size: 30px;
+}
+
+.caption .tanggal{
+    margin-top: -18px;
+    font-family: light;
+    font-size: 13px;
+}
+
+.rata{
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+.paragraf{
+    font-family: light;
+    font-size: 17px;
+    margin-top: 20px;
+}
+
+.paragraf strong{
+    font-family: bold;
+    font-size: 19px;
+}
+
+li{
+    font-family: light !important;
+    font-size: 18px !important;
+}
+
+.nav{
+    width: 100%;
+    height: 90px;
+    position: fixed;
+    z-index: 100;
+}
+
+.contact{
+    width: 100%;
+    height: 30px;
+    background-color: #EAEAEA;
+    position: relative;
+    padding-left: 20px;
+}
+
+.about-footer{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.logo{
+    width: 100%;
+    height: 70px;
+    background-color: #3B5A9A;
+    font-family: light;
+    color: white;
+    font-size: 17px;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.logo-footer{
+    background: url('../image/logo.png') no-repeat;
+    background-size: contain;
+    height: 200px;
+}
+
+.menu{
+    width: 100%;
+    height: 60px;
+    background-color: white;
+}
+
+.background{
+    position: fixed; 
+    width: 100%;
+    height: auto;
+    z-index: -1;
+}
+
+.foto{
+    width: 100%;
+    top: 90px;
+    float: left;
+    position: absolute;
+    /*background: url('foto2.png') no-repeat;*/
+    background-size: cover;
+    z-index: -1;
+    height: auto;
+}
+
+/*nav*/
+/* Add a black background color to the top navigation */
+.logo .icon{
+    float: right;
+    color: white;
+    margin-right: 20px;
+    text-decoration: none;
+    display: none;
+}
+
+.topnav {
+    float: right;
+    overflow: hidden;
+    background-color: #3B5A9A;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 0px 16px;
+    padding-bottom: 22px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    border-bottom: solid;
+    color: #FCA01A;
+}
+
+/* Hide the link that should open and close the topnav on small screens */
+.topnav .icon {
+    display: none;
+}
+
+.carousel-control {
+  padding-top:10%;
+  width:5%;
+}
+
+.icon-atas{
+    color: #3A3A3A; 
+    margin-top: 6px;
+}
+
+.icon-font{
+    color: #3A3A3A; 
+    font-family: light; 
+    font-size: 12px; 
+    margin-left: 5px;
+}
+
+.div1{
+    padding-top: 300px; 
+    /*position:absolute; */
+    float: right;     
+    padding-bottom: 200px;
+    height: 600px;
+    width: 100%;
+}
+
+.slogan{
+    font-family:bold; 
+    font-size: 300%; 
+    margin-top: -40px;
+    color:white;
+}
+
+.slogan strong{
+    /*font-family: bold;*/
+    /*color: #FCA01A;*/
+}
+
+.slogan-text{
+    font-family: light;
+    font-size: 18px;
+    color: white;
+}
+
+.div2{
+    width: 100%; 
+    float:left;  
+    background-color:white;
+}
+
+.div2 .a{
+    /*margin-top: 10%;*/
+}
+
+.batas-atas{
+    margin-top: 140px;
+}
+
+.batas-bawah{
+    margin-bottom: 100px;
+}
+
+.judul-div{
+    margin-top: 20px;
+    margin-left: 70px;
+    font-family: light;
+    font-size: 50px;
+    color: #3A3A3A;
+}
+
+.judul-div .a{
+    margin-left: 0;
+}
+
+.font-welcome{
+    margin-top: 25px; 
+    font-family: regular; 
+    font-size: 20px; 
+    color:#005F6B;
+}
+
+.footer{
+    font-family: light;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.judul-footer{
+    font-family: light;
+    font-size: 30px;
+    color: white;
+    margin-top: 50px;
+}
+
+.icon-welcome{
+    margin-top: 30px; 
+}
+
+.b{
+    margin-top: -20px;
+}
+
+.judul-div strong{
+    font-family: regular;
+    color: #3A3A3A;
+}
+
+.product{
+    color:#343838;
+    margin-left: 70px;
+    font-size: 15px;
+}
+
+.kanan{
+    text-align: right;
+}
+
+.lewat{
+    margin-top: -40px;
+}
+
+.kotak{
+    height: 50px;
+    text-align: center;
+    font-family: regular;
+    font-size: 110%;
+    color:white;
+}
+
+.kotak button{
+    width: 100%;
+    height: 100%;
+    border-style: solid;
+    border-color: #3B5A9A;
+    background-color: #3B5A9A;
+
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: linear;
+}
+
+.berita-besar{
+    padding-left: 70px;
+    margin-bottom: 10vh;
+}
+
+.copyright{
+    height: 30px; 
+    text-align:center; 
+    color:#3A3A3A; 
+    font-size: 11px; 
+    margin-top: 10px;
+}
+
+.berita-bawah{
+    border-style: solid;
+    margin-left: 90px;
+    margin-right: 100px;
+}
+
+.produk{
+    padding-left: 70px;
+}
+
+.customer{
+    margin-left: 70px;
+}
+
+.kotak button:hover{   
+    color: #3B5A9A; 
+    background-color: white;
+}
+
+@media screen and (max-width: 930px) {
+    .topnav a {display: none;}
+    .topnav a:first-child{margin-top:60px;}
+    .logo .icon {
+        float: right;
+        display: block;
+    }
+}
+
+/* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
+@media screen and (max-width: 930px) {
+    .topnav.responsive {position: relative;}
+    .logo .icon {
+        position: absolute;
+        right: 0;
+        top: 50px;
+    }
+    .topnav.responsive a {
+        float: none;
+        display: block;
+        text-align: right;
+    }
+}
+
+@media screen and (max-width: 992px) {
+
+    .icon-welcome img{
+        width: 10%;
+    }
+
+    .center{
+        text-align: center; 
+        margin-left: 0px;   
+    }
+
+    .product, .customer{
+        margin-left: 0;
+    }
+
+    .produk, .berita-besar{
+        padding-left: 0;
+    }
+
+    .center .b{
+        font-size: 180%;
+    }
+
+    .center .judul-div{
+        margin-left: 0px;
+    }
+
+    .batas-bawah{
+        margin-bottom: 60px;
+    }
+
+    .footer img{
+        width: 50%
+    }
+
+    .rata{
+        padding: 0px;
+    }
+
+    .rata-kiri{
+        text-align:left;
+    }
+
+}
+
+@media screen and (max-width: 991px) and (min-width: 473px) {
+    #slideshow{
+        height: 70vh;
+        text-align: center;
+    }
+
+    #slideshow div{
+        width: 50%;
+        margin: 0 auto;
+    }
+
+    .slogan{
+        font-size: 7vw;
+    }
+}
+
+@media screen and (max-width: 473px) {
+    #slideshow{
+        height: 60vh;
+    }
+
+    .slogan{
+        font-size: 5vw;
+    }
+}
+
+@media screen and (max-width: 660px) {
+    .jarak{
+        height: 100px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .background{
+        height: 100%;
+    }
+
+    .chevron{
+        display: none;
+    }
+
+    .div1{
+        height: 300px;
+        padding-top: 250px;
+    }
+}
+
+#carousel-example-generic{
+    margin-left: 70px;
+    margin-top: 20px;
+}
