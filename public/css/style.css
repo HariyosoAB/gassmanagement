@@ -1,17 +1,17 @@
 
 @font-face {
 font-family: bebas;
-src: url('public/font/BebasNeue.otf');
+src: url('../font/BebasNeue.otf');
 }
 
 @font-face {
 font-family: montserrat;
-src: url('public/font/Montserrat-Light.otf');
+src: url('../font/Montserrat-Light.otf');
 }
 
 @font-face {
 font-family: montserrat;
-src: url('public/font/Montserrat-Light.otf');
+src: url('../font/Montserrat-Light.otf');
 }
 
 div{

@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages/tes');
 });
 
 Route::get('login','userController@showlogin');
