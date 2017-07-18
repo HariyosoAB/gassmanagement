@@ -1,0 +1,150 @@
+
+@font-face {
+font-family: bebas;
+src: url('public/font/BebasNeue.otf');
+}
+
+@font-face {
+font-family: montserrat;
+src: url('public/font/Montserrat-Light.otf');
+}
+
+@font-face {
+font-family: montserrat;
+src: url('public/font/Montserrat-Light.otf');
+}
+
+div{
+/*border-style: solid;*/
+}
+
+body{
+background-color: #2D3238; 
+}
+
+.outter{
+position: absolute;
+width: 100%;
+left: 0;
+height: auto;
+}
+
+.outter2{
+position: relative;
+padding: 40px;
+margin-top: 80px;
+}
+
+.head{
+width: 100%;
+position: fixed;
+height: 120px;
+background-color: #2D3238;
+z-index: 100;
+}
+
+.logo{
+width: 500px;
+height: 100%;
+position: relative;
+float: left;
+}
+
+.logo p{
+font-size: 40px;
+font-family: bebas;			
+color: #EFEFEF;
+padding: 40px;
+}
+
+.notif{
+float: right;
+height: 100%;
+width: 300px;
+position: relative;
+}
+
+.nav{
+height: 160px;
+}
+
+.content{
+width: 100%;
+position: relative;
+height: 900px;
+background-color: white;
+}
+
+.menu{
+width: 100%;
+height: 80px;
+float: left;
+background-color: #2D3238;
+}
+
+.sub-menu{
+width: 100%;
+height: 80px;
+float: left;
+background-color: #EFEFEF;
+}
+
+.menu button{
+background-color: #474E54;
+width: 200px;
+text-align: center;
+margin-top: 12px;
+padding: 20px 0px;
+color: #5B646B;
+font-family: bebas;
+font-size: 25px;
+border-style: none;
+}
+
+.menu button:focus{
+outline: 0;
+background-color: #EFEFEF;
+}
+
+.active{
+background-color: #EFEFEF;
+}
+
+.menu button:hover{
+background-color: #02ADBA;
+color: white;
+}
+
+.menu .active{
+background-color: #EFEFEF;
+}
+
+.menu .active:hover{
+background-color: #EFEFEF;
+color: #5B646B;
+}
+
+a{
+text-decoration: none;
+float: left;
+padding-right: 5px;
+}
+
+.sub-menu div a{
+margin: 30px 30px;
+text-decoration: none;
+color: #5B646B;
+font-family: montserrat;
+}
+
+.sub-menu div a:hover{
+color: #02ADBA;
+}
+
+.sub-menu div a:first-child{
+margin-left: 78px;
+}
+
+#sub-menu-order, #sub-menu-setting{
+display: none;
+}

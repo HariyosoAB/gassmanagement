@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -11,25 +12,228 @@
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+    <script src="public/plugin/jQuery/jQuery-2.1.4.min.js"></script>
+
 	<style type="text/css">
+		@font-face {
+		    font-family: bebas;
+		    src: url('public/font/BebasNeue.otf');
+		}
+
+		@font-face {
+		    font-family: montserrat;
+		    src: url('public/font/Montserrat-Light.otf');
+		}
+
+		@font-face {
+		    font-family: montserrat;
+		    src: url('public/font/Montserrat-Light.otf');
+		}
+
+		div{
+			/*border-style: solid;*/
+		}
+
+		body{
+			background-color: #2D3238; 
+		}
+
 		.outter{
-			border-style: solid;
 			position: absolute;
 			width: 100%;
 			left: 0;
 			height: auto;
 		}
 
-		.nav{
+		.outter2{
+			position: relative;
+			padding: 40px;
+			margin-top: 80px;
+		}
+
+		.head{
 			width: 100%;
 			position: fixed;
+			height: 120px;
+			background-color: #2D3238;
+			z-index: 100;
+		}
 
+		.logo{
+			width: 500px;
+			height: 100%;
+			position: relative;
+			float: left;
+		}
+
+		.logo p{
+			font-size: 40px;
+			font-family: bebas;			
+			color: #EFEFEF;
+			padding: 40px;
+		}
+
+		.notif{
+			float: right;
+			height: 100%;
+			width: 300px;
+			position: relative;
+		}
+
+		.nav{
+			height: 160px;
+		}
+
+		.content{
+			width: 100%;
+			position: relative;
+			height: 900px;
+			background-color: white;
+		}
+
+		.menu{
+			width: 100%;
+			height: 80px;
+			float: left;
+			background-color: #2D3238;
+		}
+
+		.sub-menu{
+			width: 100%;
+			height: 80px;
+			float: left;
+			background-color: #EFEFEF;
+		}
+
+		.menu button{
+			background-color: #474E54;
+			width: 200px;
+			text-align: center;
+			margin-top: 12px;
+			padding: 20px 0px;
+			color: #5B646B;
+			font-family: bebas;
+			font-size: 25px;
+			border-style: none;
+		}
+
+		.menu button:focus{
+			outline: 0;
+			background-color: #EFEFEF;
+		}
+
+		.active{
+			background-color: #EFEFEF;
+		}
+
+		.menu button:hover{
+			background-color: #02ADBA;
+			color: white;
+		}
+
+		.menu .active{
+			background-color: #EFEFEF;
+		}
+
+		.menu .active:hover{
+			background-color: #EFEFEF;
+			color: #5B646B;
+		}
+
+		a{
+			text-decoration: none;
+			float: left;
+			padding-right: 5px;
+		}
+
+		.sub-menu div a{
+			margin: 30px 30px;
+			text-decoration: none;
+			color: #5B646B;
+			font-family: montserrat;
+		}
+
+		.sub-menu div a:hover{
+			color: #02ADBA;
+		}
+
+		.sub-menu div a:first-child{
+			margin-left: 78px;
+		}
+
+		#sub-menu-order, #sub-menu-setting{
+			display: none;
 		}
 	</style>
 </head>
 <body>
+	<div class="head">
+		<div class="logo"><p>GMF Aircraft Support Services</p></div>
+		<div class="notif"></div>
+	</div>
 	<div class="outter">
-		<div class="head"></div>
+		<div class="outter2">
+			<div class="nav">
+				<div class="menu">
+					<button id="home" autofocus>HOME</button>
+					<button id="order">ORDER</button>
+					<button id="setting">SETING</button>
+				</div>
+				<div class="sub-menu">
+					<div id="sub-menu-home">
+						<a href="">Contoh</a>
+						<a href="">Contoh</a>
+						<a href="">Contoh</a>
+						<a href="">Contoh</a>
+					</div>
+					<div id="sub-menu-order">
+						<a href="">Contoh1</a>
+						<a href="">Contoh1</a>
+						<a href="">Contoh1</a>
+						<a href="">Contoh1</a>
+					</div>
+					<div id="sub-menu-setting">
+						<a href="">Contoh2</a>
+						<a href="">Contoh2</a>
+						<a href="">Contoh2</a>
+						<a href="">Contoh2</a>
+					</div>
+				</div>
+			</div>
+			<div class="content"></div>
+			<div class="footer"></div>
+		</div>
 	</div>
 </body>
+<script>
+	$("#home").click(function(){
+		$(this).addClass("active");
+		$("#order").removeClass("active");
+		$("#setting").removeClass("active");
+
+		$("#sub-menu-home").show();
+		$("#sub-menu-order").hide();
+		$("#sub-menu-setting").hide();
+	});
+
+	$("#order").click(function(){
+		$(this).addClass("active");
+		$("#home").removeClass("active");
+		$("#setting").removeClass("active");
+
+		$("#sub-menu-home").hide();
+		$("#sub-menu-order").show();
+		$("#sub-menu-setting").hide();
+	});
+
+	$("#setting").click(function(){
+		$(this).addClass("active");
+		$("#order").removeClass("active");
+		$("#home").removeClass("active");
+
+		$("#sub-menu-home").hide();
+		$("#sub-menu-order").hide();
+		$("#sub-menu-setting").show();
+	});
+</script>
 </html>
