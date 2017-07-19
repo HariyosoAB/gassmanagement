@@ -18,5 +18,11 @@
 		</div>
 	</div>
 </body>
-@include('master/script')
+@if(Auth::user()->user_role == 1)
+	@include('master/script-cus')
+@elseif(Auth::user()->user_role == 2)
+	@include('master/script-occ')
+@elseif(Auth::user()->user_role== 3)
+	@include('master/script-man')
+@endif
 </html>
