@@ -2,7 +2,7 @@
 	<div class="menu">
 		<!-- cutomer -->
 		@if(Auth::user()->user_role==1)
-		<button id="order-cus" autofocus>Order</button>
+		<button id="order-cus" onclick="window.location.href='{{url('')}}/customer'" autofocus>Order</button>
 		<button id="history-cus">History</button>
 		@endif
 		<!-- occ -->
@@ -19,7 +19,7 @@
 	</div>
 	<div class="sub-menu">
 		<!-- customer -->
-		@if(Auth::user()->user_role==1)
+		@if(Auth::user()->user_role == 1)
 		<div id="sub-menu-order-cus">
 		</div>
 		<div id="sub-menu-history-cus" style="display:none">
@@ -28,7 +28,7 @@
 		</div>
 		@endif
 		<!-- occ -->
-		@if(Auth::user()->user_role==2)
+		@if(Auth::user()->user_role == 2)
 		<div id="sub-menu-order-occ">
 		</div>
 		<div id="sub-menu-history-occ" style="display:none">
@@ -37,7 +37,7 @@
 		</div>
 		@endif
 		<!-- manager -->
-		@if(Auth::user()->user_role==3)
+		@if(Auth::user()->user_role == 3)
 		<div id="sub-menu-order-man">
 		</div>
 		<div id="sub-menu-history-man" style="display:none">

@@ -1,150 +1,170 @@
 
 @font-face {
-font-family: bebas;
-src: url('../font/BebasNeue.otf');
+	font-family: bebas;
+	src: url('../font/BebasNeue.otf');
 }
 
 @font-face {
-font-family: montserrat;
-src: url('../font/Montserrat-Light.otf');
-}
-
-@font-face {
-font-family: montserrat;
-src: url('../font/Montserrat-Light.otf');
+	font-family: montserrat;
+	src: url('../font/Montserrat-Light.otf');
 }
 
 div{
-/*border-style: solid;*/
+	/*border-style: solid;*/
 }
 
 body{
-background-color: #2D3238; 
+	background-color: #2D3238; 
 }
 
 .outter{
-position: absolute;
-width: 100%;
-left: 0;
-height: auto;
+	position: absolute;
+	width: 100%;
+	left: 0;
+	height: auto;
 }
 
 .outter2{
-position: relative;
-padding: 40px;
-margin-top: 80px;
+	position: relative;
+	padding: 40px;
+	margin-top: 80px;
 }
 
 .head{
-width: 100%;
-position: fixed;
-height: 120px;
-background-color: #2D3238;
-z-index: 100;
+	width: 100%;
+	position: fixed;
+	height: 120px;
+	background-color: #2D3238;
+	z-index: 100;
 }
 
 .logo{
-width: 500px;
-height: 100%;
-position: relative;
-float: left;
+	width: 500px;
+	height: 100%;
+	position: relative;
+	float: left;
 }
 
 .logo p{
-font-size: 40px;
-font-family: bebas;			
-color: #EFEFEF;
-padding: 40px;
+	font-size: 40px;
+	font-family: bebas;			
+	color: #EFEFEF;
+	padding: 40px;
 }
 
 .notif{
-float: right;
-height: 100%;
-width: 300px;
-position: relative;
+	float: right;
+	height: 100%;
+	width: 300px;
+	position: relative;
 }
 
 .nav{
-height: 160px;
+	height: 140px;
 }
 
 .content{
-width: 100%;
-position: relative;
-height: 900px;
-background-color: white;
+	width: 100%;
+	height: auto;
+	position: relative;
+	background-color: white;
+	padding: 50px 40px;
+	float: left;
+}
+.footer{
+	float: left;
+	width: 100%;
+	height: 50px;
+	color: white;
+	font-size: 10px;
+	text-align: center;
+	padding-top: 20px;
+}
+
+.inputs{
+	background-color:#dde3ec;
+}
+
+.judul{
+	font-family: bebas;
+	font-size: 35px;
+}
+
+.isi{
+	width: 100%;
+	font-family: montserrat;
 }
 
 .menu{
-width: 100%;
-height: 80px;
-float: left;
-background-color: #2D3238;
+	width: 100%;
+	height: 80px;
+	float: left;
+	background-color: #2D3238;
 }
 
 .sub-menu{
-width: 100%;
-height: 80px;
-float: left;
-background-color: #EFEFEF;
+	width: 100%;
+	height: 60px;
+	float: left;
+	background-color: #EFEFEF;
 }
 
 .menu button{
-background-color: #474E54;
-width: 200px;
-text-align: center;
-margin-top: 12px;
-padding: 20px 0px;
-color: #5B646B;
-font-family: bebas;
-font-size: 25px;
-border-style: none;
+	background-color: #474E54;
+	width: 200px;
+	text-align: center;
+	margin-top: 12px;
+	padding: 20px 0px;
+	color: #5B646B;
+	font-family: bebas;
+	font-size: 25px;
+	border-style: none;
 }
 
 .menu button:focus{
-outline: 0;
-background-color: #EFEFEF;
+	outline: 0;
+	background-color: #EFEFEF;
 }
 
 .active{
-background-color: #EFEFEF;
+	background-color: #EFEFEF;
 }
 
 .menu button:hover{
-background-color: #02ADBA;
-color: white;
+	background-color: #02ADBA;
+	color: white;
 }
 
 .menu .active{
-background-color: #EFEFEF;
+	background-color: #EFEFEF;
 }
 
 .menu .active:hover{
-background-color: #EFEFEF;
-color: #5B646B;
+	background-color: #EFEFEF;
+	color: #5B646B;
 }
 
 a{
-text-decoration: none;
-float: left;
-padding-right: 5px;
+	text-decoration: none;
+	float: left;
+	padding-right: 5px;
 }
 
 .sub-menu div a{
-margin: 30px 30px;
-text-decoration: none;
-color: #5B646B;
-font-family: montserrat;
+	margin: 20px 30px;
+	text-decoration: none;
+	color: #5B646B;
+	font-family: montserrat;
 }
 
 .sub-menu div a:hover{
-color: #02ADBA;
+	color: #02ADBA;
 }
 
 .sub-menu div a:first-child{
-margin-left: 78px;
+	margin-left: 78px;
 }
 
 #sub-menu-order, #sub-menu-setting{
-display: none;
+	display: none;
 }
