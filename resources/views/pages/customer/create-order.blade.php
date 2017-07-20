@@ -27,11 +27,11 @@ create order
 		<div class="row">
 			<div class="form-group col-md-5">
 				<label>Start</label>
-				<input type="text" class="form-control inputs" name="start" required>
+				<input type="text" class="form-control inputs" name="start" required/>
 			</div>
 			<div class="form-group col-md-5">
 				<label>End</label>
-				<input type="text" class="form-control inputs" name="End" required>
+				<input type="text" class="form-control inputs" name="end" required/>
 			</div>
 		</div>
 		<div class="row">
@@ -124,4 +124,23 @@ create order
 		</div>
 	</div>
 </form>
+<script type="text/javascript">
+$(function() {
+    $('input[name="start"]').daterangepicker({
+    	timePicker: true,
+        singleDatePicker: true,
+        locale: {
+            format: 'MM/DD/YYYY h:mm A'
+        }
+    });
+
+    $('input[name="end"]').daterangepicker({
+    	timePicker: true,
+        singleDatePicker: true,
+        locale: {
+            format: 'MM/DD/YYYY h:mm A'
+        }
+    });
+});
+</script>
 @stop
