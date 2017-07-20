@@ -19,6 +19,6 @@ class CustomerArea
         if(Auth::user() && Auth::user()->user_role==1){
           return $next($request);
         }
-        return redirect('/');
+        return redirect('/login');
     }
 }

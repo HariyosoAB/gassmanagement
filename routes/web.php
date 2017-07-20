@@ -17,8 +17,10 @@ Route::get('/', function () {
 
 Route::get('login','userController@showlogin');
 Route::post('login','userController@login');
+Route::post('register','userController@register');
+
 Route::get('logout','userController@logout');
 
 Route::group(['middleware' => 'CustomerArea', 'prefix' => 'cust'],function(){
-  
+    Route::get('/stuff','customerController@wow');
 });
