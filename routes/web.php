@@ -11,8 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('pages/tes');
+Route::get('/customer', function () {
+    return view('pages/customer/create-order');
 });
 
 Route::get('login','userController@showlogin');
