@@ -40,11 +40,22 @@
 </style>
 
 <div class="ss" style="padding-top:7em;">
+
   <div class="col-md-12">
     <div class="row">
       <div class="col-md-4">
       </div>
       <div class="col-md-4 text-center" style="color:white;">
+        @if (session('success'))
+          <div class="alert alert-success">
+              {{ session('success') }}
+          </div>
+        @endif
+        @if (session('failed'))
+          <div class="alert alert-danger">
+              {{ session('failed') }}
+          </div>
+        @endif
         <h2 class="jud"style="margin-bottom:10px">GASS Order Management</h2>
       </div>
     </div>
@@ -52,6 +63,7 @@
       <div class="col-md-4">
       </div>
       <div class="col-md-4">
+
         <div style="background-color:white;">
           <div class="text-center" style="padding:20px">
             <h3 class="jud"style="margin:20px 0px;color:#32c5d2">Sign In</h3>
@@ -111,9 +123,9 @@
                       <option value="GASS">GASS</option>
                     </select>
                   </div>
-                  <div name="subunit" class="form-group">
+                  <div  class="form-group">
                     <label >Sub Unit</label>
-                    <select class="form-control inputs" style="padding:0px;" required>
+                    <select  name="subunit"class="form-control inputs" style="padding:0px;" required>
                       <option value=""></option>
                       <option value="PG">PG</option>
                     </select>
@@ -132,7 +144,7 @@
 
                   <div class="form-group">
                     <label >Jabatan</label>
-                    <select class="form-control inputs" style="padding:0px;" required>
+                    <select name="position" class="form-control inputs" style="padding:0px;" required>
                       <option value=""></option>
                       <option value="staff">Staff</option>
 
@@ -199,7 +211,7 @@ $(document).ready(function(){
 $('#showform').click(function(){
   $('#login').hide(500);
   $('#register').show(500);
-  $(".ss").css("height", "200vh");
+  $(".ss").css("height", "110vh");
 });
 $('#back').click(function(){
   window.scrollTo(0, 0);
