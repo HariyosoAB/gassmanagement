@@ -14,7 +14,7 @@ div{
 }
 
 body{
-	background-color: #2D3238; 
+	background-color: #2D3238 !important; 
 }
 
 .outter{
@@ -68,7 +68,7 @@ body{
 	height: auto;
 	position: relative;
 	background-color: white;
-	padding: 50px 40px;
+	padding: 50px 40px !important;
 	float: left;
 }
 .footer{

@@ -25,5 +25,7 @@ Route::get('logout','userController@logout');
 Route::group(['middleware' => 'CustomerArea', 'prefix' => 'cust'],function(){
     Route::get('/create-order','customerController@orderForm');
     Route::post('/create-order','customerController@insertOrder');
+    Route::get('/on-progress','customerController@onprogressTable');
+    Route::get('/completed','customerController@completedTable');
 
 });

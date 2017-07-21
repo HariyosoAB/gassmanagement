@@ -2,8 +2,11 @@
 	<div class="menu">
 		<!-- cutomer -->
 		@if(Auth::user()->user_role==1)
-		<button id="order-cus" onclick="window.location.href='{{url('')}}/customer'" autofocus>Order</button>
+		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'" <?php if($nav=="order") echo "autofocus";?>>Order</button>
 		<button id="history-cus">History</button>
+		<script>
+			<?php if($nav=="history") echo "window.onload = function () {document.querySelector('#history-cus').click();}";?>
+		</script>
 		@endif
 		<!-- occ -->
 		@if(Auth::user()->user_role==2)
@@ -23,8 +26,8 @@
 		<div id="sub-menu-order-cus">
 		</div>
 		<div id="sub-menu-history-cus" style="display:none">
-			<a href="">On-Progress</a>
-			<a href="">Completed</a>
+			<a href="{{url('')}}/cust/on-progress">On-Progress</a>
+			<a href="{{url('')}}/cust/completed">Completed</a>
 		</div>
 		@endif
 		<!-- occ -->
