@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Order;
 use Redirect;
-
+use Auth;
 class customerController extends Controller
 {
     public function orderForm(){
@@ -18,12 +18,11 @@ class customerController extends Controller
         $order->order_user = Auth::user()->user_id;
         $order->order_equipment = $request->equipment;
         $order->order_start = $request->start;
-        $order->order_end = $request->End;
         $order->order_from = $request->from;
         $order->order_to = $request->to;
         $order->order_unit = $request->unit;
-        $order->order_ac_reg = $request->ac-reg;
-        $order->order_ac_type = $request->ac-type;
+        $order->order_ac_reg = $request->acreg;
+        $order->order_ac_type = $request->actype;
         $order->order_maintenance_type = $request->maintenance;
         $order->order_urgency = $request->urgency;
         $order->order_airline = $request->airline;

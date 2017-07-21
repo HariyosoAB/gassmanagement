@@ -5,7 +5,7 @@ create order
 @stop
 
 @section('content')
-<form method="post" action="">
+<form method="post" action="{{url('/')}}/cust/create-order">
 	<div class="col-md-6" style="padding:0">
 		<div class="row">
 			<div class="form-group col-md-6">
@@ -29,10 +29,6 @@ create order
 				<label>Start</label>
 				<input type="text" class="form-control inputs" name="start" required/>
 			</div>
-			<div class="form-group col-md-5">
-				<label>End</label>
-				<input type="text" class="form-control inputs" name="end" required/>
-			</div>
 		</div>
 		<div class="row">
 			<div class="form-group col-md-5">
@@ -53,16 +49,17 @@ create order
 					<option>3</option>
 					<option>4</option>
 				</select>
+				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 			</div>
 		</div>
 		<div class="row">
 			<div class="form-group col-md-5">
 				<label>A/C Reg</label>
-				<input type="text" class="form-control inputs" name="ac-reg" required>
+				<input type="text" class="form-control inputs" name="acreg" required>
 			</div>
 			<div class="form-group col-md-5">
 				<label>A/C Type</label>
-				<select class="form-control inputs inputs" name="ac-type" required>
+				<select class="form-control inputs inputs" name="actype" required>
 					<option>1</option>
 					<option>2</option>
 					<option>3</option>
@@ -130,7 +127,8 @@ $(function() {
     	timePicker: true,
         singleDatePicker: true,
         locale: {
-            format: 'MM/DD/YYYY h:mm A'
+						format:'YYYY-MM-DD HH:mm:ss',
+
         }
     });
 
@@ -138,7 +136,7 @@ $(function() {
     	timePicker: true,
         singleDatePicker: true,
         locale: {
-            format: 'MM/DD/YYYY h:mm A'
+            format: 'YYYY-MM-DD HH:mm:ss'
         }
     });
 });
