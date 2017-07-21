@@ -122,23 +122,14 @@ create order
 	</div>
 </form>
 <script type="text/javascript">
-$(function() {
-    $('input[name="start"]').daterangepicker({
-    	timePicker: true,
-        singleDatePicker: true,
-        locale: {
-						format:'YYYY-MM-DD HH:mm:ss',
-
-        }
-    });
-
-    $('input[name="end"]').daterangepicker({
-    	timePicker: true,
-        singleDatePicker: true,
-        locale: {
-            format: 'YYYY-MM-DD HH:mm:ss'
-        }
-    });
-});
+	$(function() {
+		$('input[name="start"]').daterangepicker({
+			timePicker: true,
+			singleDatePicker: true,
+			locale: {
+				format:'YYYY-MM-DD HH:mm:ss',
+			}
+		});
+	});
 </script>
 @stop

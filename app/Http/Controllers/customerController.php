@@ -9,7 +9,8 @@ use Auth;
 class customerController extends Controller
 {
     public function orderForm(){
-      return view('pages/customer/create-order');
+        $data['nav'] = "order";
+        return view('pages/customer/create-order', $data);
     }
 
     public function insertOrder(Request $request){
@@ -33,5 +34,15 @@ class customerController extends Controller
 
         return Redirect('/cust/progress')->with('success','You have created a new order');
 
+    }
+
+    public function onprogressTable(){
+        $data['nav'] = "history";
+        return view('pages/customer/on-progress', $data);
+    }
+
+    public function completedTable(){
+        $data['nav'] = "history";
+        return view('pages/customer/completed', $data);
     }
 }
