@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Order;
 use Redirect;
 use Auth;
+use DB;
 class customerController extends Controller
 {
     public function orderForm(){
@@ -33,8 +34,22 @@ class customerController extends Controller
         $order->save();
 
         return Redirect('/cust/progress')->with('success','You have created a new order');
-
     }
+<<<<<<< HEAD
+    public function viewprogress()
+    {
+      $data['progress'] = DB::table('order_f')
+        ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
+        ->join('actype','order_f.order_ac_type','=','actype.actype_id')
+        ->join('urgency','order_f.order_urgency','=','urgency.urgency_id')
+        ->join('airline','airline.airline_id','=','order_f.order_airline')
+        ->where('order_f.order_status','!=','3')
+        ->where('order_f.order_user','=',Auth::user()->user_id)
+        ->get();
+      return view('pages.customer.progress',$data);
+    }
+
+=======
 
     public function onprogressTable(){
         $data['nav'] = "history";
@@ -45,4 +60,5 @@ class customerController extends Controller
         $data['nav'] = "history";
         return view('pages/customer/completed', $data);
     }
+>>>>>>> 54e98aa32ab7dba7e05cddbe4fed9285c2e2df68
 }
