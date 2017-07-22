@@ -18,7 +18,7 @@ class userController extends Controller
         // echo "logged in boi";
         //return Redirect::to('/adminhome');
         if(Auth::user()->user_role == 1){
-          return view('pages/customer/create-order');
+          return Redirect::to('/cust/create-order');
         }elseif(Auth::user()->user_role == 2){
           return view('pages/tes');
         }elseif(Auth::user()->user_role == 3){

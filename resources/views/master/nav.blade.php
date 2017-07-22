@@ -2,7 +2,7 @@
 	<div class="menu">
 		<!-- cutomer -->
 		@if(Auth::user()->user_role==1)
-		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'" <?php if($nav=="order") echo "autofocus";?>>Order</button>
+		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'" <?php if($nav=="order") echo "class='active'";?>>Order</button>
 		<button id="history-cus">History</button>
 		<script>
 			<?php if($nav=="history") echo "window.onload = function () {document.querySelector('#history-cus').click();}";?>
@@ -49,6 +49,36 @@
 		</div>
 		<div id="sub-menu-report" style="display:none">
 		</div>
+		@endif
+	</div>
+</div>
+<div class="nav2">
+	<div class="menu">
+		<!-- cutomer -->
+		@if(Auth::user()->user_role==1)
+		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'" <?php if($nav=="order") echo "class='active'";?>>Order</button>
+		<button id="history-cus">History</button>
+		<div id="sub-menu-history-cus" style="display:none">
+			<a href="{{url('')}}/cust/on-progress">On-Progress</a>
+			<a href="{{url('')}}/cust/completed">Completed</a>
+		</div>
+		<script>
+			$("#history-cus").click(function(){
+				$("#sub-menu-history-cus").show(200);
+			});
+			<?php if($nav=="history") echo "window.onload = function () {document.querySelector('#history-cus').click();}";?>
+		</script>
+		@endif
+		<!-- occ -->
+		@if(Auth::user()->user_role==2)
+		<button id="order-occ" autofocus>Order</button>
+		<button id="history-occ">History</button>
+		@endif
+		<!-- manager -->
+		@if(Auth::user()->user_role==3)
+		<button id="order-man" autofocus>Order</button>
+		<button id="history-man">History</button>
+		<button id="report">Report</button>
 		@endif
 	</div>
 </div>
