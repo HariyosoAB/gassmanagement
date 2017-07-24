@@ -47,7 +47,10 @@ class customerController extends Controller
       return view('pages.customer.progress',$data);
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6a09ab95ae1013aa3ef81950d30f090c510235dc
     public function onprogressTable(){
         $data['nav'] = "history";
         $data['progress'] = DB::table('order_f')

@@ -39,24 +39,70 @@ body{
 }
 
 .logo{
-	width: 500px;
 	height: 100%;
 	position: relative;
 	float: left;
-}
-
-.logo p{
 	font-size: 40px;
 	font-family: bebas;			
 	color: #EFEFEF;
 	padding: 40px;
+	padding-right: 0;
 }
 
 .notif{
 	float: right;
 	height: 100%;
-	width: 300px;
 	position: relative;
+	padding: 55px 40px;
+	font-family: montserrat;
+	color: white;
+	font-size: 18px;
+	padding-left: 0;
+	/*border-style: solid;*/
+}
+
+.notif button{
+	border-style: none;
+	background-color: #2D3238;
+	outline: 0;
+}
+
+.notif button i{
+	font-size: 20px; 
+	margin-left: 20px;
+}
+
+#profil-menu{
+	display: none;
+	position: absolute;
+	width: 200px;
+	background-color: white;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+	top: 90px;
+	right: 40px;
+}
+
+#profil-menu a{
+	font-family: montserrat;
+	padding: 10px;
+	width: 100%;
+	text-decoration: none;
+	color: #02ADBA;
+}
+
+.mobile{
+	display: none;
+}
+
+#profil-menu a:hover{
+	color: white;
+	width: 100%;
+	background-color: #02ADBA;
+}
+
+.profil-menu{
+	width: 100%;
+	float: left;
 }
 
 .nav{
@@ -126,10 +172,6 @@ body{
 	background-color: #EFEFEF;
 }
 
-.active{
-	background-color: #EFEFEF;
-}
-
 .menu button:hover{
 	background-color: #02ADBA;
 	color: white;
@@ -167,4 +209,61 @@ a{
 
 #sub-menu-order, #sub-menu-setting{
 	display: none;
+}
+
+.active{
+	background-color: #EFEFEF !important;
+}
+
+#nav-mobile{
+	display: none;
+}
+
+.nav2{
+	width: 100%;
+	height: auto;
+	position: relative;
+	float: left;
+	display: none;
+}
+
+@media screen and (max-width: 675px) {
+	.desktop{
+		display: none;
+	}
+
+	.mobile{
+		display: block;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.nav{
+		display: none;
+	}
+
+	#nav-mobile{
+		display: block;
+		float: left;
+	}
+
+	#profil{
+		float: left;
+	}
+
+	.nav2 .menu button{
+		width: 100%;
+		margin: 0;
+		border-top: solid #2D3238; 
+	}
+
+	.nav2 .menu{
+		height: auto;
+		width: 100%;
+		position: relative;
+	}
+
+	#sub-menu-history-cus a{
+		width: 100%;
+	}
 }

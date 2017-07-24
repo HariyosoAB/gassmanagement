@@ -3,8 +3,13 @@
 @include('master/head')
 <body>
 	<div class="head">
-		<div class="logo"><p>GMF Aircraft Support Services</p></div>
-		<div class="notif"></div>
+		<div class="logo desktop"><p>GMF Aircraft Support Services</p></div>
+		<div class="logo mobile"><p>GASS</p></div>
+		<div class="notif"><button id="profil">Hi, Carlos</button><button id="nav-mobile"><i class="fa fa-bars" aria-hidden="true"></i></button></div>
+		<div id="profil-menu">
+			<a href=""><div class="profil-menu">Change Profile</div></a>
+			<a href=""><div class="profil-menu">Log Out</div></a>
+		</div>
 	</div>
 	<div class="outter">
 		<div class="outter2">
@@ -32,6 +37,14 @@
 
 <script>
 	AOS.init();
+
+	$("#profil").click(function(){
+		$("#profil-menu").toggle(200);
+	});
+
+	$("#nav-mobile").click(function(){
+		$(".nav2").slideToggle(200);
+	});
 </script>
 
 </html>
