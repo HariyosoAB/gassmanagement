@@ -8,7 +8,7 @@
 		<div class="notif"><button id="profil">Hi, Carlos</button><button id="nav-mobile"><i class="fa fa-bars" aria-hidden="true"></i></button></div>
 		<div id="profil-menu">
 			<a href=""><div class="profil-menu">Change Profile</div></a>
-			<a href=""><div class="profil-menu">Log Out</div></a>
+			<a href="{{url('')}}/logout"><div class="profil-menu">Log Out</div></a>
 		</div>
 	</div>
 	<div class="outter">

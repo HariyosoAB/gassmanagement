@@ -16,9 +16,6 @@
 	});
 
 	$("#history-cus2").click(function(){
-		$(this).addClass("active");
-		$("#order-cus").removeClass("active");
-
-		$("#sub-menu-history-cus2").slideToggle();
+		$(".sub-menu-history-cus2").slideToggle();
 	});
 </script>

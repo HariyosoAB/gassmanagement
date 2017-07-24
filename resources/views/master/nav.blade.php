@@ -2,8 +2,8 @@
 	<div class="menu">
 		<!-- cutomer -->
 		@if(Auth::user()->user_role==1)
-		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'" <?php if($nav=="order") echo "class='active'";?>>Order</button>
-		<button id="history-cus">History</button>
+		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'" <?php if($nav=="order") echo "class='active'";?>><i class="fa fa-shopping-cart" aria-hidden="true"></i>Order</button>
+		<button id="history-cus"><i class="fa fa-history" aria-hidden="true"></i>History</button>
 		<script>
 			<?php if($nav=="history") echo "window.onload = function () {document.querySelector('#history-cus').click();}";?>
 		</script>
@@ -26,8 +26,8 @@
 		<div id="sub-menu-order-cus">
 		</div>
 		<div id="sub-menu-history-cus" style="display:none">
-			<a href="{{url('')}}/cust/on-progress">On-Progress</a>
-			<a href="{{url('')}}/cust/completed">Completed</a>
+			<a href="{{url('')}}/cust/on-progress"><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
+			<a href="{{url('')}}/cust/completed"><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
 		</div>
 		@endif
 		<!-- occ -->
@@ -56,18 +56,12 @@
 	<div class="menu">
 		<!-- cutomer -->
 		@if(Auth::user()->user_role==1)
-		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'" <?php if($nav=="order") echo "class='active'";?>>Order</button>
-		<button id="history-cus2">History</button>
-		<div id="sub-menu-history-cus2" style="display:none">
-			<a href="{{url('')}}/cust/on-progress">On-Progress</a>
-			<a href="{{url('')}}/cust/completed">Completed</a>
+		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Order</button>
+		<button id="history-cus2"><i class="fa fa-history" aria-hidden="true"></i>History</button>
+		<div class="sub-menu-history-cus2" style="display:none">
+			<a href="{{url('')}}/cust/on-progress"><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
+			<a href="{{url('')}}/cust/completed"><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
 		</div>
-		<script>
-			$("#history-cus").click(function(){
-				$("#sub-menu-history-cus").show(200);
-			});
-			<?php if($nav=="history") echo "window.onload = function () {document.querySelector('#history-cus').click();}";?>
-		</script>
 		@endif
 		<!-- occ -->
 		@if(Auth::user()->user_role==2)
