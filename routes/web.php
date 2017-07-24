@@ -25,11 +25,12 @@ Route::get('logout','userController@logout');
 Route::group(['middleware' => 'CustomerArea', 'prefix' => 'cust'],function(){
     Route::get('/create-order','customerController@orderForm');
     Route::get('/order-edit/{id}','customerController@editForm');
-
     Route::post('/order-edit/{id}','customerController@editOrder');
     Route::post('/create-order','customerController@insertOrder');
     Route::get('/on-progress','customerController@onprogressTable');
     Route::get('/completed','customerController@completedTable');
     Route::post('/cancel/{id}','customerController@cancel');
+});
 
+Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
 });
