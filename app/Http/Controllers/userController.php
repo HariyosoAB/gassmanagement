@@ -22,7 +22,7 @@ class userController extends Controller
         if(Auth::user()->user_role == 1){
           return Redirect::to('/cust/create-order');
         }elseif(Auth::user()->user_role == 2){
-          return Redirect::to('/occ/review-order');
+          return Redirect::to('/occ/preview-order');
         }elseif(Auth::user()->user_role == 3){
           return view('pages/tes');
         }

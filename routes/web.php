@@ -33,4 +33,9 @@ Route::group(['middleware' => 'CustomerArea', 'prefix' => 'cust'],function(){
 });
 
 Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
+    Route::get('/preview-order','occController@previewOrder');
+    Route::get('/on-progress','occController@onprogressTable');
+    Route::get('/completed','occController@completedTable');
+    Route::get('/canceled','occController@canceledTable');
+    Route::get('/all-order','occController@allTable');
 });

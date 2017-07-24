@@ -10,9 +10,13 @@
 		@endif
 		<!-- occ -->
 		@if(Auth::user()->user_role==2)
-		<button id="order-occ" autofocus><i class="fa fa-shopping-cart" aria-hidden="true"></i>Preview Order</button>
+		<button id="order-occ"  onclick="window.location.href='{{url('')}}/occ/preview-order'" <?php if($nav=="preview") echo "class='active'";?>><i class="fa fa-shopping-cart" aria-hidden="true"></i>Preview Order</button>
 		<button id="history-occ"><i class="fa fa-history" aria-hidden="true"></i>History</button>
 		<button id="settings-occ"><i class="fa fa-cogs" aria-hidden="true"></i>Settings</button>
+		<script>
+			<?php if($nav=="history-occ") echo "window.onload = function () {document.querySelector('#history-occ').click();}";?>
+			<?php if($nav=="settings-occ") echo "window.onload = function () {document.querySelector('#settings-occ').click();}";?>
+		</script>
 		@endif
 		<!-- manager -->
 		@if(Auth::user()->user_role==3)
@@ -35,10 +39,10 @@
 		@if(Auth::user()->user_role == 2)
 		<div id="sub-menu-order-occ"></div>
 		<div id="sub-menu-history-occ" style="display:none">
-			<a href=""><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
-			<a href=""><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
-			<a href=""><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
-			<a href=""><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
+			<a href="{{url('')}}/occ/on-progress"><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
+			<a href="{{url('')}}/occ/completed"><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
+			<a href="{{url('')}}/occ/canceled"><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
+			<a href="{{url('')}}/occ/all-order"><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
 		</div>
 		<div id="sub-menu-settings-occ" style="display:none">
 			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Equipment Data</a>
