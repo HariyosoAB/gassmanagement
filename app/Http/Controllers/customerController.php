@@ -88,6 +88,7 @@ class customerController extends Controller
           ->where('order_f.order_status','!=','3')
           ->where('order_f.order_status','!=','9')
           ->where('order_f.order_user','=',Auth::user()->user_id)
+          ->orderBy('order_f.order_id','desc')
           ->get();
         return view('pages/customer/on-progress', $data);
     }

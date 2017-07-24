@@ -43,6 +43,12 @@ on progress
             <td>
                 @if($prog->order_status == 1)
                   Waiting for approval
+                @elseif($prog->order_status == 2)
+                  In Execution
+                @elseif($prog->order_status == 5)
+                  Waiting For Execution
+                @elseif($prog->order_status == 10)
+                  Delayed until {{$prog->order_delayed_until}}
                 @endif
             </td>
             <td>

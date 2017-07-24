@@ -8,17 +8,6 @@ create order
 <form method="post" action="{{url('/')}}/cust/create-order">
 	<div class="col-md-6" style="padding:0">
 		<div class="row">
-			<div class="form-group col-md-7">
-				<label>Equipment</label>
-				<select class="form-control inputs" name="equipment" required>
-					<option>1</option>
-					<option>2</option>
-					<option>3</option>
-					<option>4</option>
-				</select>
-			</div>
-		</div>
-		<div class="row">
 			<div class="form-group col-md-5">
 				<label>Start</label>
 				<input type="text" class="form-control inputs" name="start" required/>
