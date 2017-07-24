@@ -1,7 +1,7 @@
 @extends('master.master')
 
 @section('judul')
-create order
+edit order
 @stop
 
 @section('content')

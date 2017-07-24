@@ -7,6 +7,7 @@ use App\Order;
 use Redirect;
 use Auth;
 use DB;
+use Carbon\Carbon;
 class customerController extends Controller
 {
     public function orderForm(){
@@ -22,20 +23,24 @@ class customerController extends Controller
 
     public function editOrder(Request $request,$id){
         $order = Order::find($id);
-        $order->order_equipment = $request->equipment;
-        $order->order_start = $request->start;
-        $order->order_from = $request->from;
-        $order->order_to = $request->to;
-        $order->order_unit = $request->unit;
-        $order->order_ac_reg = $request->acreg;
-        $order->order_ac_type = $request->actype;
-        $order->order_maintenance_type = $request->maintenance;
-        $order->order_urgency = $request->urgency;
-        $order->order_airline = $request->airline;
-        $order->order_address = $request->address;
-        $order->order_note = $request->note;
-        $order->save();
-
+        if($order->order_status == 1){
+          $order->order_equipment = $request->equipment;
+          $order->order_start = $request->start;
+          $order->order_from = $request->from;
+          $order->order_to = $request->to;
+          $order->order_unit = $request->unit;
+          $order->order_ac_reg = $request->acreg;
+          $order->order_ac_type = $request->actype;
+          $order->order_maintenance_type = $request->maintenance;
+          $order->order_urgency = $request->urgency;
+          $order->order_airline = $request->airline;
+          $order->order_address = $request->address;
+          $order->order_note = $request->note;
+          $order->save();
+        }
+        else {
+          return Redirect('/cust/on-progress')->with('success','Unable to edit data. Order already in execution phase.');
+        }
         return Redirect('/cust/on-progress')->with('success','You have created a new order');
     }
 
@@ -56,6 +61,8 @@ class customerController extends Controller
         $order->order_note = $request->note;
         $order->order_status = 1;
         $order->save();
+
+
 
         return Redirect('/cust/on-progress')->with('success','You have created a new order');
     }
@@ -90,6 +97,7 @@ class customerController extends Controller
       $order->order_status = 9;
       $order->order_cancellation = $request->reason;
       $order->save();
+
       return Redirect('cust/on-progress');
     }
 

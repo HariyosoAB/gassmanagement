@@ -32,5 +32,8 @@ class Order extends Model
       'order_wingman2',
       'order_wingman3',
       'order_cancellation',
+      'order_delayed_until',
+      'order_execute_at',
+      'order_finished_at',
     ];
 }
