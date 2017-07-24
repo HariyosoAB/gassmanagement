@@ -13,6 +13,31 @@ class customerController extends Controller
         $data['nav'] = "order";
         return view('pages/customer/create-order', $data);
     }
+    public function editForm($id){
+      $data['nav'] = "order";
+      $data['fields'] = Order::find($id);
+      return view('pages/customer/edit-order',$data);
+    }
+
+
+    public function editOrder(Request $request,$id){
+        $order = Order::find($id);
+        $order->order_equipment = $request->equipment;
+        $order->order_start = $request->start;
+        $order->order_from = $request->from;
+        $order->order_to = $request->to;
+        $order->order_unit = $request->unit;
+        $order->order_ac_reg = $request->acreg;
+        $order->order_ac_type = $request->actype;
+        $order->order_maintenance_type = $request->maintenance;
+        $order->order_urgency = $request->urgency;
+        $order->order_airline = $request->airline;
+        $order->order_address = $request->address;
+        $order->order_note = $request->note;
+        $order->save();
+
+        return Redirect('/cust/on-progress')->with('success','You have created a new order');
+    }
 
     public function insertOrder(Request $request){
         $order = new Order;
@@ -47,10 +72,6 @@ class customerController extends Controller
       return view('pages.customer.progress',$data);
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6a09ab95ae1013aa3ef81950d30f090c510235dc
     public function onprogressTable(){
         $data['nav'] = "history";
         $data['progress'] = DB::table('order_f')
