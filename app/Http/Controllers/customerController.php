@@ -16,7 +16,6 @@ class customerController extends Controller
 
     public function insertOrder(Request $request){
         $order = new Order;
-        $order->order_swo = $request->swo;
         $order->order_user = Auth::user()->user_id;
         $order->order_equipment = $request->equipment;
         $order->order_start = $request->start;
@@ -33,9 +32,8 @@ class customerController extends Controller
         $order->order_status = 1;
         $order->save();
 
-        return Redirect('/cust/progress')->with('success','You have created a new order');
+        return Redirect('/cust/on-progress')->with('success','You have created a new order');
     }
-<<<<<<< HEAD
     public function viewprogress()
     {
       $data['progress'] = DB::table('order_f')
@@ -49,16 +47,38 @@ class customerController extends Controller
       return view('pages.customer.progress',$data);
     }
 
-=======
 
     public function onprogressTable(){
         $data['nav'] = "history";
+        $data['progress'] = DB::table('order_f')
+          ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
+          ->join('actype','order_f.order_ac_type','=','actype.actype_id')
+          ->join('airline','airline.airline_id','=','order_f.order_airline')
+          ->where('order_f.order_status','!=','3')
+          ->where('order_f.order_status','!=','9')
+          ->where('order_f.order_user','=',Auth::user()->user_id)
+          ->get();
         return view('pages/customer/on-progress', $data);
+    }
+
+    public function cancel($id,Request $request){
+      $order = Order::find($id);
+      $order->order_status = 9;
+      $order->order_cancellation = $request->reason;
+      $order->save();
+      return Redirect('cust/on-progress');
     }
 
     public function completedTable(){
         $data['nav'] = "history";
+        $data['progress'] = DB::table('order_f')
+          ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
+          ->join('actype','order_f.order_ac_type','=','actype.actype_id')
+          ->join('urgency','order_f.order_urgency','=','urgency.urgency_id')
+          ->join('airline','airline.airline_id','=','order_f.order_airline')
+          ->where('order_f.order_status','=','3')
+          ->where('order_f.order_user','=',Auth::user()->user_id)
+          ->get();
         return view('pages/customer/completed', $data);
     }
->>>>>>> 54e98aa32ab7dba7e05cddbe4fed9285c2e2df68
 }

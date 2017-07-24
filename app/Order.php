@@ -31,5 +31,6 @@ class Order extends Model
       'order_wingman',
       'order_wingman2',
       'order_wingman3',
+      'order_cancellation',
     ];
 }

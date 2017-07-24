@@ -17,6 +17,8 @@ class userController extends Controller
       {
         // echo "logged in boi";
         //return Redirect::to('/adminhome');
+        $data['nav'] = "order";
+
         if(Auth::user()->user_role == 1){
           return view('pages/customer/create-order');
         }elseif(Auth::user()->user_role == 2){

@@ -20,7 +20,7 @@
         </thead>
         <tbody>
           @foreach($progress as $prog)
-          <tr>
+          <tr >
             <td>{{$prog->order_swo}}</td>
             <td>{{$prog->order_start}}</td>
             <td>{{$prog->equipment_model}}</td>

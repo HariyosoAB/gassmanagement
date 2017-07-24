@@ -12,6 +12,7 @@
 
     <!-- daterangepicker -->
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="{{url('/')}}/plugin/sweetalert/sweetalert2.min.css" />
 
     <!-- datatables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" />

@@ -27,5 +27,6 @@ Route::group(['middleware' => 'CustomerArea', 'prefix' => 'cust'],function(){
     Route::post('/create-order','customerController@insertOrder');
     Route::get('/on-progress','customerController@onprogressTable');
     Route::get('/completed','customerController@completedTable');
+    Route::post('/cancel/{id}','customerController@cancel');
 
 });
