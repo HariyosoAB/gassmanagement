@@ -57,8 +57,8 @@
 		<!-- cutomer -->
 		@if(Auth::user()->user_role==1)
 		<button id="order-cus" onclick="window.location.href='{{url('')}}/cust/create-order'" <?php if($nav=="order") echo "class='active'";?>>Order</button>
-		<button id="history-cus">History</button>
-		<div id="sub-menu-history-cus" style="display:none">
+		<button id="history-cus2">History</button>
+		<div id="sub-menu-history-cus2" style="display:none">
 			<a href="{{url('')}}/cust/on-progress">On-Progress</a>
 			<a href="{{url('')}}/cust/completed">Completed</a>
 		</div>

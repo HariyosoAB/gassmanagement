@@ -35,7 +35,6 @@ class customerController extends Controller
 
         return Redirect('/cust/progress')->with('success','You have created a new order');
     }
-<<<<<<< HEAD
     public function viewprogress()
     {
       $data['progress'] = DB::table('order_f')
@@ -49,8 +48,6 @@ class customerController extends Controller
       return view('pages.customer.progress',$data);
     }
 
-=======
-
     public function onprogressTable(){
         $data['nav'] = "history";
         return view('pages/customer/on-progress', $data);
@@ -60,5 +57,4 @@ class customerController extends Controller
         $data['nav'] = "history";
         return view('pages/customer/completed', $data);
     }
->>>>>>> 54e98aa32ab7dba7e05cddbe4fed9285c2e2df68
 }
