@@ -35,18 +35,18 @@
 		@if(Auth::user()->user_role == 2)
 		<div id="sub-menu-order-occ"></div>
 		<div id="sub-menu-history-occ" style="display:none">
-			<a href="">On-Progress</a>
-			<a href="">Completed</a>
-			<a href="">Canceled</a>
-			<a href="">All Order</a>
+			<a href=""><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
+			<a href=""><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
+			<a href=""><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
+			<a href=""><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
 		</div>
 		<div id="sub-menu-settings-occ" style="display:none">
-			<a href="">Equipment Data</a>
-			<a href="">Airline Data</a>
-			<a href="">Urgency Data</a>
-			<a href="">Root Cause Data</a>
-			<a href="">Man Power Data</a>
-			<a href="">AC Type Data</a>
+			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Equipment Data</a>
+			<a href=""><i class="fa fa-plane" aria-hidden="true"></i>Airline Data</a>
+			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Urgency Data</a>
+			<a href=""><i class="fa fa-bomb" aria-hidden="true"></i>Root Cause Data</a>
+			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Man Power Data</a>
+			<a href=""><i class="fa fa-code-fork" aria-hidden="true"></i>AC Type Data</a>
 		</div>
 		@endif
 		<!-- manager -->
@@ -78,19 +78,19 @@
 		<button id="order-occ"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Preview Order</button>
 		<button id="history-occ2"><i class="fa fa-history" aria-hidden="true"></i>History</button>
 		<div class="sub-menu-history-cus2" id="sub-menu-history-occ2" style="display:none">
-			<a href="">On-Progress</a>
-			<a href="">Completed</a>
-			<a href="">Canceled</a>
-			<a href="">All Order</a>
+			<a href=""><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
+			<a href=""><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
+			<a href=""><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
+			<a href=""><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
 		</div>
 		<button id="settings-occ2"><i class="fa fa-cogs" aria-hidden="true"></i>Settings</button>
 		<div class="sub-menu-history-cus2" id="sub-menu-settings-occ2" style="display:none">
-			<a href="">Equipment Data</a>
-			<a href="">Airline Data</a>
-			<a href="">Urgency Data</a>
-			<a href="">Root Cause Data</a>
-			<a href="">Man Power Data</a>
-			<a href="">AC Type Data</a>
+			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Equipment Data</a>
+			<a href=""><i class="fa fa-plane" aria-hidden="true"></i>Airline Data</a>
+			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Urgency Data</a>
+			<a href=""><i class="fa fa-bomb" aria-hidden="true"></i>Root Cause Data</a>
+			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Man Power Data</a>
+			<a href=""><i class="fa fa-code-fork" aria-hidden="true"></i>AC Type Data</a>
 		</div>
 		@endif
 		<!-- manager -->
