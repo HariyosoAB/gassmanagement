@@ -227,6 +227,10 @@ a{
 	display: none;
 }
 
+.fa{
+	margin-right: 10px;
+}
+
 @media screen and (max-width: 675px) {
 	.desktop{
 		display: none;
@@ -254,7 +258,6 @@ a{
 	.nav2 .menu button{
 		width: 100%;
 		margin: 0;
-		border-top: solid #2D3238; 
 	}
 
 	.nav2 .menu{
@@ -263,7 +266,28 @@ a{
 		position: relative;
 	}
 
-	#sub-menu-history-cus a{
+	.sub-menu-history-cus2 a{
 		width: 100%;
+		text-align: center;
+		padding: 15px 0px;
+		background-color: #EFEFEF;
+		font-family: montserrat;
+		color: #5B646B;
+		text-decoration: none;
+	}
+
+	.sub-menu-history-cu2 a:hover{
+		background-color: #474E54;
+		text-decoration: none;
+	}
+
+	.head{
+		position: absolute;
+	}
+}
+
+@media screen and (min-width: 769px) {
+	.nav2{
+		display: none !important;
 	}
 }
