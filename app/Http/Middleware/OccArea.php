@@ -19,6 +19,6 @@ class OccArea
          if(Auth::user() && Auth::user()->user_role==2){
            return $next($request);
          }
-         return redirect('/');
+         return redirect('/login');
      }
 }

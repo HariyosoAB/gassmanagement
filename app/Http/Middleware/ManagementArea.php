@@ -19,6 +19,6 @@ class ManagementArea
          if(Auth::user() && Auth::user()->user_role==3){
            return $next($request);
          }
-         return redirect('/');
+         return redirect('/login');
      }
 }

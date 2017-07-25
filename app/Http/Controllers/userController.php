@@ -5,11 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth,Redirect;
 use App\User;
-
 class userController extends Controller
 {
     public function showlogin(){
-      return view('login');
+      if(Auth::check()){
+        if(Auth::user()->user_role == 1){
+          return Redirect::to('/cust/create-order');
+        }elseif(Auth::user()->user_role == 2){
+          return Redirect::to('/occ/preview-order');
+        }elseif(Auth::user()->user_role == 3){
+          return view('pages/tes');
+        }
+      }
+      else {
+        return view('login');
+      }
     }
 
     public function login(Request $request){

@@ -12,22 +12,51 @@ class customerController extends Controller
 {
     public function orderForm(){
         $data['nav'] = "order";
+        $data['maintenance'] = DB::table('maintenance')->get();
+        $data['airline'] = DB::table('airline')->get();
+        $data['units'] = DB::table('unit')->get();
+        $data['actype'] = DB::table('actype')->get();
+        $data['equipment'] = DB::table('equipment')->get();
+
+
         return view('pages/customer/create-order', $data);
     }
     public function editForm($id){
       $data['nav'] = "order";
       $data['fields'] = Order::find($id);
+      $data['maintenance'] = DB::table('maintenance')->get();
+      $data['airline'] = DB::table('airline')->get();
+      $data['units'] = DB::table('unit')->get();
+      $data['actype'] = DB::table('actype')->get();
+      $data['equipment'] = DB::table('equipment')->get();
       return view('pages/customer/edit-order',$data);
     }
 
 
     public function editOrder(Request $request,$id){
         $order = Order::find($id);
+
         if($order->order_status == 1){
           $order->order_equipment = $request->equipment;
           $order->order_start = $request->start;
-          $order->order_from = $request->from;
-          $order->order_to = $request->to;
+          $order->order_end = $request->end;
+
+          if(null != $request->fromnew)
+          {
+            $order->order_from = $request->fromnew;
+
+          }
+          else {
+            $order->order_from = $request->from;
+          }
+          if(null != $request->tonew)
+          {
+            $order->order_to = $request->tonew;
+
+          }
+          else {
+            $order->order_to = $request->to;
+          }
           $order->order_unit = $request->unit;
           $order->order_ac_reg = $request->acreg;
           $order->order_ac_type = $request->actype;
@@ -49,20 +78,34 @@ class customerController extends Controller
         $order->order_user = Auth::user()->user_id;
         $order->order_equipment = $request->equipment;
         $order->order_start = $request->start;
-        $order->order_from = $request->from;
-        $order->order_to = $request->to;
+        $order->order_end = $request->end;
+        $dt = Carbon::now();
+        $order->order_swo = substr(hash('md5', $dt),0,10);
+        if(null != $request->fromnew)
+        {
+          $order->order_from = $request->fromnew;
+
+        }
+        else {
+          $order->order_from = $request->from;
+        }
+        if(null != $request->tonew)
+        {
+          $order->order_to = $request->tonew;
+
+        }
+        else {
+          $order->order_to = $request->to;
+        }
         $order->order_unit = $request->unit;
         $order->order_ac_reg = $request->acreg;
         $order->order_ac_type = $request->actype;
         $order->order_maintenance_type = $request->maintenance;
-        $order->order_urgency = $request->urgency;
         $order->order_airline = $request->airline;
         $order->order_address = $request->address;
         $order->order_note = $request->note;
         $order->order_status = 1;
         $order->save();
-
-
 
         return Redirect('/cust/on-progress')->with('success','You have created a new order');
     }
@@ -75,6 +118,7 @@ class customerController extends Controller
         ->join('airline','airline.airline_id','=','order_f.order_airline')
         ->where('order_f.order_status','!=','3')
         ->where('order_f.order_user','=',Auth::user()->user_id)
+        ->orderBy('order_f.order_id','desc')
         ->get();
       return view('pages.customer.progress',$data);
     }
@@ -111,6 +155,7 @@ class customerController extends Controller
           ->join('airline','airline.airline_id','=','order_f.order_airline')
           ->where('order_f.order_status','=','3')
           ->where('order_f.order_user','=',Auth::user()->user_id)
+          ->orderBy('order_f.order_id','desc')
           ->get();
         return view('pages/customer/completed', $data);
     }

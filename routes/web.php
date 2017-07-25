@@ -14,7 +14,7 @@
 Route::get('/customer', function () {
     return view('pages/customer/create-order');
 });
-
+Route::get('/', 'userController@showlogin');
 Route::get('tes','customerController@viewprogress');
 Route::get('login','userController@showlogin');
 Route::post('login','userController@login');
