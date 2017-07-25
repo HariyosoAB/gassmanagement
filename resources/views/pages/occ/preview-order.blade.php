@@ -8,36 +8,39 @@ Preview Order
 <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
-              <th>SWO Number</th>
               <th>Start Time</th>
               <th>Equipment</th>
               <th>Maintenance Type</th>
               <th>Airline</th>
-              <th>Status</th>
               <th>Action</th>
             </tr>
         </thead>
         <tfoot>
           <tr>
-            <th>SWO Number</th>
             <th>Start Time</th>
             <th>Equipment</th>
             <th>Maintenance Type</th>
             <th>Airline</th>
-            <th>Status</th>
             <th>Action</th>
           </tr>
         </tfoot>
         <tbody>
+          @foreach($orders as $order)
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{$order->order_start}}</td>
+            <td>{{$order->equipment_model}}</td>
+            <td>{{$order->order_maintenance_type}}</td>
+            <td>{{$order->order_airline}}</td>
+            <td>
+                <a href="{{url('/')}}/occ/order_"><div class="btn btn-primary">
+                  Review Order
+                </div></a>
+                <a href="#"><div class="btn btn-danger">
+                  Delete Order
+                </div></a>
+            </td>
           </tr>
+          @endforeach
         </tbody>
     </table>
     <script type="text/javascript" src="{{url('/')}}/plugin/sweetalert/sweetalert2.min.js"></script>
