@@ -14,7 +14,6 @@
               <th>Equipment</th>
               <th>Maintenance Type</th>
               <th>Airline</th>
-              <th>Urgency</th>
               <th>Action</th>
             </tr>
         </thead>
@@ -26,7 +25,6 @@
             <th>Equipment</th>
             <th>Maintenance Type</th>
             <th>Airline</th>
-            <th>Urgency</th>
             <th>Action</th>
           </tr>
         </tfoot>
@@ -36,10 +34,9 @@
             <td>{{$order->order_swo}}</td>
             <td>{{$order->order_start}}</td>
             <td>{{$order->order_end}}</td>
-            <td>{{$order->equipment_model}} (No: {{$order->em_no_inventory}})</td>
+            <td>{{$order->equipment_model}}</td>
             <td>{{$order->maintenance_description}}</td>
             <td>{{$order->airline_type}}</td>
-            <td><span class="label @if($order->order_urgency == 1) label-danger @elseif($order->order_urgency == 2) label-warning @elseif($order->order_urgency == 3) label-success @else label-default @endif">{{$order->urgency_level}}</span></td>
             <td>
                 <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" style="margin:5px;margin-left:0px"><div class="btn btn-sm btn-info">
                   Details

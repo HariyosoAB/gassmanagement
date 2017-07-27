@@ -1,7 +1,7 @@
 @extends('master.master')
 
 @section('judul')
-<i class="fa fa-list"></i> Orders Completed
+<i class="fa fa-list"></i> All Orders
 @stop
 
 @section('content')
@@ -14,6 +14,7 @@
               <th>Equipment</th>
               <th>Maintenance Type</th>
               <th>Airline</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
         </thead>
@@ -25,6 +26,8 @@
             <th>Equipment</th>
             <th>Maintenance Type</th>
             <th>Airline</th>
+            <th>Status</th>
+
             <th>Action</th>
           </tr>
         </tfoot>
@@ -34,9 +37,26 @@
             <td>{{$order->order_swo}}</td>
             <td>{{$order->order_start}}</td>
             <td>{{$order->order_end}}</td>
-            <td>{{$order->equipment_model}} (No: {{$order->em_no_inventory}})</td>
+            <td>{{$order->equipment_model}}</td>
             <td>{{$order->maintenance_description}}</td>
             <td>{{$order->airline_type}}</td>
+            <td>
+              @if($order->order_status == 1)
+                Waiting for approval
+              @elseif($order->order_status == 2)
+                In Execution
+              @elseif($order->order_status == 3)
+                Completed
+              @elseif($order->order_status == 5)
+                Waiting For Execution
+              @elseif($order->order_status == 10)
+                Delayed until {{$prog->order_delayed_until}}
+              @elseif($order->order_status == 9)
+                Cancelled
+
+              @endif
+            </td>
+
             <td>
                 <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" style="margin:5px;margin-left:0px"><div class="btn btn-sm btn-info">
                   Details

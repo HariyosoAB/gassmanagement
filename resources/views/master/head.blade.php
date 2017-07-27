@@ -21,6 +21,8 @@
     <!-- aos -->
     <link rel="stylesheet" href="{{url('')}}/plugin/aos-master/dist/aos.css" />
 
+    <link rel="stylesheet" href="{{url('')}}/plugin/select2/select2.min.css" />
+
 
     <script src="{{url('')}}/plugin/jQuery/jQuery-2.1.4.min.js"></script>
 
@@ -29,6 +31,8 @@
 
     <!-- aos -->
     <script src="{{url('')}}/plugin/aos-master/dist/aos.js"></script>
+    
+    <script src="{{url('')}}/plugin/select2/select2.min.js"></script>
 
     <!-- daterangepicker -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>

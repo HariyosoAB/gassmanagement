@@ -15,7 +15,11 @@ Route::get('/customer', function () {
     return view('pages/customer/create-order');
 });
 Route::get('/', 'userController@showlogin');
-Route::get('tes','customerController@viewprogress');
+Route::get('tes', function(){
+  $data['nav'] = "history-occ";
+  $data['delay'] = "execute";
+  return view('pages.occ.problem-tagging',$data);
+});
 Route::get('login','userController@showlogin');
 Route::post('login','userController@login');
 Route::post('register','userController@register');
@@ -45,6 +49,8 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
 
     Route::get('/execute/{id}','occController@executeOrder');
     Route::get('/finish/{id}','occController@finishOrder');
+
+    Route::post('/problem-tagging/{id}','occController@problemTag');
 
 
 });

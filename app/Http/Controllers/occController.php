@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Order;
+use App\ProblemTagging;
 use DB;
 use Carbon\Carbon;
 class occController extends Controller
@@ -29,6 +30,33 @@ class occController extends Controller
       }
     }
 
+    public function problemTag($id,Request $request){
+        $order= Order::find($id);
+        $now = Carbon::now();
+        $now = $now->toDateTimeString();
+
+        foreach($request->reason as $key => $value){
+          $pt = new ProblemTagging;
+          $pt->order_id = $order->order_id;
+          $pt->pt_root_cause = $value;
+          $pt->save();
+        }
+        if($request->type == 'execute'){
+          $order->order_status = 2;
+          $order->order_execute_at = $now;
+          $order->save();
+          return Redirect('/occ/wait-exec');
+        }
+        else if ($request->type == 'finish'){
+          $order->order_status = 3;
+          $order->order_finished_at = $now;
+          $order->save();
+          DB::table('equipment_many')->where('em_id','=',$order->order_em)->update(['em_status_on_service' => 0]);
+          DB::table('manpower')->where('manpower_id','=',$order->order_operator)->orWhere('manpower_id','=',$order->order_wingman)->orWhere('manpower_id','=',$order->order_wingman2)->orWhere('manpower_id','=',$order->order_wingman3)->update(['manpower_status' => 0]);
+          return Redirect('/occ/on-progress');
+        }
+    }
+
     public function finishOrder($id){
       $order = Order::find($id);
       $now = Carbon::now();
@@ -41,7 +69,13 @@ class occController extends Controller
 
       if($execTime->gt($startTime) && $totalDuration > 15)
       {
-        //late
+        $data['order'] = $order;
+        $data['time'] = Carbon::now();
+        $data['problems'] = DB::table('root_cause')->get();
+        $data['time'] = $data['time']->toDateTimeString();
+        $data['delay'] = "finish";
+        $data['nav'] = "history-occ";
+        return view('pages.occ.problem-tagging',$data);
       }
       else
       {
@@ -74,11 +108,19 @@ class occController extends Controller
       else {
 
       }
+
+
       if ($this->checkLateExec($order)) {
           return Redirect('/occ/wait-exec');
       }
       else {
-
+          $data['order'] = $order;
+          $data['time'] = Carbon::now();
+          $data['problems'] = DB::table('root_cause')->get();
+          $data['time'] = $data['time']->toDateTimeString();
+          $data['delay'] = "execute";
+          $data['nav'] = "history-occ";
+         return view('pages.occ.problem-tagging',$data);
       }
 
     }
@@ -141,11 +183,9 @@ class occController extends Controller
       $data['nav'] = "history-occ";
       $data['orders'] = DB::table('order_f')
         ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
-        ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
         ->join('actype','order_f.order_ac_type','=','actype.actype_id')
         ->join('airline','airline.airline_id','=','order_f.order_airline')
         ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
-        ->join('urgency','urgency.urgency_id','order_f.order_urgency')
         ->where('order_f.order_status','=','9')
         ->get();
         return view('pages/occ/canceled', $data);
@@ -155,11 +195,9 @@ class occController extends Controller
       $data['nav'] = "history-occ";
       $data['orders'] = DB::table('order_f')
         ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
-        ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
         ->join('actype','order_f.order_ac_type','=','actype.actype_id')
         ->join('airline','airline.airline_id','=','order_f.order_airline')
         ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
-        ->join('urgency','urgency.urgency_id','order_f.order_urgency')
         ->get();
       return view('pages/occ/all-order', $data);
     }
