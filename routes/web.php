@@ -33,9 +33,18 @@ Route::group(['middleware' => 'CustomerArea', 'prefix' => 'cust'],function(){
 });
 
 Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
+    Route::get('/wait-exec','occController@waitExec');
     Route::get('/preview-order','occController@previewOrder');
     Route::get('/on-progress','occController@onprogressTable');
     Route::get('/completed','occController@completedTable');
     Route::get('/canceled','occController@canceledTable');
     Route::get('/all-order','occController@allTable');
+
+    Route::get('/allocate/{id}','occController@allocateForm');
+    Route::post('/allocate/{id}','occController@allocateOrder');
+
+    Route::get('/execute/{id}','occController@executeOrder');
+    Route::get('/finish/{id}','occController@finishOrder');
+
+
 });

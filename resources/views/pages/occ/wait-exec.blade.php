@@ -1,7 +1,7 @@
 @extends('master.master')
 
 @section('judul')
-<i class="fa fa-list"></i> Orders Completed
+<i class="fa fa-clock-o"></i> Orders Waiting for Execution
 @stop
 
 @section('content')
@@ -14,6 +14,7 @@
               <th>Equipment</th>
               <th>Maintenance Type</th>
               <th>Airline</th>
+              <th>Urgency</th>
               <th>Action</th>
             </tr>
         </thead>
@@ -25,6 +26,7 @@
             <th>Equipment</th>
             <th>Maintenance Type</th>
             <th>Airline</th>
+            <th>Urgency</th>
             <th>Action</th>
           </tr>
         </tfoot>
@@ -37,10 +39,16 @@
             <td>{{$order->equipment_model}} (No: {{$order->em_no_inventory}})</td>
             <td>{{$order->maintenance_description}}</td>
             <td>{{$order->airline_type}}</td>
+            <td><span class="label @if($order->order_urgency == 1) label-danger @elseif($order->order_urgency == 2) label-warning @elseif($order->order_urgency == 3) label-success @else label-default @endif">{{$order->urgency_level}}</span></td>
             <td>
-                <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" style="margin:5px;margin-left:0px"><div class="btn btn-sm btn-info">
+                <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/execute/{{$order->order_id}}"><div class="btn btn-sm btn-primary">
+                  Execute
+                </div>
+              </a>
+                <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/allocate/{{$order->order_id}}"><div class="btn btn-sm btn-info">
                   Details
-                </div></a>
+                </div>
+                </a>
             </td>
           </tr>
           @endforeach

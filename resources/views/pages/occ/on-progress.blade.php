@@ -1,7 +1,7 @@
 @extends('master.master')
 
 @section('judul')
-On Progress
+<i class="fa fa-refresh"></i> Orders in Execution
 @stop
 
 @section('content')
@@ -10,10 +10,11 @@ On Progress
             <tr>
               <th>SWO Number</th>
               <th>Start Time</th>
+              <th>End Time</th>
               <th>Equipment</th>
               <th>Maintenance Type</th>
               <th>Airline</th>
-              <th>Status</th>
+              <th>Urgency</th>
               <th>Action</th>
             </tr>
         </thead>
@@ -21,23 +22,34 @@ On Progress
           <tr>
             <th>SWO Number</th>
             <th>Start Time</th>
+            <th>End Time</th>
             <th>Equipment</th>
             <th>Maintenance Type</th>
             <th>Airline</th>
-            <th>Status</th>
+            <th>Urgency</th>
             <th>Action</th>
           </tr>
         </tfoot>
         <tbody>
+          @foreach($orders as $order)
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{$order->order_swo}}</td>
+            <td>{{$order->order_start}}</td>
+            <td>{{$order->order_end}}</td>
+            <td>{{$order->equipment_model}} (No: {{$order->em_no_inventory}})</td>
+            <td>{{$order->maintenance_description}}</td>
+            <td>{{$order->airline_type}}</td>
+            <td><span class="label @if($order->order_urgency == 1) label-danger @elseif($order->order_urgency == 2) label-warning @elseif($order->order_urgency == 3) label-success @else label-default @endif">{{$order->urgency_level}}</span></td>
+            <td>
+                <a href="{{url('/')}}/occ/finish/{{$order->order_id}}" style="margin:5px; margin-left:0px"><div class="btn btn-sm btn-primary">
+                  Finish
+                </div></a>
+                <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" style="margin:5px;margin-left:0px"><div class="btn btn-sm btn-info">
+                  Details
+                </div></a>
+            </td>
           </tr>
+          @endforeach
         </tbody>
     </table>
     <script type="text/javascript" src="{{url('/')}}/plugin/sweetalert/sweetalert2.min.js"></script>

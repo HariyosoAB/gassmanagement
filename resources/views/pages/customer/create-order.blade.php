@@ -32,7 +32,7 @@ create order
 		<div class="row">
 			<div class="form-group col-md-5">
 				<label>From</label>
-				<select id="fr"class="form-control inputs" style="padding:0px;" name="from" required>
+				<select id="fr"class="form-control inputs" style="padding:0px;" name="from" >
 						<option value=""></option>
 						<option value="Hangar 1">Hangar 1</option>
 						<option value="Hangar 2">Hangar 2</option>
@@ -44,7 +44,7 @@ create order
 			</div>
 			<div class="form-group col-md-5">
 				<label>To</label>
-				<select id="tu"class="form-control inputs" style="padding:0px;" name="to" required>
+				<select id="tu"class="form-control inputs" style="padding:0px;" name="to" >
 						<option value=""></option>
 						<option value="Hangar 1">Hangar 1</option>
 						<option value="Hangar 2">Hangar 2</option>
