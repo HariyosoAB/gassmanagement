@@ -32,9 +32,14 @@
         </tfoot>
         <tbody>
           @foreach($orders as $order)
-          <tr>
+          <tr @isset($order->order_delayed_until) class="danger" @endisset >
             <td>{{$order->order_swo}}</td>
-            <td>{{$order->order_start}}</td>
+            <td>{{$order->order_start}}
+              @isset($order->order_delayed_until)
+              <br>
+                <strong style="color:red;">  Delayed Until {{$order->order_delayed_until}}</strong>
+              @endisset
+          </td>
             <td>{{$order->order_end}}</td>
             <td>{{$order->equipment_model}} (No: {{$order->em_no_inventory}})</td>
             <td>{{$order->maintenance_description}}</td>

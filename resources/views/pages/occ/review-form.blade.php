@@ -98,7 +98,7 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
             </div>
             <div class="col-md-6 form-group">
                 <label>Wingman</label>
-                <select class="form-control" name="wingman" required>
+                <select class="form-control" id="wing" name="wingman[]" multiple required>
                     <option value=""></option>
                     @foreach($manpower as $man)
                       <option value="{{$man->manpower_id}}">{{$man->manpower_capability}} -- {{$man->manpower_nama}} -- {{$man->manpower_no_pegawai}} </option>
@@ -143,6 +143,8 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
     </div>
 </form>
 <script type="text/javascript">
-
+ $(document).ready(function(){
+   $('#wing').select2();
+ });
 </script>
 @stop
