@@ -86,6 +86,7 @@ class occController extends Controller
       $execTime = Carbon::parse($now);
       $totalDuration = $execTime->diffInMinutes($startTime);
 
+//bug here
       if($execTime->gt($startTime) && $totalDuration > 15)
       {
         $data['order'] = $order;
@@ -126,6 +127,7 @@ class occController extends Controller
         ->from('order_manpower')
         ->where('order_id','=',$order->order_id);
       })->get();
+    //  dd($data['mantabrak']);
     //  dd($manpower);
 
 
@@ -283,71 +285,80 @@ class occController extends Controller
          ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
          ->where('order_f.order_id','=',$id)
          ->get();
-       $data['urgency'] = DB::table('urgency')->get();
-       $data['manpower'] = DB::table('manpower')->orderBy('manpower_capability','desc')->get();
-       $data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$data['orders'][0]->order_equipment)->get();
-       return view('pages/occ/review-form',$data);
+      //   dd($data);
+       if($data['orders'][0]->order_status ==1)
+       {
+         $data['urgency'] = DB::table('urgency')->get();
+         $data['manpower'] = DB::table('manpower')->orderBy('manpower_capability','desc')->get();
+         $data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$data['orders'][0]->order_equipment)->get();
+         return view('pages/occ/review-form',$data);
+       }
+       else {
+         return redirect('occ/preview-order');
+       }
     }
     public function allocateOrder($id,Request $request)
     {
         $order = Order::find($id);
-        $order->order_status = 5;
-        $order->order_urgency = $request->urgency;
+        if($order->order_status ==1)
+        {
+          $order->order_status = 5;
+          $order->order_urgency = $request->urgency;
 
-        $manorder = new OrderManpower;
-        $manorder->order_id = $order->order_id;
-        $manorder->manpower_id = $request->operator;
-        $manorder->om_type = "operator";
-        $manorder->save();
-        foreach($request->wingman as $key => $value){
-                $wingorder = new OrderManpower;
-                $wingorder->order_id = $order->order_id;
-                $wingorder->manpower_id = $request->wingman[$key];
-                $wingorder->om_type = "wingman";
-                $wingorder->save();
-        }
-        $order->order_em = $request->alloceqp;
-        $order->save();
-
-        // $now = Carbon::now();
-        // $now = Carbon::parse($now);
-        // $now = $now->format('Y-m-d');
-
-        $datestart = Carbon::parse($order->order_start);
-        $datestart = $datestart->format('H');
-        $datestart  = (int) $datestart;
-
-        $dateend = Carbon::parse($order->order_end);
-        $dateend= $dateend->format('H.i');
-        $dateend  = (float) $dateend;
-        $dateend = (int) ceil($dateend);
-
-
-        $ds = Carbon::parse($order->order_start)->format('Y-m-d');
-        $timeslot = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$ds)->first();
-
-
-        // $datestart = $datestart->format('H.i');
-        // $datestart  = (float) $datestart;
-        // $datestart = (int) ceil($datestart);
-
-        if(isset($timeslot)){
-          $updateslot = $timeslot->et_timeslot;
-          for($i=$datestart;$i<=$dateend;$i++){
-             $updateslot[$i] = 1;
+          $manorder = new OrderManpower;
+          $manorder->order_id = $order->order_id;
+          $manorder->manpower_id = $request->operator;
+          $manorder->om_type = "operator";
+          $manorder->save();
+          foreach($request->wingman as $key => $value){
+                  $wingorder = new OrderManpower;
+                  $wingorder->order_id = $order->order_id;
+                  $wingorder->manpower_id = $request->wingman[$key];
+                  $wingorder->om_type = "wingman";
+                  $wingorder->save();
           }
-          $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
-        }
-        else {
-          $ts = new EquipmentTimeslot;
-          $ts->et_equipment = $order->order_em;
-          $time= "000000000000000000000000";
-          for($i=$datestart;$i<=$dateend;$i++){
-             $time[$i] = 1;
+          $order->order_em = $request->alloceqp;
+          $order->save();
+
+          // $now = Carbon::now();
+          // $now = Carbon::parse($now);
+          // $now = $now->format('Y-m-d');
+
+          $datestart = Carbon::parse($order->order_start);
+          $datestart = $datestart->format('H');
+          $datestart  = (int) $datestart;
+
+          $dateend = Carbon::parse($order->order_end);
+          $dateend= $dateend->format('H');
+          $dateend  = (int) $dateend;
+
+
+          $ds = Carbon::parse($order->order_start)->format('Y-m-d');
+          $timeslot = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$ds)->first();
+
+
+          // $datestart = $datestart->format('H.i');
+          // $datestart  = (float) $datestart;
+          // $datestart = (int) ceil($datestart);
+
+          if(isset($timeslot)){
+            $updateslot = $timeslot->et_timeslot;
+            for($i=$datestart;$i<=$dateend;$i++){
+               $updateslot[$i] = 1;
+            }
+            $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
           }
-          $ts->et_timeslot = $time;
-          $ts->et_date = $ds;
-          $ts->save();
+          else {
+            $ts = new EquipmentTimeslot;
+            $ts->et_equipment = $order->order_em;
+            $time= "000000000000000000000000";
+            for($i=$datestart;$i<=$dateend;$i++){
+               $time[$i] = 1;
+            }
+            $ts->et_timeslot = $time;
+            $ts->et_date = $ds;
+            $ts->save();
+          }
         }
         return Redirect('occ/preview-order');
     }
@@ -364,6 +375,7 @@ class occController extends Controller
           $q->where('equipment_timeslot.et_date',$now)
           ->orWhere('equipment_timeslot.et_date',null);
       })->get();
+      $data['nav'] = 'history-occ';
       return view('pages/occ/allocation',$data);
     }
 

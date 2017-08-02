@@ -1,0 +1,82 @@
+@extends('master.master')
+
+@section('judul')
+<i class="fa fa-list"></i>{{$alloc[0]->equipment_model}} Allocation
+@stop
+
+@section('content')
+<style media="screen">
+    td{
+      background-color: white;
+    }
+</style>
+<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+              <th>Inventory Number</th>
+              <th>00:00</th>
+              <th>01:00</th>
+              <th>02:00</th>
+              <th>03:00</th>
+              <th>04:00</th>
+              <th>05:00</th>
+              <th>06:00</th>
+              <th>07:00</th>
+              <th>08:00</th>
+              <th>09:00</th>
+              <th>10:00</th>
+              <th>11:00</th>
+              <th>12:00</th>
+              <th>13:00</th>
+              <th>14:00</th>
+              <th>15:00</th>
+              <th>16:00</th>
+              <th>17:00</th>
+              <th>18:00</th>
+              <th>19:00</th>
+              <th>20:00</th>
+              <th>21:00</th>
+              <th>22:00</th>
+              <th>23:00</th>
+            </tr>
+        </thead>
+        <!-- <tfoot>
+          <tr>
+            <th></th>
+          </tr>
+        </tfoot> -->
+        <tbody>
+          @foreach($alloc as $al)
+          <tr>
+            <td>
+              {{$al->em_no_inventory}}
+            </td>
+            @if($al->et_timeslot != null)
+              @for ($i = 0; $i < 24; $i++)
+                @if($al->et_timeslot[$i])
+                  <td style="background-color:red"></td>
+                @else
+                  <td></td>
+                @endif
+                <!-- <td>{{$al->et_timeslot[$i]}}</td> -->
+              @endfor
+            @else
+              @for ($i = 0; $i < 24; $i++)
+                  <td></td>
+              @endfor
+            @endif
+          </tr>
+          @endforeach
+        </tbody>
+</table>
+
+<script type="text/javascript" src="{{url('/')}}/plugin/sweetalert/sweetalert2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').DataTable({
+  "scrollX": true
+});
+} );
+</script>
+@stop

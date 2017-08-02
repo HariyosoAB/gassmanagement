@@ -1,0 +1,38 @@
+-A/C Reg : dikasih bawahnya contoh PK-GAG
+-A/C Type data: query bener B-777
+-Maintenance type : masih dicari 
+-Address ganti station : pake list query
+-airline : query tapi bisa other
+-urgency di customer
+-ticket sama SWOCWO, SWO/CWO di input customer, ticket generate kek biasa
+-cancel sebelum eksekusi
+-End time bulet keatas
+-di completed order ada statusnya ontime atau delay
+-tombol review order jadi manage order
+-dari revew order bisa didelay
+- all order juga ada completed on time atau delay
+- all order dicek, buat yang waiting for execution kalo start udah telat merahin
+- time-frame 30menit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
