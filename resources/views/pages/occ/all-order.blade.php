@@ -33,9 +33,15 @@
         </tfoot>
         <tbody>
           @foreach($orders as $order)
-          <tr>
+          <tr @if($order->order_status == 10) class="danger" @endif>
             <td>{{$order->order_swo}}</td>
-            <td>{{$order->order_start}}</td>
+            <td>
+              {{$order->order_start}}
+              @isset($order->order_delayed_until)
+              <br>
+              <strong style="color:red">Delayed until {{$order->order_delayed_until}}</strong>
+              @endisset
+            </td>
             <td>{{$order->order_end}}</td>
             <td>{{$order->equipment_model}}</td>
             <td>{{$order->maintenance_description}}</td>
@@ -50,7 +56,7 @@
               @elseif($order->order_status == 5)
                 Waiting For Execution
               @elseif($order->order_status == 10)
-                Delayed until {{$prog->order_delayed_until}}
+                Delayed
               @elseif($order->order_status == 9)
                 Cancelled
 

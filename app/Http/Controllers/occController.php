@@ -6,14 +6,16 @@ use Illuminate\Http\Request;
 use App\Order;
 use App\ProblemTagging;
 use App\OrderManpower;
+use App\EquipmentTimeslot;
 use DB;
 use Carbon\Carbon;
 class occController extends Controller
 {
 
     public function checkLateExec(Order $order){
-      $now = Carbon::now();
+      $now = Carbon::now('Asia/Jakarta');
       $now = $now->toDateTimeString();
+
       $startTime = Carbon::parse($order->order_start);
       $execTime = Carbon::parse($now);
       $totalDuration = $execTime->diffInMinutes($startTime);
@@ -38,7 +40,7 @@ class occController extends Controller
 
     public function problemTag($id,Request $request){
         $order= Order::find($id);
-        $now = Carbon::now();
+        $now = Carbon::now('Asia/Jakarta');
         $now = $now->toDateTimeString();
 
         foreach($request->reason as $key => $value){
@@ -76,7 +78,7 @@ class occController extends Controller
 
     public function finishOrder($id){
       $order = Order::find($id);
-      $now = Carbon::now();
+      $now = Carbon::now('Asia/Jakarta');
       $now = $now->toDateTimeString();
 
 
@@ -87,7 +89,7 @@ class occController extends Controller
       if($execTime->gt($startTime) && $totalDuration > 15)
       {
         $data['order'] = $order;
-        $data['time'] = Carbon::now();
+        $data['time'] = Carbon::now('Asia/Jakarta');
         $data['problems'] = DB::table('root_cause')->get();
         $data['time'] = $data['time']->toDateTimeString();
         $data['delay'] = "finish";
@@ -143,7 +145,7 @@ class occController extends Controller
         }
         else {
             $data['order'] = $order;
-            $data['time'] = Carbon::now();
+            $data['time'] = Carbon::now('Asia/Jakarta');
             $data['problems'] = DB::table('root_cause')->get();
             $data['time'] = $data['time']->toDateTimeString();
             $data['delay'] = "execute";
@@ -288,7 +290,6 @@ class occController extends Controller
     }
     public function allocateOrder($id,Request $request)
     {
-      //rombak disini
         $order = Order::find($id);
         $order->order_status = 5;
         $order->order_urgency = $request->urgency;
@@ -307,7 +308,63 @@ class occController extends Controller
         }
         $order->order_em = $request->alloceqp;
         $order->save();
+
+        // $now = Carbon::now();
+        // $now = Carbon::parse($now);
+        // $now = $now->format('Y-m-d');
+
+        $datestart = Carbon::parse($order->order_start);
+        $datestart = $datestart->format('H');
+        $datestart  = (int) $datestart;
+
+        $dateend = Carbon::parse($order->order_end);
+        $dateend= $dateend->format('H.i');
+        $dateend  = (float) $dateend;
+        $dateend = (int) ceil($dateend);
+
+
+        $ds = Carbon::parse($order->order_start)->format('Y-m-d');
+        $timeslot = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$ds)->first();
+
+
+        // $datestart = $datestart->format('H.i');
+        // $datestart  = (float) $datestart;
+        // $datestart = (int) ceil($datestart);
+
+        if(isset($timeslot)){
+          $updateslot = $timeslot->et_timeslot;
+          for($i=$datestart;$i<=$dateend;$i++){
+             $updateslot[$i] = 1;
+          }
+          $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
+        }
+        else {
+          $ts = new EquipmentTimeslot;
+          $ts->et_equipment = $order->order_em;
+          $time= "000000000000000000000000";
+          for($i=$datestart;$i<=$dateend;$i++){
+             $time[$i] = 1;
+          }
+          $ts->et_timeslot = $time;
+          $ts->et_date = $ds;
+          $ts->save();
+        }
         return Redirect('occ/preview-order');
+    }
+
+    public function checkAllocation($id){
+      $now = Carbon::now();
+      $now = Carbon::parse($now);
+      $now = $now->format('Y-m-d');
+      $data['alloc'] = DB::table('equipment')
+      ->join('equipment_many','equipment.equipment_id','=','equipment_many.em_equipment')
+      ->leftjoin('equipment_timeslot','equipment_many.em_id','=','equipment_timeslot.et_equipment')
+      ->where('equipment.equipment_id',$id)
+      ->where(function ($q) use ($now){
+          $q->where('equipment_timeslot.et_date',$now)
+          ->orWhere('equipment_timeslot.et_date',null);
+      })->get();
+      return view('pages/occ/allocation',$data);
     }
 
 

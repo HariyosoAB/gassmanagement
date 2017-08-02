@@ -53,4 +53,7 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::post('/problem-tagging/{id}','occController@problemTag');
     Route::post('/delayorder/{id}','occController@delayOrder');
 
+    Route::get('/checkallocation/{id}','occController@checkAllocation');
+
+
 });

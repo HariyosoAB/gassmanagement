@@ -107,17 +107,21 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
             </div>
           </div>
           <div class="row">
+
+
               <div class="col-md-6 form-group">
                 <label>{{$orders[0]->equipment_model}} Allocation</label>
                 <select class="form-control" name="alloceqp" required>
                     <option value=""></option>
+                    <optgroup label="{{$orders[0]->equipment_description}}">
                     @foreach($equipment as $equip)
-                      <optgroup label="{{$orders[0]->equipment_description}}">
                         <option value="{{$equip->em_id}}">-No Inventory: {{$equip->em_no_inventory}}</option>
-                      </optgroup>
                     @endforeach
+                    </optgroup>
+
                 </select>
               </div>
+
               <div class="col-md-6 form-group">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <label>Urgency</label>
@@ -138,9 +142,17 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
 
     <div class="row">
       <div class="form-group col-md-4">
-        <button type="submit" class="btn btn-primary">Approve</button>
+        <button type="submit" class="btn btn-primary" style="float:left">Approve</button>
+        <div class="" style="float:left;margin-left:10px">
+          <a href="{{url('/')}}/occ/checkallocation/{{$orders[0]->equipment_id}}" target="_blank">
+            <div class="btn btn-info" >
+              Check equipment allocation
+            </div>
+          </a>
+        </div>
       </div>
     </div>
+
 </form>
 <script type="text/javascript">
  $(document).ready(function(){
