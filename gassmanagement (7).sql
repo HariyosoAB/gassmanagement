@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 02, 2017 at 03:38 AM
+-- Generation Time: Aug 03, 2017 at 02:34 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.3
 
@@ -99,7 +99,7 @@ CREATE TABLE `equipment_many` (
 --
 
 INSERT INTO `equipment_many` (`em_id`, `em_no_inventory`, `em_part_number`, `em_status_on_service`, `em_servicable`, `em_equipment`) VALUES
-(1, '203', '2012319', 1, 1, 2),
+(1, '203', '2012319', 0, 1, 2),
 (2, '103', '123k12', 0, 1, 1),
 (3, '204', '12419', 0, 1, 2);
 
@@ -112,16 +112,9 @@ INSERT INTO `equipment_many` (`em_id`, `em_no_inventory`, `em_part_number`, `em_
 CREATE TABLE `equipment_timeslot` (
   `et_id` int(11) NOT NULL,
   `et_equipment` int(11) NOT NULL,
-  `et_timeslot` varchar(48) NOT NULL,
+  `et_timeslot` varchar(50) NOT NULL,
   `et_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `equipment_timeslot`
---
-
-INSERT INTO `equipment_timeslot` (`et_id`, `et_equipment`, `et_timeslot`, `et_date`) VALUES
-(1, 1, '000011111111111111100111', '2017-08-02');
 
 -- --------------------------------------------------------
 
@@ -161,10 +154,10 @@ CREATE TABLE `manpower` (
 --
 
 INSERT INTO `manpower` (`manpower_id`, `manpower_nama`, `manpower_no_pegawai`, `manpower_capability`, `manpower_status`) VALUES
-(1, 'Ashfly Faunal', '592529', 'Towing', 1),
-(2, 'Riyohaso Riao Mibo', '583591', 'Wingman', 1),
+(1, 'Ashfly Faunal', '592529', 'Towing', 0),
+(2, 'Riyohaso Riao Mibo', '583591', 'Wingman', 0),
 (3, 'Aditya Ikhsan', '592567', 'Test', 0),
-(4, 'Muh Rifatullah', '572562', 'Test', 0);
+(4, 'Muh Rifatullah', '572562', 'Test', 1);
 
 -- --------------------------------------------------------
 
@@ -176,6 +169,7 @@ CREATE TABLE `order_f` (
   `order_id` int(11) NOT NULL,
   `order_user` int(11) NOT NULL,
   `order_swo` varchar(140) DEFAULT NULL,
+  `order_ticket_number` varchar(20) NOT NULL,
   `order_equipment` int(11) DEFAULT NULL,
   `order_em` int(11) DEFAULT NULL,
   `order_start` datetime NOT NULL,
@@ -187,24 +181,16 @@ CREATE TABLE `order_f` (
   `order_maintenance_type` int(11) NOT NULL,
   `order_urgency` int(11) DEFAULT NULL,
   `order_airline` int(11) NOT NULL,
-  `order_address` varchar(500) NOT NULL,
+  `order_address` int(11) NOT NULL,
   `order_note` varchar(2000) DEFAULT NULL,
   `order_end` datetime DEFAULT NULL,
   `order_status` int(11) NOT NULL,
   `order_cancellation` varchar(2000) DEFAULT NULL,
   `order_delayed_until` datetime DEFAULT NULL,
+  `order_delayed_end` datetime NOT NULL,
   `order_execute_at` datetime DEFAULT NULL,
   `order_finished_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `order_f`
---
-
-INSERT INTO `order_f` (`order_id`, `order_user`, `order_swo`, `order_equipment`, `order_em`, `order_start`, `order_from`, `order_to`, `order_unit`, `order_ac_reg`, `order_ac_type`, `order_maintenance_type`, `order_urgency`, `order_airline`, `order_address`, `order_note`, `order_end`, `order_status`, `order_cancellation`, `order_delayed_until`, `order_execute_at`, `order_finished_at`) VALUES
-(46, 2, '8901199d91', 2, 1, '2017-08-02 21:00:00', 'Hangar 2', 'Hangar 2', 1, 'PK-2', 1, 1, 2, 1, 'Rumah', 'Yang bener aja', '2017-08-02 23:00:00', 5, NULL, NULL, NULL, NULL),
-(47, 2, 'b2d2f59932', 2, 1, '2017-08-02 04:00:00', 'Hangar 3', 'Hangar 4', 1, 'PK-2', 1, 1, 2, 1, 'blabla', 'blabla', '2017-08-02 18:00:00', 5, NULL, NULL, NULL, NULL),
-(48, 2, 'bf48cb37a1', 2, NULL, '2017-08-02 08:00:00', 'Hangar 2', 'Hangar 3', 1, 'PK-3', 1, 1, NULL, 1, 'oija', 'bisain dah ya', '2017-08-02 12:00:00', 1, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -218,20 +204,6 @@ CREATE TABLE `order_manpower` (
   `manpower_id` int(11) NOT NULL,
   `om_type` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `order_manpower`
---
-
-INSERT INTO `order_manpower` (`om_id`, `order_id`, `manpower_id`, `om_type`) VALUES
-(21, 46, 1, 'operator'),
-(22, 46, 1, 'wingman'),
-(23, 47, 1, 'operator'),
-(24, 47, 2, 'wingman'),
-(25, 47, 1, 'wingman'),
-(26, 47, 1, 'operator'),
-(27, 47, 2, 'wingman'),
-(28, 47, 1, 'wingman');
 
 -- --------------------------------------------------------
 
@@ -270,6 +242,17 @@ INSERT INTO `root_cause` (`rc_id`, `rc_name`, `rc_description`, `rc_pemutihan`) 
 (5, 'Fuel Issue', '--', 0),
 (6, 'Service Issue', '--', 0),
 (7, 'A/C Technician Issue', '--', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `station`
+--
+
+CREATE TABLE `station` (
+  `station_id` int(11) NOT NULL,
+  `station_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -337,7 +320,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `user_nama`, `user_no_pegawai`, `user_unit`, `user_subunit`, `user_telp`, `user_email`, `user_jabatan`, `user_role`, `password`, `remember_token`) VALUES
 (1, 'ario bimo', 'admin', 'GSE', 'PG', '0812221923', 'masgondi234@yahoo.com', 'management', 1, '$2y$10$sJ2V8gV6/QYqoi/6ASmlCuz/liZXaApEHmwKVfCYWDejk9cs.bpYm', 'gssFfC9vrvufMR2RkD0KVAo006DZAzfFNCGytvnRpmlpj348jdWIT7RqEimY'),
 (2, 'Ario Bimo', '581582', 'GASS', 'PG', '08121034567', 'masgondi234@gmail.com', 'staff', 1, '$2y$10$l3kKAfI2EAU22P.Ph1nbWeI7cVPClOx5G.4VGs3laxsUIuzPWkUpq', 'uQimeJ5vksvilxwMka9R09JISb3RgfzKnAKICFtacsNSHQWOKeC731org3AR'),
-(3, 'Shafly Naufal', '581593', 'GASS', 'PG', '08132394834', 'shafly96@gmail.com', 'OCC', 2, '$2y$10$l3kKAfI2EAU22P.Ph1nbWeI7cVPClOx5G.4VGs3laxsUIuzPWkUpq', 'RaOHkAdXlwnEc5IsmvZPobfqhOm87zowj3Lnirwhazl5nAMA5eRwO3MTleL6');
+(3, 'Shafly Naufal', '581593', 'GASS', 'PG', '08132394834', 'shafly96@gmail.com', 'OCC', 2, '$2y$10$l3kKAfI2EAU22P.Ph1nbWeI7cVPClOx5G.4VGs3laxsUIuzPWkUpq', 'cOCGcSQL101XgdREZf0WxKKYLubMEOSZ8DfNmruosgyLzfrznCo4vcjCbIGU');
 
 --
 -- Indexes for dumped tables
@@ -400,7 +383,8 @@ ALTER TABLE `order_f`
   ADD KEY `order_start_2` (`order_start`),
   ADD KEY `order_em` (`order_em`),
   ADD KEY `order_unit` (`order_unit`),
-  ADD KEY `order_maintenance_type` (`order_maintenance_type`);
+  ADD KEY `order_maintenance_type` (`order_maintenance_type`),
+  ADD KEY `order_address` (`order_address`);
 
 --
 -- Indexes for table `order_manpower`
@@ -423,6 +407,12 @@ ALTER TABLE `problem_tagging`
 --
 ALTER TABLE `root_cause`
   ADD PRIMARY KEY (`rc_id`);
+
+--
+-- Indexes for table `station`
+--
+ALTER TABLE `station`
+  ADD PRIMARY KEY (`station_id`);
 
 --
 -- Indexes for table `unit`
@@ -472,7 +462,7 @@ ALTER TABLE `equipment_many`
 -- AUTO_INCREMENT for table `equipment_timeslot`
 --
 ALTER TABLE `equipment_timeslot`
-  MODIFY `et_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `et_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `maintenance`
 --
@@ -487,22 +477,27 @@ ALTER TABLE `manpower`
 -- AUTO_INCREMENT for table `order_f`
 --
 ALTER TABLE `order_f`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 --
 -- AUTO_INCREMENT for table `order_manpower`
 --
 ALTER TABLE `order_manpower`
-  MODIFY `om_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `om_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 --
 -- AUTO_INCREMENT for table `problem_tagging`
 --
 ALTER TABLE `problem_tagging`
-  MODIFY `pt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `pt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT for table `root_cause`
 --
 ALTER TABLE `root_cause`
   MODIFY `rc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `station`
+--
+ALTER TABLE `station`
+  MODIFY `station_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `unit`
 --
@@ -545,6 +540,7 @@ ALTER TABLE `order_f`
   ADD CONSTRAINT `order_f_ibfk_13` FOREIGN KEY (`order_equipment`) REFERENCES `equipment` (`equipment_id`) ON DELETE NO ACTION,
   ADD CONSTRAINT `order_f_ibfk_14` FOREIGN KEY (`order_maintenance_type`) REFERENCES `maintenance` (`maintenance_id`) ON DELETE NO ACTION,
   ADD CONSTRAINT `order_f_ibfk_15` FOREIGN KEY (`order_unit`) REFERENCES `unit` (`unit_id`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `order_f_ibfk_16` FOREIGN KEY (`order_address`) REFERENCES `station` (`station_id`) ON DELETE NO ACTION,
   ADD CONSTRAINT `order_f_ibfk_3` FOREIGN KEY (`order_ac_type`) REFERENCES `actype` (`actype_id`) ON DELETE NO ACTION;
 
 --
