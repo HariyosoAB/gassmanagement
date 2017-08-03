@@ -309,58 +309,58 @@ class occController extends Controller
           $manorder->order_id = $order->order_id;
           $manorder->manpower_id = $request->operator;
           $manorder->om_type = "operator";
-          $manorder->save();
+        //  $manorder->save();
           foreach($request->wingman as $key => $value){
                   $wingorder = new OrderManpower;
                   $wingorder->order_id = $order->order_id;
                   $wingorder->manpower_id = $request->wingman[$key];
                   $wingorder->om_type = "wingman";
-                  $wingorder->save();
+                  //$wingorder->save();
           }
           $order->order_em = $request->alloceqp;
-          $order->save();
-
-          // $now = Carbon::now();
-          // $now = Carbon::parse($now);
-          // $now = $now->format('Y-m-d');
-
-          $datestart = Carbon::parse($order->order_start);
-          $datestart = $datestart->format('H');
-          $datestart  = (int) $datestart;
-
-          $dateend = Carbon::parse($order->order_end);
-          $dateend= $dateend->format('H');
-          $dateend  = (int) $dateend;
-
-
-          $ds = Carbon::parse($order->order_start)->format('Y-m-d');
-          $timeslot = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$ds)->first();
-
+        //  $order->save();
 
           // $datestart = $datestart->format('H.i');
           // $datestart  = (float) $datestart;
           // $datestart = (int) ceil($datestart);
+          $this->changeAlloc($order);
 
-          if(isset($timeslot)){
-            $updateslot = $timeslot->et_timeslot;
-            for($i=$datestart;$i<=$dateend;$i++){
-               $updateslot[$i] = 1;
-            }
-            $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
-          }
-          else {
-            $ts = new EquipmentTimeslot;
-            $ts->et_equipment = $order->order_em;
-            $time= "000000000000000000000000";
-            for($i=$datestart;$i<=$dateend;$i++){
-               $time[$i] = 1;
-            }
-            $ts->et_timeslot = $time;
-            $ts->et_date = $ds;
-            $ts->save();
-          }
         }
         return Redirect('occ/preview-order');
+    }
+
+    public function changeAlloc(Order $order){
+      $ds = Carbon::parse($order->order_start)->format('Y-m-d');
+      $timeslot = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$ds)->first();
+      $datestart = Carbon::parse($order->order_start);
+      $datestart = $datestart->format('H.i');
+      dd($datestart);
+      $datestart  = (int) $datestart;
+
+      $dateend = Carbon::parse($order->order_end);
+      $dateend= $dateend->format('H');
+      $dateend  = (int) $dateend;
+
+      if(isset($timeslot)){
+        $updateslot = $timeslot->et_timeslot;
+        for($i=$datestart;$i<=$dateend;$i++){
+           $updateslot[$i] = 1;
+        }
+        $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
+        return;
+      }
+      else {
+        $ts = new EquipmentTimeslot;
+        $ts->et_equipment = $order->order_em;
+        $time= "000000000000000000000000000000000000000000000000";
+        for($i=$datestart;$i<=$dateend;$i++){
+           $time[$i] = 1;
+        }
+        $ts->et_timeslot = $time;
+        $ts->et_date = $ds;
+        $ts->save();
+        return;
+      }
     }
 
     public function checkAllocation($id){

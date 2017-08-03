@@ -17,6 +17,8 @@ class customerController extends Controller
         $data['units'] = DB::table('unit')->get();
         $data['actype'] = DB::table('actype')->get();
         $data['equipment'] = DB::table('equipment')->get();
+        $data['station'] = DB::table('station')->get();
+        $data['urgency'] = DB::table('urgency')->get();
 
 
         return view('pages/customer/create-order', $data);
@@ -29,6 +31,9 @@ class customerController extends Controller
       $data['units'] = DB::table('unit')->get();
       $data['actype'] = DB::table('actype')->get();
       $data['equipment'] = DB::table('equipment')->get();
+      $data['station'] = DB::table('station')->get();
+      $data['urgency'] = DB::table('urgency')->get();
+
       return view('pages/customer/edit-order',$data);
     }
 
@@ -37,10 +42,11 @@ class customerController extends Controller
         $order = Order::find($id);
 
         if($order->order_status == 1){
+          $order->order_swo = $request->swo;
           $order->order_equipment = $request->equipment;
           $order->order_start = $request->start;
           $order->order_end = $request->end;
-
+          $order->order_urgency = $request->urgency;
           if(null != $request->fromnew)
           {
             $order->order_from = $request->fromnew;
@@ -80,7 +86,10 @@ class customerController extends Controller
         $order->order_start = $request->start;
         $order->order_end = $request->end;
         $dt = Carbon::now();
-        $order->order_swo = substr(hash('md5', $dt),0,10);
+        $order->order_ticket_number = substr(hash('md5', $dt),0,10);
+        $order->order_swo = $request->swo;
+        $order->order_urgency = $request->urgency;
+
         if(null != $request->fromnew)
         {
           $order->order_from = $request->fromnew;

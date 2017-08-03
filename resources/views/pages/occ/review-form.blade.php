@@ -122,16 +122,7 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
                 </select>
               </div>
 
-              <div class="col-md-6 form-group">
-                <input type="hidden" name="_token" value="{{csrf_token()}}">
-                <label>Urgency</label>
-                <select class="form-control" name="urgency" required>
-                    <option value=""></option>
-                    @foreach($urgency as $urgen)
-                      <option value="{{$urgen->urgency_id}}">{{$urgen->urgency_level}}</option>
-                    @endforeach
-                </select>
-              </div>
+            
           </div>
 
       </div>

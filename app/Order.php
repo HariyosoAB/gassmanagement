@@ -13,6 +13,7 @@ class Order extends Model
     [
       'order_user',
       'order_swo',
+      'order_ticket_number',
       'order_equipment',
       'order_start',
       'order_from',
@@ -29,6 +30,7 @@ class Order extends Model
       'order_status',
       'order_cancellation',
       'order_delayed_until',
+      'order_delayed_end',
       'order_execute_at',
       'order_finished_at',
     ];

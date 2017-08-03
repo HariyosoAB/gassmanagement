@@ -9,6 +9,13 @@ edit order
 	<div class="col-md-6" style="padding:0">
 		<div class="row">
 			<div class="form-group col-md-7">
+				<label>SWO Number</label>
+				<input class="form-control" type="text" name="swo" value="{{$fields->order_swo}}"required>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="form-group col-md-7">
 				<label>Equipment</label>
 				<select class="form-control inputs" name="equipment" required>
           <option value=""></option>
@@ -86,6 +93,18 @@ edit order
 	</div>
 	<div class="col-md-6" style="padding:0">
 		<div class="row">
+			<div class="col-md-8 form-group">
+				<input type="hidden" name="_token" value="{{csrf_token()}}">
+				<label>Urgency</label>
+				<select class="form-control" name="urgency" required>
+					<option value=""></option>
+					@foreach($urgency as $urgen)
+					<option value="{{$urgen->urgency_id}}" @if($urgen->urgency_id == $fields->order_urgency) selected @endif>{{$urgen->urgency_level}}</option>
+					@endforeach
+				</select>
+			</div>
+		</div>
+		<div class="row">
 			<div class="form-group col-md-8">
 				<label>Maintenance Type</label>
 				<select class="form-control inputs" name="maintenance" value="{{$fields->order_maintenance_type}}" required>
@@ -98,8 +117,14 @@ edit order
 		</div>
 		<div class="row">
 			<div class="form-group col-md-8">
-				<label>Address</label>
-				<input type="text" class="form-control inputs" name="address" value="{{$fields->order_address}}"required>
+				<label>Station</label>
+				<select class="form-control" name="address" required>
+					@foreach($station as $stat)
+					<option value=""></option>
+						<option value="{{$stat->station_id}}" @if($stat->station_id == $fields->order_address) selected @endif>{{$stat->station_name}}</option>
+					@endforeach
+
+				</select>
 			</div>
 		</div>
 		<div class="row">

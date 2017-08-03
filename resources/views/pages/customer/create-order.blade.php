@@ -8,6 +8,12 @@ create order
 <form method="post" action="{{url('/')}}/cust/create-order">
 	<div class="col-md-6" style="padding:0">
 		<div class="row">
+			<div class="form-group col-md-7">
+				<label>SWO Number</label>
+				<input class="form-control"type="text" name="swo" required>
+			</div>
+		</div>
+		<div class="row">
 			<div class="form-group col-md-9">
 				<label>Equipment</label>
 				<select class="form-control inputs inputs" name="equipment" required>
@@ -86,6 +92,18 @@ create order
 	</div>
 	<div class="col-md-6" style="padding:0">
 		<div class="row">
+			<div class="col-md-8 form-group">
+				<input type="hidden" name="_token" value="{{csrf_token()}}">
+				<label>Urgency</label>
+				<select class="form-control" name="urgency" required>
+					<option value=""></option>
+					@foreach($urgency as $urgen)
+					<option value="{{$urgen->urgency_id}}">{{$urgen->urgency_level}}</option>
+					@endforeach
+				</select>
+			</div>
+		</div>
+		<div class="row">
 			<div class="form-group col-md-8">
 				<label>Maintenance Type</label>
 				<select class="form-control inputs" name="maintenance" required>
@@ -98,8 +116,15 @@ create order
 		</div>
 		<div class="row">
 			<div class="form-group col-md-8">
-				<label>Address</label>
-				<input type="text" class="form-control inputs" name="address" required>
+				<label>Station</label>
+				<select class="form-control" name="address" required>
+					@foreach($station as $stat)
+					<option value=""></option>
+
+						<option value="{{$stat->station_id}}">{{$stat->station_name}}</option>
+					@endforeach
+
+				</select>
 			</div>
 		</div>
 		<div class="row">
