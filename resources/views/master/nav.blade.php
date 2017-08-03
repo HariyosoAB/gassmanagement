@@ -12,6 +12,7 @@
 		@if(Auth::user()->user_role==2)
 		<button id="order-occ"  onclick="window.location.href='{{url('')}}/occ/preview-order'" <?php if($nav=="preview") echo "class='active'";?>><i class="fa fa-shopping-cart" aria-hidden="true"></i>Review Order</button>
 		<button id="history-occ"><i class="fa fa-history" aria-hidden="true"></i>History</button>
+		<button id="alokasi-occ" onclick="window.location.href='{{url('')}}/occ/allocation'" <?php if($nav=="alokasi-occ") echo "class='active'";?>><i class="fa fa-pie-chart" aria-hidden="true"></i>Allocation</button>
 		<button id="settings-occ"><i class="fa fa-cogs" aria-hidden="true"></i>Settings</button>
 		<script>
 			<?php if($nav=="history-occ") echo "window.onload = function () {document.querySelector('#history-occ').click();}";?>
@@ -45,6 +46,7 @@
 			<a href="{{url('')}}/occ/canceled"><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
 			<a href="{{url('')}}/occ/all-order"><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
 		</div>
+		<div id="sub-menu-alokasi-occ" style="display:none"></div>
 		<div id="sub-menu-settings-occ" style="display:none">
 			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Equipment Data</a>
 			<a href=""><i class="fa fa-plane" aria-hidden="true"></i>Airline Data</a>
@@ -88,6 +90,7 @@
 			<a href=""><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
 			<a href=""><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
 		</div>
+		<button id="alokasi-occ2"><i class="fa fa-pie-chart" aria-hidden="true"></i>Allocation</button>
 		<button id="settings-occ2"><i class="fa fa-cogs" aria-hidden="true"></i>Settings</button>
 		<div class="sub-menu-history-cus2" id="sub-menu-settings-occ2" style="display:none">
 			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Equipment Data</a>
