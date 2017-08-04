@@ -87,6 +87,26 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
     <div class="row">
       <div class="col-md-6">
           <div class="row">
+            <div class="form-group col-md-5" style="margin-bottom:10px">
+                <button type="button" name="button" id="delaythis" class="btn btn-danger" style="float:left">Delay this order</button>
+                <button type="button" name="button" id="close" class="btn btn-primary" style="float:left;margin-left:10px;"><i class="fa fa-close" style="margin:0px"></i></button>
+            </div>
+          </div>
+
+          <div class="row" id="delayform">
+            <div class="form-group col-md-6">
+              <label>Delay Start Time</label>
+              <input class="form-control" type="text" id="delaystart" name="delaystart" value="">
+            </div>
+            <div class="form-group col-md-6">
+              <label>Delay End Time</label>
+              <input class="form-control" type="text" id="delayend" name="delayend" value="">
+            </div>
+          </div>
+
+
+
+          <div class="row">
             <div class="col-md-6 form-group">
                 <label>Operator</label>
                 <select class="form-control" name="operator" required>
@@ -111,6 +131,7 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
 
               <div class="col-md-6 form-group">
                 <label>{{$orders[0]->equipment_model}} Allocation</label>
+                <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <select class="form-control" name="alloceqp" required>
                     <option value=""></option>
                     <optgroup label="{{$orders[0]->equipment_description}}">
@@ -122,7 +143,7 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
                 </select>
               </div>
 
-            
+
           </div>
 
       </div>
@@ -148,6 +169,46 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
 <script type="text/javascript">
  $(document).ready(function(){
    $('#wing').select2();
+   $('#close').hide();
+   $('#delayform').hide();
+
  });
+
+ $(function() {
+   $('input[name="delaystart"]').daterangepicker({
+     timePicker: true,
+     singleDatePicker: true,
+     locale: {
+       format:'YYYY-MM-DD HH:mm:ss',
+     }
+   }).val('');
+ });
+ $(function() {
+   $('input[name="delayend"]').daterangepicker({
+     timePicker: true,
+     singleDatePicker: true,
+     locale: {
+       format:'YYYY-MM-DD HH:mm:ss',
+     }
+   }).val('');
+ });
+ $('#delaythis').click(function(){
+   $('#delayform').show(500);
+   $('#delaystart').prop('required',true);
+   $('#delayend').prop('required',true);
+   $('#close').show(500);
+ });
+
+ $('#close').click(function(){
+   $('#delaystart').val('');
+   $('#delayend').val('');
+   $('#delaystart').prop('required',false);
+   $('#delayend').prop('required',false);
+    $('#delayform').hide(500);
+    $('#close').hide(500);
+
+
+ });
+
 </script>
 @stop

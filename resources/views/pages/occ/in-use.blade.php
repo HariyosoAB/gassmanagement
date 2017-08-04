@@ -145,11 +145,16 @@
         <p class="judul" style="font-size:25px">Delay Form</p>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="row">
-          <div class="form-group col-md-10">
-            <label for="">Delay Until </label>
-              <input type="text" class="form-control inputs" name="delay" required/>
+          <div class="form-group col-md-5">
+            <label for="">Delay Start Time </label>
+              <input type="text" class="form-control inputs" name="delaystart" required/>
           </div>
-          
+          <div class="form-group col-md-5">
+            <label for="">Delay End Time </label>
+              <input type="text" class="form-control inputs" name="delayend" required/>
+          </div>
+
+
           @isset($mantabrak)
             @foreach($mantabrak as $man)
               @if($man->om_type == "operator")
@@ -166,8 +171,9 @@
         </div>
 
         <div class="row">
-          <div class="form-group col-md-4">
-            <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="form-group col-md-12">
+            <button type="submit" class="btn btn-primary" style="float:left">Submit</button>
+            <a href="{{url('/')}}/occ/checkallocation/{{$order->order_equipment}}" target="_blank" style="margin-left:10px"><div class="btn btn-info">Check Equipment Allocation</div></a>
           </div>
         </div>
 
@@ -182,7 +188,16 @@
  $(document).ready(function(){
 
    $(function() {
-     $('input[name="delay"]').daterangepicker({
+     $('input[name="delaystart"]').daterangepicker({
+       timePicker: true,
+       singleDatePicker: true,
+       locale: {
+         format:'YYYY-MM-DD HH:mm:ss',
+       }
+     });
+   });
+   $(function() {
+     $('input[name="delayend"]').daterangepicker({
        timePicker: true,
        singleDatePicker: true,
        locale: {
@@ -224,7 +239,6 @@
 
   $('#delaybutton').click(function(){
     $('#allocation').hide(500);
-
     $('#delay').show(500);
 
   });

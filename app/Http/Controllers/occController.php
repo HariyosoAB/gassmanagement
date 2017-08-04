@@ -82,7 +82,7 @@ class occController extends Controller
       $now = $now->toDateTimeString();
 
 
-      $startTime = Carbon::parse($order->order_start);
+      $startTime = Carbon::parse($order->order_end);
       $execTime = Carbon::parse($now);
       $totalDuration = $execTime->diffInMinutes($startTime);
 
@@ -115,60 +115,87 @@ class occController extends Controller
 
     public function executeOrder($id){
       $order= Order::find($id);
-
-      $equipment = DB::table('equipment_many')->where('em_id','=',$order->order_em)->get();
-      $data['mantabrak'] = DB::table('order_f')
-      ->join('order_manpower','order_f.order_id','=','order_manpower.order_id')
-      ->join('manpower','order_manpower.manpower_id','=','manpower.manpower_id')
-      ->where('manpower.manpower_status','=','1')
-      ->where('order_f.order_status','=',2)
-      ->whereIn('order_manpower.manpower_id',function($query) use ($order){
-        $query->select('manpower_id')
-        ->from('order_manpower')
-        ->where('order_id','=',$order->order_id);
-      })->get();
-    //  dd($data['mantabrak']);
-    //  dd($manpower);
-
-
-      if($equipment[0]->em_status_on_service == 1){
-        $data['eqtabrak'] = DB::table('order_f')
-        ->join('equipment','equipment.equipment_id','=','order_f.order_equipment')
-        ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
+      if($order->order_status == 5 || $order->order_status == 10)
+      {
+        $equipment = DB::table('equipment_many')->where('em_id','=',$order->order_em)->get();
+        $data['mantabrak'] = DB::table('order_f')
+        ->join('order_manpower','order_f.order_id','=','order_manpower.order_id')
+        ->join('manpower','order_manpower.manpower_id','=','manpower.manpower_id')
+        ->where('manpower.manpower_status','=','1')
         ->where('order_f.order_status','=',2)
-        ->where('order_f.order_em','=',$order->order_em)
-        ->get();
-      }
+        ->whereIn('order_manpower.manpower_id',function($query) use ($order){
+          $query->select('manpower_id')
+          ->from('order_manpower')
+          ->where('order_id','=',$order->order_id);
+        })->get();
+      //  dd($data['mantabrak']);
+      //  dd($manpower);
 
-      if(isset($data['mantabrak']) && $equipment[0]->em_status_on_service == 0){
 
-        if ($this->checkLateExec($order)) {
-            return Redirect('/occ/wait-exec');
+        if($equipment[0]->em_status_on_service == 1){
+          $data['eqtabrak'] = DB::table('order_f')
+          ->join('equipment','equipment.equipment_id','=','order_f.order_equipment')
+          ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
+          ->where('order_f.order_status','=',2)
+          ->where('order_f.order_em','=',$order->order_em)
+          ->get();
+        }
+
+        if(empty($data['mantabrak'][0]) && $equipment[0]->em_status_on_service == 0){
+
+          if ($this->checkLateExec($order)) {
+              return Redirect('/occ/wait-exec');
+          }
+          else {
+              $data['order'] = $order;
+              $data['time'] = Carbon::now('Asia/Jakarta');
+              $data['problems'] = DB::table('root_cause')->get();
+              $data['time'] = $data['time']->toDateTimeString();
+              $data['delay'] = "execute";
+              $data['nav'] = "history-occ";
+             return view('pages.occ.problem-tagging',$data);
+          }
         }
         else {
-            $data['order'] = $order;
-            $data['time'] = Carbon::now('Asia/Jakarta');
-            $data['problems'] = DB::table('root_cause')->get();
-            $data['time'] = $data['time']->toDateTimeString();
-            $data['delay'] = "execute";
-            $data['nav'] = "history-occ";
-           return view('pages.occ.problem-tagging',$data);
+          $data['order'] = $order;
+          $data['manpower'] = DB::table('manpower')->where('manpower_status','=',0)->get();
+          $data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$order->order_equipment)->where('em_status_on_service','=',0)->get();
+          $data['nav'] = "history-occ";
+          return view('pages.occ.in-use',$data);
         }
       }
-      else {
-        $data['order'] = $order;
-        $data['manpower'] = DB::table('manpower')->where('manpower_status','=',0)->get();
-        $data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$order->order_equipment)->where('em_status_on_service','=',0)->get();
-        $data['nav'] = "history-occ";
-        return view('pages.occ.in-use',$data);
-      }
-
+      return redirect('/occ/wait-exec');
     }
 
     public function delayOrder($id,Request $request)
     {
       $order = Order::find($id);
-      $order->order_delayed_until = $request->delay;
+
+      if(isset($order->order_delayed_until)){
+        $dels = Carbon::parse($order->order_delayed_until)->format('Y-m-d');
+        $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
+
+        $delaystart = Carbon::parse($order->order_delayed_until);
+        $delaystart = $delaystart->format('H.i');
+        $delsexplode = explode('.',$delaystart);
+        $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
+        $delaystart  = (int) $delaystart;
+
+        $delayend = Carbon::parse($order->order_delayed_end);
+        $delayend = $delayend->format('H.i');
+        $deleexplode = explode('.',$delayend);
+        $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
+        $delayend  = (int) $delayend;
+
+        $updateslot = $timeslotdel->et_timeslot;
+        for($i=$delaystart;$i<=$delayend;$i++){
+           $updateslot[$i] = 0;
+        }
+        $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslotdel->et_id)->update(['et_timeslot' => $updateslot]);
+      }
+      $order->order_delayed_until = $request->delaystart;
+      $order->order_delayed_end = $request->delayend;
+      $this->changeAlloc($order,"delayed");
       $order->order_status = 10;
 
       if(isset($request->optabrak))
@@ -303,64 +330,138 @@ class occController extends Controller
         if($order->order_status ==1)
         {
           $order->order_status = 5;
-          $order->order_urgency = $request->urgency;
-
           $manorder = new OrderManpower;
           $manorder->order_id = $order->order_id;
           $manorder->manpower_id = $request->operator;
           $manorder->om_type = "operator";
-        //  $manorder->save();
+          $manorder->save();
           foreach($request->wingman as $key => $value){
                   $wingorder = new OrderManpower;
                   $wingorder->order_id = $order->order_id;
                   $wingorder->manpower_id = $request->wingman[$key];
                   $wingorder->om_type = "wingman";
-                  //$wingorder->save();
+                  $wingorder->save();
           }
           $order->order_em = $request->alloceqp;
-        //  $order->save();
 
-          // $datestart = $datestart->format('H.i');
-          // $datestart  = (float) $datestart;
-          // $datestart = (int) ceil($datestart);
-          $this->changeAlloc($order);
+          if(isset($request->delaystart)){
+            if(isset($order->order_delayed_until)){
+              $dels = Carbon::parse($order->order_delayed_until)->format('Y-m-d');
+              $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
+
+              $delaystart = Carbon::parse($order->order_delayed_until);
+              $delaystart = $delaystart->format('H.i');
+              $delsexplode = explode('.',$delaystart);
+              $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
+              $delaystart  = (int) $delaystart;
+
+              $delayend = Carbon::parse($order->order_delayed_end);
+              $delayend = $delayend->format('H.i');
+              $deleexplode = explode('.',$delayend);
+              $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
+              $delayend  = (int) $delayend;
+
+              $updateslot = $timeslotdel->et_timeslot;
+              for($i=$delaystart;$i<=$delayend;$i++){
+                 $updateslot[$i] = 0;
+              }
+              $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
+            }
+            $order->order_delayed_until = $request->delaystart;
+            $order->order_delayed_end = $request->delayend;
+            $order->order_status = 10;
+            $this->changeAlloc($order,"delayed");
+          }
+          else {
+            $this->changeAlloc($order,"allocation");
+          }
+          $order->save();
 
         }
         return Redirect('occ/preview-order');
     }
 
-    public function changeAlloc(Order $order){
+    public function changeAlloc(Order $order,$stat){
       $ds = Carbon::parse($order->order_start)->format('Y-m-d');
       $timeslot = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$ds)->first();
       $datestart = Carbon::parse($order->order_start);
       $datestart = $datestart->format('H.i');
-      dd($datestart);
+      $dsexplode = explode('.',$datestart);
+      $datestart = (int) $dsexplode[0]*2 + (int) round((float) $dsexplode[1]/60);
       $datestart  = (int) $datestart;
 
       $dateend = Carbon::parse($order->order_end);
-      $dateend= $dateend->format('H');
+      $dateend = $dateend->format('H.i');
+      $deexplode = explode('.',$dateend);
+      $dateend = (int) $deexplode[0]*2 + (int) round((float) $deexplode[1]/60);
       $dateend  = (int) $dateend;
 
-      if(isset($timeslot)){
-        $updateslot = $timeslot->et_timeslot;
-        for($i=$datestart;$i<=$dateend;$i++){
-           $updateslot[$i] = 1;
+      if($stat== "delayed")
+      {
+        $dels = Carbon::parse($order->order_delayed_until)->format('Y-m-d');
+        $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
+
+        $delaystart = Carbon::parse($order->order_delayed_until);
+        $delaystart = $delaystart->format('H.i');
+        $delsexplode = explode('.',$delaystart);
+        $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
+        $delaystart  = (int) $delaystart;
+
+        $delayend = Carbon::parse($order->order_delayed_end);
+        $delayend = $delayend->format('H.i');
+        $deleexplode = explode('.',$delayend);
+        $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
+        $delayend  = (int) $delayend;
+
+        if(isset($timeslot)){
+          $updateslot = $timeslot->et_timeslot;
+          for($i=$datestart;$i<=$dateend;$i++){
+             $updateslot[$i] = 0;
+             $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
+          }
         }
-        $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
-        return;
+
+        if(isset($timeslotdel)){
+          $updatedelslot = $timeslotdel->et_timeslot;
+          for($i=$delaystart;$i<=$delayend;$i++){
+             $updateslot[$i] = 1;
+          }
+          $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslotdel->et_id)->update(['et_timeslot' => $updateslot]);
+        }
+        else {
+          $ts = new EquipmentTimeslot;
+          $ts->et_equipment = $order->order_em;
+          $time= "000000000000000000000000000000000000000000000000";
+          for($i=$delaystart;$i<=$delayend;$i++){
+             $time[$i] = 1;
+          }
+          $ts->et_timeslot = $time;
+          $ts->et_date = $dels;
+          $ts->save();
+        }
       }
       else {
-        $ts = new EquipmentTimeslot;
-        $ts->et_equipment = $order->order_em;
-        $time= "000000000000000000000000000000000000000000000000";
-        for($i=$datestart;$i<=$dateend;$i++){
-           $time[$i] = 1;
+        if(isset($timeslot)){
+          $updateslot = $timeslot->et_timeslot;
+          for($i=$datestart;$i<=$dateend;$i++){
+             $updateslot[$i] = 1;
+          }
+          $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
         }
-        $ts->et_timeslot = $time;
-        $ts->et_date = $ds;
-        $ts->save();
-        return;
+        else {
+          $ts = new EquipmentTimeslot;
+          $ts->et_equipment = $order->order_em;
+          $time= "000000000000000000000000000000000000000000000000";
+          for($i=$datestart;$i<=$dateend;$i++){
+             $time[$i] = 1;
+          }
+          $ts->et_timeslot = $time;
+          $ts->et_date = $ds;
+          $ts->save();
+        }
       }
+      return;
+
     }
 
     public function checkAllocation($id){

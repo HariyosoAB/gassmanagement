@@ -39,7 +39,7 @@
             <td>{{$order->airline_type}}</td>
             <td>
                 <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/allocate/{{$order->order_id}}" ><div class="btn btn-sm btn-primary">
-                  Review Order
+                  Manage Order
                 </div></a>
                 <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/deleteorder/{{$order->order_id}}"><div class="btn btn-sm btn-danger">
                   Delete Order

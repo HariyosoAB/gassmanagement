@@ -40,7 +40,12 @@
                 <strong style="color:red;">  Delayed Until {{$order->order_delayed_until}}</strong>
               @endisset
           </td>
-            <td>{{$order->order_end}}</td>
+            <td>{{$order->order_end}}
+              @isset($order->order_delayed_end)
+              <br>
+                <strong style="color:red;">  Delayed Until {{$order->order_delayed_end}}</strong>
+              @endisset
+            </td>
             <td>{{$order->equipment_model}} (No: {{$order->em_no_inventory}})</td>
             <td>{{$order->maintenance_description}}</td>
             <td>{{$order->airline_type}}</td>
