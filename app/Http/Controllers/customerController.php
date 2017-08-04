@@ -23,6 +23,32 @@ class customerController extends Controller
 
         return view('pages/customer/create-order', $data);
     }
+
+    public function detailForm($id){
+      $data['nav'] = "history";
+      // $data['fields'] = Order::find($id);
+      $data['fields'] = DB::table('order_f')
+      ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
+      ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
+      ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
+      ->join("actype", "actype.actype_id", "=", "order_f.order_ac_type")
+      ->join("equipment", "equipment.equipment_id", "=", "order_f.order_equipment")
+      ->join("station", "station.station_id", "=", "order_f.order_address")
+      ->join("urgency", "urgency.urgency_id", "=", "order_f.order_urgency")
+      ->where("order_f.order_id", "=", $id)
+      ->get();
+      // dd($data['fields']);
+      // $data['maintenance'] = DB::table('maintenance')->get();
+      // $data['airline'] = DB::table('airline')->get();
+      // $data['units'] = DB::table('unit')->get();
+      // $data['actype'] = DB::table('actype')->get();
+      // $data['equipment'] = DB::table('equipment')->get();
+      // $data['station'] = DB::table('station')->get();
+      // $data['urgency'] = DB::table('urgency')->get();
+
+      return view('pages/customer/detail-order',$data);
+    }
+
     public function editForm($id){
       $data['nav'] = "order";
       $data['fields'] = Order::find($id);
