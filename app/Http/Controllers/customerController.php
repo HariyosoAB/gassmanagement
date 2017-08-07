@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Order;
+use App\EquipmentTimeslot;
+
 use Redirect;
 use Auth;
 use DB;
@@ -174,10 +176,55 @@ class customerController extends Controller
 
     public function cancel($id,Request $request){
       $order = Order::find($id);
+      if($order->order_status == 5)
+      {
+        if(isset($order->order_delayed_until)){
+          $dels = Carbon::parse($order->order_delayed_until)->format('Y-m-d');
+          $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
+
+          $delaystart = Carbon::parse($order->order_delayed_until);
+          $delaystart = $delaystart->format('H.i');
+          $delsexplode = explode('.',$delaystart);
+          $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
+          $delaystart  = (int) $delaystart;
+
+          $delayend = Carbon::parse($order->order_delayed_end);
+          $delayend = $delayend->format('H.i');
+          $deleexplode = explode('.',$delayend);
+          $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
+          $delayend  = (int) $delayend;
+
+          $updateslot = $timeslotdel->et_timeslot;
+          for($i=$delaystart;$i<=$delayend;$i++){
+             $updateslot[$i] = 0;
+          }
+        }
+        else {
+          $dels = Carbon::parse($order->order_start)->format('Y-m-d');
+          $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
+
+          $delaystart = Carbon::parse($order->order_start);
+          $delaystart = $delaystart->format('H.i');
+          $delsexplode = explode('.',$delaystart);
+          $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
+          $delaystart  = (int) $delaystart;
+
+          $delayend = Carbon::parse($order->order_end);
+          $delayend = $delayend->format('H.i');
+          $deleexplode = explode('.',$delayend);
+          $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
+          $delayend  = (int) $delayend;
+
+          $updateslot = $timeslotdel->et_timeslot;
+          for($i=$delaystart;$i<=$delayend;$i++){
+             $updateslot[$i] = 0;
+           }
+          $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslotdel->et_id)->update(['et_timeslot' => $updateslot]);
+        }
+    }
       $order->order_status = 9;
       $order->order_cancellation = $request->reason;
       $order->save();
-
       return Redirect('cust/on-progress');
     }
 

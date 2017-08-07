@@ -85,7 +85,7 @@
                 <!-- <td>{{$al->et_timeslot[$i]}}</td> -->
               @endfor
             @else
-              @for ($i = 0; $i < 48; $i++)
+              @for($i = 0; $i < 48; $i++)
                   <td></td>
               @endfor
             @endif

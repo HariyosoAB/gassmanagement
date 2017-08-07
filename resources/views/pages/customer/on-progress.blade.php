@@ -52,10 +52,13 @@ on progress
                 @endif
             </td>
             <td>
+              @if($prog->order_status == 1 || $prog->order_status ==5 )
+              <div id="cancel" onclick="cancellation({{$prog->order_id}})" role="button" class="btn btn-danger btn-sm">
+                 Cancel Order
+              </div>
+              @endif
               @if($prog->order_status == 1)
-                <div id="cancel" onclick="cancellation({{$prog->order_id}})" role="button" class="btn btn-danger btn-sm">
-                   Cancel Order
-                </div>
+
                 <a href="{{url('/')}}/cust/order-edit/{{$prog->order_id}}"><div class="btn btn-primary btn-sm">
                    Edit Order
                 </div></a>

@@ -41,8 +41,8 @@
                 <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/allocate/{{$order->order_id}}" ><div class="btn btn-sm btn-primary">
                   Manage Order
                 </div></a>
-                <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/deleteorder/{{$order->order_id}}"><div class="btn btn-sm btn-danger">
-                  Delete Order
+                <a style="margin:5px;margin-left:0px" onclick="cancellation({{$order->order_id}})" ><div class="btn btn-sm btn-danger">
+                  Cancel Order
                 </div></a>
             </td>
           </tr>
@@ -57,5 +57,28 @@
 			responsive: true
 		});
 	} );
+
+  function cancellation(orderid){
+      swal({
+        title: "Are you sure?",
+        text: "You will not be able to recover this order data!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, cancel it!",
+      }).then(function(){
+        console.log(orderid);
+        swal({
+          title: "Cancellation",
+          text: "Please enter the reason of cancellation",
+          type: "info",
+          html: '<form action="<?php echo url('')."/occ/cancel/" ?>'+orderid+'" method="post">'+
+         '<div class="form-group" style="margin:10px 0px;"><input name="_token" value="<?php echo csrf_token() ?>"type="hidden"><textarea rows="10"name="reason" class="form-control" placeholder="Please enter the reason of cancellation" required></textarea></div>'+
+          '<div class="form-group" style="margin:10px 0px;"><button type="submit" class="btn btn-primary">Submit</button></div>'+
+         '</form>',
+         showConfirmButton: false
+       })
+      });
+    };
 </script>
 @stop

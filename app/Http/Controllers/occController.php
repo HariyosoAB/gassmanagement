@@ -12,6 +12,70 @@ use Carbon\Carbon;
 class occController extends Controller
 {
 
+  public function cancel($id,Request $request){
+    $order = Order::find($id);
+    if($order->order_status == 5)
+    {
+      $skrg = 1;
+      if(isset($order->order_delayed_until)){
+        $dels = Carbon::parse($order->order_delayed_until)->format('Y-m-d');
+        $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
+
+        $delaystart = Carbon::parse($order->order_delayed_until);
+        $delaystart = $delaystart->format('H.i');
+        $delsexplode = explode('.',$delaystart);
+        $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
+        $delaystart  = (int) $delaystart;
+
+        $delayend = Carbon::parse($order->order_delayed_end);
+        $delayend = $delayend->format('H.i');
+        $deleexplode = explode('.',$delayend);
+        $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
+        $delayend  = (int) $delayend;
+
+        $updateslot = $timeslotdel->et_timeslot;
+        for($i=$delaystart;$i<=$delayend;$i++){
+           $updateslot[$i] = 0;
+        }
+      }
+      else {
+        $dels = Carbon::parse($order->order_start)->format('Y-m-d');
+        $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
+
+        $delaystart = Carbon::parse($order->order_start);
+        $delaystart = $delaystart->format('H.i');
+        $delsexplode = explode('.',$delaystart);
+        $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
+        $delaystart  = (int) $delaystart;
+
+        $delayend = Carbon::parse($order->order_end);
+        $delayend = $delayend->format('H.i');
+        $deleexplode = explode('.',$delayend);
+        $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
+        $delayend  = (int) $delayend;
+
+        $updateslot = $timeslotdel->et_timeslot;
+        for($i=$delaystart;$i<=$delayend;$i++){
+           $updateslot[$i] = 0;
+         }
+        $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslotdel->et_id)->update(['et_timeslot' => $updateslot]);
+      }
+    }
+    else {
+      $skrg=0;
+    }
+
+    $order->order_status = 9;
+    $order->order_cancellation = $request->reason;
+    $order->save();
+    if($skrg == 1){
+      return Redirect('occ/wait-exec');
+    }
+    else {
+      return Redirect('occ/preview-order');
+    }
+  }
+
     public function checkLateExec(Order $order){
       $now = Carbon::now('Asia/Jakarta');
       $now = $now->toDateTimeString();
@@ -465,7 +529,7 @@ class occController extends Controller
     }
 
     public function checkAllocation($id){
-      $now = Carbon::now();
+      $now = Carbon::now('Asia/Jakarta');
       $now = Carbon::parse($now);
       $now = $now->format('Y-m-d');
       $data['alloc'] = DB::table('equipment')
@@ -477,6 +541,7 @@ class occController extends Controller
           ->orWhere('equipment_timeslot.et_date',null);
       })->get();
       $data['nav'] = 'history-occ';
+      //dd($data);
       return view('pages/occ/allocation',$data);
     }
 
