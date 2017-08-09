@@ -55,7 +55,7 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::post('/delayorder/{id}','occController@delayOrder');
 
     Route::get('/checkallocation/{id}','occController@checkAllocation');
-    Route::post('/cancel/{id}','customerController@cancel');
+    Route::post('/cancel/{id}','occController@cancel');
 
 
 });

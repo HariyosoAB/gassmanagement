@@ -179,47 +179,57 @@ class customerController extends Controller
       if($order->order_status == 5)
       {
         if(isset($order->order_delayed_until)){
-          $dels = Carbon::parse($order->order_delayed_until)->format('Y-m-d');
-          $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
-
-          $delaystart = Carbon::parse($order->order_delayed_until);
-          $delaystart = $delaystart->format('H.i');
-          $delsexplode = explode('.',$delaystart);
-          $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
-          $delaystart  = (int) $delaystart;
-
-          $delayend = Carbon::parse($order->order_delayed_end);
-          $delayend = $delayend->format('H.i');
-          $deleexplode = explode('.',$delayend);
-          $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
-          $delayend  = (int) $delayend;
-
-          $updateslot = $timeslotdel->et_timeslot;
-          for($i=$delaystart;$i<=$delayend;$i++){
-             $updateslot[$i] = 0;
-          }
+          $datestart = Carbon::parse($order->order_delayed_until);
+          $dateend = Carbon::parse($order->order_delayed_end);
         }
         else {
-          $dels = Carbon::parse($order->order_start)->format('Y-m-d');
-          $timeslotdel = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$dels)->first();
+          $datestart = Carbon::parse($order->order_start);
+          $dateend = Carbon::parse($order->order_end);
+        }
+        $checkdate1 = Carbon::parse($datestart)->format('Y-m-d');
+        $checkdate2 = Carbon::parse($dateend)->format('Y-m-d');
+        $checkdate1 = Carbon::parse($checkdate1);
+        $checkdate2 = Carbon::parse($checkdate2);
+        $diffdays = $checkdate1->diffInDays($checkdate2);
+        $iter = $checkdate1;
 
-          $delaystart = Carbon::parse($order->order_start);
-          $delaystart = $delaystart->format('H.i');
-          $delsexplode = explode('.',$delaystart);
-          $delaystart = (int) $delsexplode[0]*2 + (int) round((float) $delsexplode[1]/60);
-          $delaystart  = (int) $delaystart;
 
-          $delayend = Carbon::parse($order->order_end);
-          $delayend = $delayend->format('H.i');
-          $deleexplode = explode('.',$delayend);
-          $delayend = (int) $deleexplode[0]*2 + (int) round((float) $deleexplode[1]/60);
-          $delayend  = (int) $delayend;
+        $datestart = $datestart->format('H.i');
+        $dsexplode = explode('.',$datestart);
+        $datestart = (int) $dsexplode[0]*2 + (int) round((float) $dsexplode[1]/60);
+        $datestart  = (int) $datestart;
 
-          $updateslot = $timeslotdel->et_timeslot;
-          for($i=$delaystart;$i<=$delayend;$i++){
-             $updateslot[$i] = 0;
-           }
-          $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslotdel->et_id)->update(['et_timeslot' => $updateslot]);
+        $dateend = $dateend->format('H.i');
+        $deexplode = explode('.',$dateend);
+        $dateend = (int) $deexplode[0]*2 + (int) round((float) $deexplode[1]/60);
+        $dateend  = (int) $dateend;
+
+        for($x=0;$x<=$diffdays;$x++){
+          $timeslot = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$iter)->first();
+          if($checkdate1->diffInDays($checkdate2) != 0){
+            if($iter->diffInDays($checkdate1) == 0){
+              $start = $datestart;
+              $end = 47;
+            }
+            elseif($iter->diffInDays($checkdate2) == 0){
+              $start = 0;
+              $end = $dateend;
+            }
+            else {
+              $start = 0;
+              $end =47;
+            }
+          }
+          else {
+            $start = $datestart;
+            $end = $dateend;
+          }
+          $updateslot = $timeslot->et_timeslot;
+          for($i=$start;$i<=$end;$i++){
+            $updateslot[$i] = 0;
+            $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
+          }
+          $iter = $iter->copy()->addDays(1);
         }
     }
       $order->order_status = 9;
