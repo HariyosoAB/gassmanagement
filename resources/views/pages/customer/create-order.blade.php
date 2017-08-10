@@ -78,6 +78,8 @@ create order
 			<div class="form-group col-md-5">
 				<label>A/C Reg</label>
 				<input type="text" class="form-control inputs" name="acreg" required>
+				<small style="color:grey">Contoh A/C Reg: PK-GAG</small>
+
 			</div>
 			<div class="form-group col-md-5">
 				<label>A/C Type</label>
@@ -141,7 +143,7 @@ create order
 		<div class="row">
 			<div class="form-group col-md-7">
 				<label>Note</label>
-				<textarea class="form-control inputs" rows="5" name="note" required></textarea>
+				<textarea class="form-control inputs" rows="5" name="note"></textarea>
 			</div>
 		</div>
 		<div class="row">

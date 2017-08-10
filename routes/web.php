@@ -57,5 +57,8 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::get('/checkallocation/{id}','occController@checkAllocation');
     Route::post('/cancel/{id}','occController@cancel');
 
+    Route::get('/allocation/{id}/{date}','occController@allocationajax');
+    Route::get('/allocation','occController@allocation');
+
 
 });

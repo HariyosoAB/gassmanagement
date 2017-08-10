@@ -543,7 +543,7 @@ class occController extends Controller
     $now = Carbon::parse($now);
     //  dd($now);
     $now = $now->format('Y-m-d');
-    
+
     $query = "SELECT * FROM equipment e
     INNER JOIN equipment_many em on e.equipment_id = em.em_equipment
     LEFT JOIN (
@@ -555,6 +555,29 @@ class occController extends Controller
       $data['nav'] = 'history-occ';
       //dd($data);
       return view('pages/occ/allocation',$data);
+    }
+    public function allocationajax($id,$date){
+      $date = Carbon::parse($date);
+      //  dd($now);
+      $date = $date->format('Y-m-d');
+      $data['date'] = $date;
+      $query = "SELECT * FROM equipment e
+      INNER JOIN equipment_many em on e.equipment_id = em.em_equipment
+      LEFT JOIN (
+        SELECT * FROM equipment_timeslot where et_date = '".$date."'
+        ) t on t.et_equipment = em.em_id
+        WHERE e.equipment_id = ".$id."
+        ";
+        $data['alloc'] = DB::select($query);
+        return view('pages/occ/allocatable',$data);
+        //dd($data);
+    }
+
+    public function allocation(){
+        $data['equipment'] = DB::table('equipment')->get();
+        $data['nav'] = 'alokasi-occ';
+        //dd($data);
+        return view('pages/occ/all-allocation',$data);
     }
 
 

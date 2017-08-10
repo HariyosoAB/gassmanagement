@@ -33,7 +33,28 @@
         </tfoot>
         <tbody>
           @foreach($orders as $order)
-          <tr @isset($order->order_delayed_end) class="danger" @endisset>
+          <?php
+            if($order->order_status == 3)
+            {
+              $datetime1 = strtotime($order->order_start);
+              $datetime2 = strtotime($order->order_execute_at);
+              $interval  = $datetime2 - $datetime1;
+              $minutes   = round($interval / 60);
+              //echo $minutes;
+
+              $datetime1 = strtotime($order->order_end);
+              $datetime2 = strtotime($order->order_finished_at);
+              $interval  = $datetime2 - $datetime1;
+              $minutes2   = round($interval / 60);
+              //echo ".".$minutes2;
+            }
+            else {
+              $minutes = 0;
+              $minutes2 = 0;
+            }
+
+          ?>
+          <tr @if(isset($order->order_delayed_end) || $minutes > 15 || $minutes2 > 15) class="danger" @elseif($order->order_status == 3 && $minutes < 15 && $minutes2 < 15) class="success" @endif>
             <td>{{$order->order_swo}}</td>
             <td>
               {{$order->order_start}}
@@ -58,6 +79,12 @@
                 In Execution
               @elseif($order->order_status == 3)
                 Completed
+
+                @if(isset($order->order_delayed_until) || $minutes > 15 || $minutes2 > 15)
+               <span class="label label-danger">Delayed</span>
+               @else
+              <span class="label label-success">Ontime</span>
+                @endif
               @elseif($order->order_status == 5)
                 Waiting For Execution
               @elseif($order->order_status == 10)
