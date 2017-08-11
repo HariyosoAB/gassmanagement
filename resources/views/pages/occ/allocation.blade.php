@@ -1,7 +1,7 @@
 @extends('master.master')
 
 @section('judul')
-<i class="fa fa-list"></i>{{$alloc[0]->equipment_model}} Allocation
+<i class="fa fa-list"></i>{{$alloc[0]->equipment_model}} Allocation || {{$alloc[0]->et_date}}
 @stop
 
 @section('content')

@@ -12,26 +12,26 @@ use Carbon\Carbon;
 class occController extends Controller
 {
   public function detail($id){
-      $data['nav'] = "preview";
-      // $data['fields'] = Order::find($id);
-      $data['fields'] = DB::table('order_f')
-      ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
-      ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
-      ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
-      ->join("actype", "actype.actype_id", "=", "order_f.order_ac_type")
-      ->join("equipment", "equipment.equipment_id", "=", "order_f.order_equipment")
-      ->join("station", "station.station_id", "=", "order_f.order_address")
-      ->join("urgency", "urgency.urgency_id", "=", "order_f.order_urgency")
-      ->leftjoin("equipment_many", "equipment_many.em_id", "=", "order_f.order_em")
-      ->where("order_f.order_id", "=", $id)
-      ->get();
+    $data['nav'] = "preview";
+    // $data['fields'] = Order::find($id);
+    $data['fields'] = DB::table('order_f')
+    ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
+    ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
+    ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
+    ->join("actype", "actype.actype_id", "=", "order_f.order_ac_type")
+    ->join("equipment", "equipment.equipment_id", "=", "order_f.order_equipment")
+    ->join("station", "station.station_id", "=", "order_f.order_address")
+    ->join("urgency", "urgency.urgency_id", "=", "order_f.order_urgency")
+    ->leftjoin("equipment_many", "equipment_many.em_id", "=", "order_f.order_em")
+    ->where("order_f.order_id", "=", $id)
+    ->get();
 
-      $data['manpower'] = DB::table('order_manpower')
-      ->join('manpower', 'manpower.manpower_id', '=', 'order_manpower.manpower_id')
-      ->where('order_manpower.order_id', '=', $id)
-      ->get();
+    $data['manpower'] = DB::table('order_manpower')
+    ->join('manpower', 'manpower.manpower_id', '=', 'order_manpower.manpower_id')
+    ->where('order_manpower.order_id', '=', $id)
+    ->get();
 
-      return view('pages/customer/detail-order',$data);
+    return view('pages/customer/detail-order',$data);
   }
 
   public function cancel($id,Request $request){
@@ -455,6 +455,124 @@ class occController extends Controller
       return redirect('occ/preview-order');
     }
   }
+
+  public function reallocateOrder($id,Request $request)
+  {
+    $order = Order::find($id);
+    if($order->order_status != 9 || $order->order_status != 3)
+    {
+      if(isset($request->deletedman)){
+        foreach($request->deletedman as $key => $value) {
+          //  dd($value);
+          $om = OrderManpower::find($value);
+          $om->delete();
+        }
+        if(isset($request->operator))
+        {
+          $om= new OrderManpower;
+          $om->order_id = $id;
+          $om->manpower_id = $request->operator;
+          $om->om_type ="operator";
+          $om->save();
+        }
+        if(isset($request->wingman))
+        {
+          foreach($request->wingman as $key => $value) {
+            $om = new OrderManpower;
+            $om->order_id = $id;
+            $om->manpower_id = $value;
+            $om->om_type = "wingman";
+            $om->save();
+          }
+        }
+      }
+      if(isset($request->equipment)){
+        if(isset($order->order_delayed_until)){
+          $datestart = Carbon::parse($order->order_delayed_until);
+          $dateend = Carbon::parse($order->order_delayed_end);
+          $delayed = true;
+        }
+        else {
+          $datestart = Carbon::parse($order->order_start);
+          $dateend = Carbon::parse($order->order_end);
+          $delayed = false;
+        }
+        $checkdate1 = Carbon::parse($datestart)->format('Y-m-d');
+        $checkdate2 = Carbon::parse($dateend)->format('Y-m-d');
+        $checkdate1 = Carbon::parse($checkdate1);
+        $checkdate2 = Carbon::parse($checkdate2);
+        $diffdays = $checkdate1->diffInDays($checkdate2);
+        $iter = $checkdate1;
+
+
+        $datestart = $datestart->format('H.i');
+        $dsexplode = explode('.',$datestart);
+        $datestart = (int) $dsexplode[0]*2 + (int) round((float) $dsexplode[1]/60);
+        $datestart  = (int) $datestart;
+
+        $dateend = $dateend->format('H.i');
+        $deexplode = explode('.',$dateend);
+        $dateend = (int) $deexplode[0]*2 + (int) round((float) $deexplode[1]/60);
+        $dateend  = (int) $dateend;
+
+        for($x=0;$x<=$diffdays;$x++){
+          $timeslot = EquipmentTimeslot::where('et_equipment','=',$order->order_em)->where('et_date','=',$iter)->first();
+          if($checkdate1->diffInDays($checkdate2) != 0){
+            if($iter->diffInDays($checkdate1) == 0){
+              $start = $datestart;
+              $end = 47;
+            }
+            elseif($iter->diffInDays($checkdate2) == 0){
+              $start = 0;
+              $end = $dateend;
+            }
+            else {
+              $start = 0;
+              $end =47;
+            }
+          }
+          else {
+            $start = $datestart;
+            $end = $dateend;
+          }
+
+          $updateslot = $timeslot->et_timeslot;
+          for($i=$start;$i<=$end;$i++){
+            $updateslot[$i] = 0;
+            $ts= DB::table('equipment_timeslot')->where('et_id', '=',$timeslot->et_id)->update(['et_timeslot' => $updateslot]);
+          }
+          $iter = $iter->copy()->addDays(1);
+        }
+
+        $order->order_em = $request->equipment;
+        if($delayed)
+        {
+          $this->changeAlloc($order,"delayed");
+        }
+        else {
+          $this->changeAlloc($order,"allocation");
+        }
+      }
+
+      if($this->checkLateExec($order))
+      {
+        return Redirect('occ/wait-exec');
+      }
+      else{
+        $data['order'] = $order;
+        $data['time'] = Carbon::now('Asia/Jakarta');
+        $data['problems'] = DB::table('root_cause')->get();
+        $data['time'] = $data['time']->toDateTimeString();
+        $data['delay'] = "execute";
+        $data['nav'] = "history-occ";
+        return view('pages.occ.problem-tagging',$data);
+      }
+    }
+    else {
+      return Redirect('occ/wait-exec');
+    }
+
+  }
   public function allocateOrder($id,Request $request)
   {
     $order = Order::find($id);
@@ -594,20 +712,20 @@ class occController extends Controller
         $data['alloc'] = DB::select($query);
         return view('pages/occ/allocatable',$data);
         //dd($data);
-    }
+      }
 
-    public function allocation(){
+      public function allocation(){
         $data['equipment'] = DB::table('equipment')->get();
         $data['nav'] = 'alokasi-occ';
         //dd($data);
         return view('pages/occ/all-allocation',$data);
-    }
+      }
 
-    public function modalproblem($id){
+      public function modalproblem($id){
         $data['problem'] = ProblemTagging::where('order_id',$id)->join('root_cause','problem_tagging.pt_root_cause','=','rc_id')->get();
-      //  dd($data);
+        //  dd($data);
         $data['order'] = Order::find($id);
         return view('pages/occ/modal-problemtagging',$data);
-    }
+      }
 
-  }
+    }

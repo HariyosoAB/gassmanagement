@@ -14,7 +14,7 @@
           <div class="form-group">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <h1 class="judul" style="font-size:20px;"><i class="fa fa-barcode"></i>SWO Number</h1>
-            <p>{{$order->order_swo}} <a target="_blank" href="{{url('/')}}/occ/detail/{{$order->order_id}}">View Details</a></p>
+            <p>{{$order->order_swo}}</p><a target="_blank" href="{{url('/')}}/occ/order-detail/{{$order->order_id}}">View Order Details</a>
           </div>
         </div>
       </div>
@@ -109,15 +109,22 @@
         </div>
       </div>
 
-      <form action="{{url('/')}}/occ/realloc/{{$order->order_id}}"  id="allocation">
+      <form action="{{url('/')}}/occ/realloc/{{$order->order_id}}" method="post" id="allocation">
         <p class="judul" style="font-size:25px">Reallocation Form</p>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        @isset($mantabrak)
+              @foreach($mantabrak as $man)
+                  <input type="hidden" name="deletedman[]" value="{{$man->om_id}}">
+              @endforeach
+        @endisset
 
         @if(isset($nabrakop))
         <div class="row">
           <div class="form-group col-md-10">
             <label for="">Operator Reallocation </label>
-            <select class="form-control" name="manpower[]" id="reman" multiple required>
+            <select class="form-control" name="operator" id="reman" required>
+              <option value=""></option>
+
                 @foreach($manpower as $man)
                   <option value="{{$man->manpower_id}}" @if($man->manpower_status == 1) disabled @endif>{{$man->manpower_nama}} -- {{$man->manpower_capability}} @if($man->manpower_status == 1)Unavailable @endif</option>
                 @endforeach
@@ -129,7 +136,9 @@
         <div class="row">
           <div class="form-group col-md-10">
             <label for="">Wingman Reallocation </label>
-            <select class="form-control" name="manpower[]" id="rewing" multiple required>
+            <select class="form-control" name="wingman[]" id="rewing" multiple required>
+              <option value=""></option>
+
                 @foreach($manpower as $man)
                   <option value="{{$man->manpower_id}}" @if($man->manpower_status == 1) disabled @endif>{{$man->manpower_nama}} -- {{$man->manpower_capability}} @if($man->manpower_status == 1)Unavailable @endif</option>
                 @endforeach
@@ -153,8 +162,8 @@
         @endisset
 
       <div class="row">
-        <div class="form-group col-md-4">
-          <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="form-group col-md-10">
+          <button type="submit" class="btn btn-primary" style="float:left">Execute Order</button> <a href="{{url('/')}}/occ/checkallocation/{{$order->order_equipment}}" target="_blank" style="margin-left:10px"><div class="btn btn-info">Check Equipment Allocation</div></a>
         </div>
       </div>
     </form>

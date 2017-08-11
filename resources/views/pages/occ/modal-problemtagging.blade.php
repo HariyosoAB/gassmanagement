@@ -52,7 +52,7 @@
             <div class="col-md-12">
               <label>Problem Tagging</label><br>
               @foreach($problem as $prob)
-                <p class="label label-danger" style="font-size:15px">{{$prob->rc_name}}</p>
+                <p class="label label-danger" style="font-size:15px;">{{$prob->rc_name}}</p>
               @endforeach
             </div>
 
