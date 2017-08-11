@@ -176,7 +176,7 @@ class customerController extends Controller
 
     public function cancel($id,Request $request){
       $order = Order::find($id);
-      if($order->order_status == 5)
+      if($order->order_status == 5 || $order->order_status == 10)
       {
         if(isset($order->order_delayed_until)){
           $datestart = Carbon::parse($order->order_delayed_until);

@@ -1,10 +1,17 @@
 @extends('master.master')
+<div id="myModal" class="modal fade" role="dialog">
 
+</div>
+<div id="loading" class="text-center" style="position:fixed; margin-top:300px;z-index:9999; width:100%; height 100%;">
+  <i class="fa fa-spinner fa-spin fa-5x"></i>
+</div>
 @section('judul')
 <i class="fa fa-list"></i> All Orders
 @stop
 
 @section('content')
+
+
 <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -54,20 +61,13 @@
             }
 
           ?>
-          <tr @if(isset($order->order_delayed_end) || $minutes > 15 || $minutes2 > 15) class="danger" @elseif($order->order_status == 3 && $minutes < 15 && $minutes2 < 15) class="success" @endif>
+          <tr @if((isset($order->order_delayed_end) || $minutes > 15 || $minutes2 > 15) && $order->order_status != 9) class="danger" @elseif($order->order_status == 3 && $minutes < 15 && $minutes2 < 15) class="success" @endif>
             <td>{{$order->order_swo}}</td>
             <td>
               {{$order->order_start}}
-              @isset($order->order_delayed_until)
-              <br>
-              <strong style="color:red">Delayed until {{$order->order_delayed_until}}</strong>
-              @endisset
             </td>
-            <td>{{$order->order_end}}
-              @isset($order->order_delayed_end)
-              <br>
-              <strong style="color:red">Delayed until {{$order->order_delayed_end}}</strong>
-              @endisset
+            <td>
+              {{$order->order_end}}
             </td>
             <td>{{$order->equipment_model}}</td>
             <td>{{$order->maintenance_description}}</td>
@@ -91,14 +91,16 @@
                 Delayed
               @elseif($order->order_status == 9)
                 Cancelled
-
               @endif
             </td>
 
             <td>
-                <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" style="margin:5px;margin-left:0px"><div class="btn btn-sm btn-info">
+                <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" ><div class="btn btn-sm btn-info">
                   Details
                 </div></a>
+                @if((isset($order->order_delayed_end) || $minutes > 15 || $minutes2 > 15) && $order->order_status != 9)
+                <a onclick="viewprobtag({{$order->order_id}})" style="padding:8px"class="btn btn-sm btn-danger" data-toggle="modal" data-target="#myModal" id="delete"><i class="fa fa-warning" style="margin-right:0px;"></i></a>
+                @endif
             </td>
           </tr>
           @endforeach
@@ -108,9 +110,21 @@
 
 <script>
 	$(document).ready(function() {
+    $('#loading').hide();
+
 		$('#example').DataTable({
 			responsive: true
 		});
 	} );
+
+  function viewprobtag(id){
+    $('#loading').show();
+    $.get("{{url('/')}}/occ/probtag/"+id,function (data){
+      //console.log(data);
+        $('#loading').hide();
+        $("#myModal").html(data);
+
+    });
+  }
 </script>
 @stop

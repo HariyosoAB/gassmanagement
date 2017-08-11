@@ -14,7 +14,7 @@ class occController extends Controller
 
   public function cancel($id,Request $request){
     $order = Order::find($id);
-    if($order->order_status == 5)
+    if($order->order_status == 5 || $order->order_status == 10)
     {
       $skrg = 1;
       if(isset($order->order_delayed_until)){
@@ -580,5 +580,11 @@ class occController extends Controller
         return view('pages/occ/all-allocation',$data);
     }
 
+    public function modalproblem($id){
+        $data['problem'] = ProblemTagging::where('order_id',$id)->join('root_cause','problem_tagging.pt_root_cause','=','rc_id')->get();
+      //  dd($data);
+        $data['order'] = Order::find($id);
+        return view('pages/occ/modal-problemtagging',$data);
+    }
 
   }
