@@ -11,6 +11,28 @@ use DB;
 use Carbon\Carbon;
 class occController extends Controller
 {
+  public function detail($id){
+      $data['nav'] = "preview";
+      // $data['fields'] = Order::find($id);
+      $data['fields'] = DB::table('order_f')
+      ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
+      ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
+      ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
+      ->join("actype", "actype.actype_id", "=", "order_f.order_ac_type")
+      ->join("equipment", "equipment.equipment_id", "=", "order_f.order_equipment")
+      ->join("station", "station.station_id", "=", "order_f.order_address")
+      ->join("urgency", "urgency.urgency_id", "=", "order_f.order_urgency")
+      ->leftjoin("equipment_many", "equipment_many.em_id", "=", "order_f.order_em")
+      ->where("order_f.order_id", "=", $id)
+      ->get();
+
+      $data['manpower'] = DB::table('order_manpower')
+      ->join('manpower', 'manpower.manpower_id', '=', 'order_manpower.manpower_id')
+      ->where('order_manpower.order_id', '=', $id)
+      ->get();
+
+      return view('pages/customer/detail-order',$data);
+  }
 
   public function cancel($id,Request $request){
     $order = Order::find($id);

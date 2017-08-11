@@ -38,11 +38,14 @@
             <td>{{$order->maintenance_description}}</td>
             <td>{{$order->airline_type}}</td>
             <td>
-                <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/allocate/{{$order->order_id}}" ><div class="btn btn-sm btn-primary">
+                <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" ><div class="btn btn-sm btn-primary">
                   Manage Order
                 </div></a>
-                <a style="margin:5px;margin-left:0px" onclick="cancellation({{$order->order_id}})" ><div class="btn btn-sm btn-danger">
+                <a onclick="cancellation({{$order->order_id}})" ><div class="btn btn-sm btn-danger">
                   Cancel Order
+                </div></a>
+                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}"><div role="button" class="btn btn-info btn-sm">
+                  Details
                 </div></a>
             </td>
           </tr>

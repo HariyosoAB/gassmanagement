@@ -88,8 +88,8 @@ detail order
 		</div>
 	</div>
 	<div class="row">
-		<div class="form-group col-md-4">
-			<a href="{{url('')}}/cust/on-progress" class="btn btn-primary">Back</a>
+		<div class="form-group col-md-6">
+			<a href="{{url()->previous()}}" class="btn btn-primary">Back</a>
 		</div>
 	</div>
 </div>

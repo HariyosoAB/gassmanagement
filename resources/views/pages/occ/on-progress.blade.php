@@ -44,7 +44,7 @@
                 <a href="{{url('/')}}/occ/finish/{{$order->order_id}}" style="margin:5px; margin-left:0px"><div class="btn btn-sm btn-primary">
                   Finish
                 </div></a>
-                <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" style="margin:5px;margin-left:0px"><div class="btn btn-sm btn-info">
+                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}"><div role="button" class="btn btn-info btn-sm">
                   Details
                 </div></a>
             </td>
