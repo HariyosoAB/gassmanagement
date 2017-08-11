@@ -284,6 +284,18 @@ a{
 	.head{
 		position: absolute;
 	}
+
+	.outter2{
+		padding: 40px 0px;
+	}
+
+	.logo{
+		padding: 40px 20px;
+	}
+
+	.notif{
+		padding: 55px 10px;
+	}
 }
 
 @media screen and (min-width: 769px) {

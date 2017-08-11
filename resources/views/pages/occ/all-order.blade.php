@@ -95,7 +95,8 @@
             </td>
 
             <td>
-                <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" ><div class="btn btn-sm btn-info">
+                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}"><div role="button" class="btn btn-info btn-sm">
+
                   Details
                 </div></a>
                 @if((isset($order->order_delayed_end) || $minutes > 15 || $minutes2 > 15) && $order->order_status != 9)

@@ -51,17 +51,16 @@
             <td>{{$order->airline_type}}</td>
             <td><span class="label @if($order->order_urgency == 1) label-danger @elseif($order->order_urgency == 2) label-warning @elseif($order->order_urgency == 3) label-success @else label-default @endif">{{$order->urgency_level}}</span></td>
             <td>
-                <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/execute/{{$order->order_id}}"><div class="btn btn-sm btn-primary">
+                <a href="{{url('/')}}/occ/execute/{{$order->order_id}}"><div class="btn btn-sm btn-primary">
                   Execute
                 </div>
               </a>
-              <a style="margin:5px;margin-left:0px" onclick="cancellation({{$order->order_id}})" ><div class="btn btn-sm btn-danger">
+              <a onclick="cancellation({{$order->order_id}})" ><div class="btn btn-sm btn-danger">
                 Cancel Order
               </div></a>
-                <a style="margin:5px;margin-left:0px" href="{{url('/')}}/occ/allocate/{{$order->order_id}}"><div class="btn btn-sm btn-info">
+                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}"><div role="button" class="btn btn-info btn-sm">
                   Details
-                </div>
-                </a>
+                </div></a>
             </td>
           </tr>
           @endforeach

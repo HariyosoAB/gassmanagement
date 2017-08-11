@@ -44,6 +44,7 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::get('/completed','occController@completedTable');
     Route::get('/canceled','occController@canceledTable');
     Route::get('/all-order','occController@allTable');
+    Route::get('/order-detail/{id}','occController@detail');
 
     Route::get('/allocate/{id}','occController@allocateForm');
     Route::post('/allocate/{id}','occController@allocateOrder');
@@ -59,8 +60,5 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
 
     Route::get('/allocation/{id}/{date}','occController@allocationajax');
     Route::get('/allocation','occController@allocation');
-
     Route::get('/probtag/{id}','occController@modalproblem');
-
-
 });
