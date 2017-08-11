@@ -232,9 +232,10 @@ class occController extends Controller
       }
       else {
         $data['order'] = $order;
-        $data['manpower'] = DB::table('manpower')->where('manpower_status','=',0)->get();
-        $data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$order->order_equipment)->where('em_status_on_service','=',0)->get();
+        $data['manpower'] = DB::table('manpower')->get();
+        $data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$order->order_equipment)->get();
         $data['nav'] = "history-occ";
+        //dd($data);
         return view('pages.occ.in-use',$data);
       }
     }

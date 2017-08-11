@@ -14,7 +14,7 @@
           <div class="form-group">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <h1 class="judul" style="font-size:20px;"><i class="fa fa-barcode"></i>SWO Number</h1>
-            <p>{{$order->order_swo}}</p>
+            <p>{{$order->order_swo}} <a target="_blank" href="{{url('/')}}/occ/detail/{{$order->order_id}}">View Details</a></p>
           </div>
         </div>
       </div>
@@ -72,6 +72,7 @@
                     </thead>
                     <tbody>
                       @foreach($mantabrak as $man)
+                      <?php if($man->om_type == "operator")$nabrakop = 1; else $nabrakwing=1; ?>
                       <tr>
                         <td>{{$man->manpower_nama}}</td>
                         <td>SWO: {{$man->order_swo}}</td>
@@ -112,12 +113,26 @@
         <p class="judul" style="font-size:25px">Reallocation Form</p>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-        @if(isset($mantabrak))
+        @if(isset($nabrakop))
         <div class="row">
           <div class="form-group col-md-10">
-            <label for="">Manpower Reallocation </label>
+            <label for="">Operator Reallocation </label>
             <select class="form-control" name="manpower[]" id="reman" multiple required>
-
+                @foreach($manpower as $man)
+                  <option value="{{$man->manpower_id}}" @if($man->manpower_status == 1) disabled @endif>{{$man->manpower_nama}} -- {{$man->manpower_capability}} @if($man->manpower_status == 1)Unavailable @endif</option>
+                @endforeach
+            </select>
+          </div>
+        </div>
+        @endisset
+        @if(isset($nabrakwing))
+        <div class="row">
+          <div class="form-group col-md-10">
+            <label for="">Wingman Reallocation </label>
+            <select class="form-control" name="manpower[]" id="rewing" multiple required>
+                @foreach($manpower as $man)
+                  <option value="{{$man->manpower_id}}" @if($man->manpower_status == 1) disabled @endif>{{$man->manpower_nama}} -- {{$man->manpower_capability}} @if($man->manpower_status == 1)Unavailable @endif</option>
+                @endforeach
             </select>
           </div>
         </div>
@@ -128,7 +143,10 @@
           <div class="form-group col-md-10">
             <label for="">Equipment Reallocation </label>
             <select class="form-control" name="equipment" id="requip" required>
-
+              <option value=""></option>
+              @foreach($equipment as $equip)
+                <option value="{{$equip->em_id}}" @if($equip->em_status_on_service == 1)disabled @endif>No-Inv:{{$equip->em_no_inventory}} @if($equip->em_status_on_service == 1)Unavailable @endif</option>
+              @endforeach
             </select>
           </div>
         </div>
@@ -208,6 +226,13 @@
 
 
    $('#reman').select2({
+     "language": {
+      "noResults": function(){
+          return "No Available Manpower";
+      }
+    },
+   });
+   $('#rewing').select2({
      "language": {
       "noResults": function(){
           return "No Available Manpower";
