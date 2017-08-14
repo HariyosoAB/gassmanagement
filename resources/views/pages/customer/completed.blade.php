@@ -51,11 +51,6 @@ completed
                 @endif
             </td>
             <td>
-              @if($prog->order_status == 1)
-                <div id="cancel" onclick="cancellation({{$prog->order_id}})" role="button" class="btn btn-danger btn-sm">
-                   Cancel Order
-                </div>
-              @endif
               <a href="{{url('/')}}/cust/order-detail/{{$prog->order_id}}"><div role="button" class="btn btn-info btn-sm">
                   Details
               </div></a>

@@ -221,7 +221,7 @@ detail order
 
 			<div class="row">
 				<div class="form-group col-md-6">
-					<a href="{{url()->previous()}}" class="btn btn-primary">Back</a>
+					<a href="{{url()->previous()}}" class="btn btn-info">Back</a>
 				</div>
 			</div>
 		</div>
