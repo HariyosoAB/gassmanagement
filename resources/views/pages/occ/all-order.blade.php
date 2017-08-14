@@ -114,7 +114,8 @@
     $('#loading').hide();
 
 		$('#example').DataTable({
-			responsive: true
+			responsive: true,
+      "aaSorting": [],
 		});
 	} );
 

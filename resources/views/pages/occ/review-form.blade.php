@@ -59,9 +59,14 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
   			</div>
   		</div>
   		<div class="row">
-  			<div class="form-group col-md-8">
+  			<div class="form-group col-md-5">
   				<strong>Maintenance Type</strong>
   				 <p>{{$orders[0]->maintenance_description}}</p>
+  			</div>
+        <div class="form-group col-md-5">
+  				<strong>Urgency</strong>
+          <br>
+  				<span class="label @if($orders[0]->urgency_level == 'High')label-danger @elseif($orders[0]->urgency_level == 'Medium')label-warning @elseif($orders[0]->urgency_level == 'Low')label-success @else label-default @endif">{{$orders[0]->urgency_level}}</span>
   			</div>
   		</div>
   		<div class="row">
@@ -156,7 +161,7 @@ Review order -- SWO No: <small style="font-family:'montserrat'">{{$orders[0]->or
       <div class="form-group col-md-4">
         <button type="submit" class="btn btn-primary" style="float:left">Approve</button>
         <div class="" style="float:left;margin-left:10px">
-          <a href="{{url('/')}}/occ/checkallocation/{{$orders[0]->equipment_id}}" target="_blank">
+          <a href="{{url('/')}}/occ/checkallocation/{{$orders[0]->equipment_id}}/{{$orders[0]->order_start}}" target="_blank">
             <div class="btn btn-info" >
               Check equipment allocation
             </div>

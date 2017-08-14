@@ -53,11 +53,35 @@
 
 <script type="text/javascript" src="{{url('/')}}/plugin/sweetalert/sweetalert2.min.js"></script>
 
+@if(isset($date))
+<script>
+$(document).ready(function() {
+  $('#loading').hide();
+  $('#loading').show();
+  $('#allocationtable').hide();
+
+  var equipment = "{{$id}}";
+  var date ="{{$date}}";
+   $.get("{{url('/')}}/occ/allocation/"+equipment+"/"+date+"",function (data){
+        $('#loading').hide();
+        $("#allocationtable").html(data);
+        $('#example').DataTable({
+          "scrollX": true
+        });
+        $('#allocationtable').show();
+
+   });
+});
+</script>
+@else
 <script>
 $(document).ready(function() {
   $('#loading').hide();
 });
+</script>
+@endif
 
+<script>
 $('#allocbutton').click(function(){
   //console.log("{{url('/')}}"+"/aa");
   $('#loading').show();

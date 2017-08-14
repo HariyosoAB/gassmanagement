@@ -165,10 +165,22 @@ class occController extends Controller
     $now = $now->toDateTimeString();
 
     foreach($request->reason as $key => $value){
-      $pt = new ProblemTagging;
-      $pt->order_id = $order->order_id;
-      $pt->pt_root_cause = $value;
-      $pt->save();
+      $cek = ProblemTagging::where('order_id' , '=',$id);
+      if(isset($cek))
+      {
+        $new = true;
+        foreach($cek as $ke =>$val){
+          if($val->pt_root_cause == $value){
+            $new= false;
+          }
+        }
+      }
+      if ($new) {
+        $pt = new ProblemTagging;
+        $pt->order_id = $order->order_id;
+        $pt->pt_root_cause = $value;
+        $pt->save();
+      }
     }
     if($request->type == 'execute'){
       $order->order_status = 2;
@@ -201,36 +213,41 @@ class occController extends Controller
     $order = Order::find($id);
     $now = Carbon::now('Asia/Jakarta');
     $now = $now->toDateTimeString();
-
-
-    $startTime = Carbon::parse($order->order_end);
-    $execTime = Carbon::parse($now);
-    $totalDuration = $execTime->diffInMinutes($startTime);
-
-    //bug here
-    if($execTime->gt($startTime) && $totalDuration > 15)
+    if($order->order_status != 3)
     {
-      $data['order'] = $order;
-      $data['time'] = Carbon::now('Asia/Jakarta');
-      $data['problems'] = DB::table('root_cause')->get();
-      $data['time'] = $data['time']->toDateTimeString();
-      $data['delay'] = "finish";
-      $data['nav'] = "history-occ";
-      return view('pages.occ.problem-tagging',$data);
+      $startTime = Carbon::parse($order->order_end);
+      $execTime = Carbon::parse($now);
+      $totalDuration = $execTime->diffInMinutes($startTime);
+
+      //bug here
+      if($execTime->gt($startTime) && $totalDuration > 15)
+      {
+        $data['order'] = $order;
+        $data['time'] = Carbon::now('Asia/Jakarta');
+        $data['problems'] = DB::table('root_cause')->get();
+        $data['time'] = $data['time']->toDateTimeString();
+        $data['delay'] = "finish";
+        $data['nav'] = "history-occ";
+        return view('pages.occ.problem-tagging',$data);
+      }
+      else
+      {
+        $order->order_status = 3;
+        $order->order_finished_at = $now;
+        $order->save();
+        DB::table('equipment_many')->where('em_id','=',$order->order_em)->update(['em_status_on_service' => 0]);
+        DB::table('manpower')->whereIn('manpower_id',function($query) use ($order){
+          $query->select('manpower_id')
+          ->from('order_manpower')
+          ->where('order_id','=',$order->order_id);
+        })->update(['manpower_status' => 0]);
+        return Redirect('/occ/on-progress');
+      }
     }
-    else
-    {
-      $order->order_status = 3;
-      $order->order_finished_at = $now;
-      $order->save();
-      DB::table('equipment_many')->where('em_id','=',$order->order_em)->update(['em_status_on_service' => 0]);
-      DB::table('manpower')->whereIn('manpower_id',function($query) use ($order){
-        $query->select('manpower_id')
-        ->from('order_manpower')
-        ->where('order_id','=',$order->order_id);
-      })->update(['manpower_status' => 0]);
+    else {
       return Redirect('/occ/on-progress');
     }
+
 
   }
 
@@ -354,28 +371,28 @@ class occController extends Controller
     $this->changeAlloc($order,"delayed");
     $order->order_status = 10;
 
-    if(isset($request->optabrak))
-    {
-      $pt = new ProblemTagging;
-      $pt->order_id = $order->order_id;
-      $pt->pt_root_cause = 2;
-      $pt->save();
-    }
-    if(isset($request->wingtabrak))
-    {
-      $pt = new ProblemTagging;
-      $pt->order_id = $order->order_id;
-      $pt->pt_root_cause = 3;
-      $pt->save();
-    }
-
-    if(isset($request->eqtabrak))
-    {
-      $pt = new ProblemTagging;
-      $pt->order_id = $order->order_id;
-      $pt->pt_root_cause = 1;
-      $pt->save();
-    }
+    // if(isset($request->optabrak))
+    // {
+    //   $pt = new ProblemTagging;
+    //   $pt->order_id = $order->order_id;
+    //   $pt->pt_root_cause = 2;
+    //   $pt->save();
+    // }
+    // if(isset($request->wingtabrak))
+    // {
+    //   $pt = new ProblemTagging;
+    //   $pt->order_id = $order->order_id;
+    //   $pt->pt_root_cause = 3;
+    //   $pt->save();
+    // }
+    //
+    // if(isset($request->eqtabrak))
+    // {
+    //   $pt = new ProblemTagging;
+    //   $pt->order_id = $order->order_id;
+    //   $pt->pt_root_cause = 1;
+    //   $pt->save();
+    // }
     $order->save();
     return redirect('/occ/wait-exec');
   }
@@ -391,6 +408,7 @@ class occController extends Controller
     ->join('urgency','urgency.urgency_id','order_f.order_urgency')
     ->where('order_f.order_status','=','5')
     ->orWhere('order_f.order_status','=','10')
+    ->orderBy('order_id','desc')
     ->get();
     return view('pages/occ/wait-exec',$data);
   }
@@ -417,6 +435,7 @@ class occController extends Controller
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
     ->join('urgency','urgency.urgency_id','order_f.order_urgency')
     ->where('order_f.order_status','=','2')
+    ->orderBy('order_id','desc')
     ->get();
     return view('pages/occ/on-progress', $data);
   }
@@ -431,6 +450,7 @@ class occController extends Controller
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
     ->join('urgency','urgency.urgency_id','order_f.order_urgency')
     ->where('order_f.order_status','=','3')
+    ->orderBy('order_id','desc')
     ->get();
     return view('pages/occ/completed', $data);
   }
@@ -443,6 +463,7 @@ class occController extends Controller
     ->join('airline','airline.airline_id','=','order_f.order_airline')
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
     ->where('order_f.order_status','=','9')
+    ->orderBy('order_id','desc')
     ->get();
     return view('pages/occ/canceled', $data);
   }
@@ -454,6 +475,7 @@ class occController extends Controller
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
+    ->orderBy('order_id','desc')
     ->get();
     return view('pages/occ/all-order', $data);
   }
@@ -465,6 +487,7 @@ class occController extends Controller
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
     ->join('unit','unit.unit_id','=','order_f.order_unit')
+    ->join('urgency','order_f.order_urgency','=','urgency.urgency_id')
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
     ->where('order_f.order_id','=',$id)
     ->get();
@@ -704,24 +727,15 @@ class occController extends Controller
     return;
   }
 
-  public function checkAllocation($id){
-    $now = Carbon::now('Asia/Jakarta');
-    $now = Carbon::parse($now);
-    //  dd($now);
-    $now = $now->format('Y-m-d');
-
-    $query = "SELECT * FROM equipment e
-    INNER JOIN equipment_many em on e.equipment_id = em.em_equipment
-    LEFT JOIN (
-      SELECT * FROM equipment_timeslot where et_date = '".$now."'
-      ) t on t.et_equipment = em.em_id
-      WHERE e.equipment_id = ".$id."
-      ";
-      $data['alloc'] = DB::select($query);
-      $data['nav'] = 'history-occ';
-      //dd($data);
-      return view('pages/occ/allocation',$data);
+  public function checkAllocation($id,$date){
+    $data['equipment'] = DB::table('equipment')->get();
+    $data['nav'] = 'alokasi-occ';
+    $data['id'] = $id;
+    $data['date'] = $date;
+    //dd($data);
+    return view('pages/occ/all-allocation',$data);
     }
+
     public function allocationajax($id,$date){
       $date = Carbon::parse($date);
       //  dd($now);
@@ -747,7 +761,7 @@ class occController extends Controller
       }
 
       public function modalproblem($id){
-        $data['problem'] = ProblemTagging::where('order_id',$id)->join('root_cause','problem_tagging.pt_root_cause','=','rc_id')->get();
+        $data['problem'] = ProblemTagging::distinct()->select('rc_name')->where('order_id',$id)->join('root_cause','problem_tagging.pt_root_cause','=','rc_id')->get();
         //  dd($data);
         $data['order'] = Order::find($id);
         return view('pages/occ/modal-problemtagging',$data);
