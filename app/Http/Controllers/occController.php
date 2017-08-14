@@ -31,6 +31,8 @@ class occController extends Controller
       ->where('order_manpower.order_id', '=', $id)
       ->get();
 
+      // dd($data);
+
       return view('pages/customer/detail-order',$data);
   }
 

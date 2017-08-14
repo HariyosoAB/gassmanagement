@@ -56,10 +56,9 @@ completed
                    Cancel Order
                 </div>
               @endif
-
-              <div role="button" class="btn btn-info btn-sm">
+              <a href="{{url('/')}}/cust/order-detail/{{$prog->order_id}}"><div role="button" class="btn btn-info btn-sm">
                   Details
-              </div>
+              </div></a>
             </td>
           </tr>
           @endforeach

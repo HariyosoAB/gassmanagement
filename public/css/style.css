@@ -9,6 +9,11 @@
 	src: url('../font/Montserrat-Light.otf');
 }
 
+@font-face {
+	font-family: montserrat-tebel;
+	src: url('../font/Montserrat-SemiBold.otf');
+}
+
 div{
 	/*border-style: solid;*/
 }
@@ -136,6 +141,11 @@ body{
 	font-size: 35px;
 }
 
+.judul2{
+	font-family: bebas !important;
+	font-size: 25px;
+}
+
 .isi{
 	width: 100%;
 	font-family: montserrat;
@@ -225,6 +235,10 @@ a{
 	position: relative;
 	float: left;
 	display: none;
+}
+
+label{
+	font-family: montserrat-tebel !important;
 }
 
 .fa{

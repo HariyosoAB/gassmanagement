@@ -30,8 +30,8 @@ on progress
         </tfoot>
         <tbody>
           @foreach($progress as $prog)
-          <tr >
-            <td>@if($prog->order_swo == null)
+          <tr>
+            <td style="margin-top: 50px !important">@if($prog->order_swo == null)
                   Not Available
                 @else
                   {{$prog->order_swo}}
@@ -58,7 +58,6 @@ on progress
               </div>
               @endif
               @if($prog->order_status == 1)
-
                 <a href="{{url('/')}}/cust/order-edit/{{$prog->order_id}}"><div class="btn btn-primary btn-sm">
                    Edit Order
                 </div></a>
@@ -75,6 +74,7 @@ on progress
 
 <script>
 	$(document).ready(function() {
+    $('#example thead th[colspan]').wrapInner( '<span/>' ).append( '&nbsp;' );
 		$('#example').DataTable({
 			responsive: true
 		});
