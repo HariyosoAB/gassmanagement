@@ -55,11 +55,12 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::post('/problem-tagging/{id}','occController@problemTag');
     Route::post('/delayorder/{id}','occController@delayOrder');
 
-    Route::get('/checkallocation/{id}','occController@checkAllocation');
+    Route::get('/checkallocation/{id}/{date}','occController@checkAllocation');
     Route::post('/cancel/{id}','occController@cancel');
 
     Route::get('/allocation/{id}/{date}','occController@allocationajax');
     Route::get('/allocation','occController@allocation');
+
     Route::get('/probtag/{id}','occController@modalproblem');
 
     Route::post('/realloc/{id}','occController@reallocateOrder');

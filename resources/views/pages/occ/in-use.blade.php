@@ -163,7 +163,7 @@
 
       <div class="row">
         <div class="form-group col-md-10">
-          <button type="submit" class="btn btn-primary" style="float:left">Execute Order</button> <a href="{{url('/')}}/occ/checkallocation/{{$order->order_equipment}}" target="_blank" style="margin-left:10px"><div class="btn btn-info">Check Equipment Allocation</div></a>
+          <button type="submit" class="btn btn-primary" style="float:left">Execute Order</button> <a href="{{url('/')}}/occ/checkallocation/{{$order->order_equipment}}/{{$order->order_start}}" target="_blank" style="margin-left:10px"><div class="btn btn-info">Check Equipment Allocation</div></a>
         </div>
       </div>
     </form>
@@ -200,7 +200,7 @@
         <div class="row">
           <div class="form-group col-md-12">
             <button type="submit" class="btn btn-primary" style="float:left">Submit</button>
-            <a href="{{url('/')}}/occ/checkallocation/{{$order->order_equipment}}" target="_blank" style="margin-left:10px"><div class="btn btn-info">Check Equipment Allocation</div></a>
+            <a href="{{url('/')}}/occ/checkallocation/{{$order->order_equipment}}/{{$order->order_start}}" target="_blank" style="margin-left:10px"><div class="btn btn-info">Check Equipment Allocation</div></a>
           </div>
         </div>
 
