@@ -31,22 +31,22 @@
         <tbody>
           @foreach($orders as $order)
           <tr>
-            <td>{{$order->order_swo}}</td>
-            <td>{{$order->order_start}}</td>
-            <td>{{$order->order_end}}</td>
-            <td>{{$order->equipment_model}}</td>
-            <td>{{$order->maintenance_description}}</td>
-            <td>{{$order->airline_type}}</td>
+            <td style="padding-top:20px">{{$order->order_swo}}</td>
+            <td style="padding-top:20px">{{$order->order_start}}</td>
+            <td style="padding-top:20px">{{$order->order_end}}</td>
+            <td style="padding-top:20px">{{$order->equipment_model}}</td>
+            <td style="padding-top:20px">{{$order->maintenance_description}}</td>
+            <td style="padding-top:20px">{{$order->airline_type}}</td>
             <td>
                 <a href="{{url('/')}}/occ/allocate/{{$order->order_id}}" style="margin-top: 5px" class="btn btn-md btn-primary">
                   <i class="fa fa-folder-open" aria-hidden="true"></i>
                 </a>
-                <a onclick="cancellation({{$order->order_id}})" style="margin-top: 5px"><div class="btn btn-md btn-danger">
+                <a onclick="cancellation({{$order->order_id}})" style="margin-top: 5px" class="btn btn-md btn-danger">
                   <i class="fa fa-times" aria-hidden="true"></i>
-                </div></a>
-                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}" style="margin-top: 5px"><div role="button" class="btn btn-info btn-md">
+                </a>
+                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}" style="margin-top: 5px" class="btn btn-md btn-info">
                   <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                </div></a>
+                </a>
             </td>
           </tr>
           @endforeach

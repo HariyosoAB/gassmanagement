@@ -75,7 +75,8 @@ on progress
 <script>
 	$(document).ready(function() {
 		$('#example').DataTable({
-			responsive: true
+			responsive: true,
+      "aaSorting": [],
 		});
 	} );
 

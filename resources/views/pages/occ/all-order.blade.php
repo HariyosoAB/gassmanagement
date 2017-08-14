@@ -62,17 +62,17 @@
 
           ?>
           <tr @if((isset($order->order_delayed_end) || $minutes > 15 || $minutes2 > 15) && $order->order_status != 9) class="danger" @elseif($order->order_status == 3 && $minutes < 15 && $minutes2 < 15) class="success" @endif>
-            <td>{{$order->order_swo}}</td>
-            <td>
+            <td style="padding-top:15px">{{$order->order_swo}}</td>
+            <td style="padding-top:15px">
               {{$order->order_start}}
             </td>
-            <td>
+            <td style="padding-top:20px">
               {{$order->order_end}}
             </td>
-            <td>{{$order->equipment_model}}</td>
-            <td>{{$order->maintenance_description}}</td>
-            <td>{{$order->airline_type}}</td>
-            <td>
+            <td style="padding-top:15px">{{$order->equipment_model}}</td>
+            <td style="padding-top:15px">{{$order->maintenance_description}}</td>
+            <td style="padding-top:15px">{{$order->airline_type}}</td>
+            <td style="padding-top:15px">
               @if($order->order_status == 1)
                 Waiting for approval
               @elseif($order->order_status == 2)
@@ -95,12 +95,11 @@
             </td>
 
             <td>
-                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}"><div role="button" class="btn btn-info btn-sm">
-
-                  Details
-                </div></a>
+                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}" style="margin-top: 5px" class="btn btn-md btn-info">
+                  <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                </a>
                 @if((isset($order->order_delayed_end) || $minutes > 15 || $minutes2 > 15) && $order->order_status != 9)
-                <a onclick="viewprobtag({{$order->order_id}})" style="padding:8px"class="btn btn-sm btn-danger" data-toggle="modal" data-target="#myModal" id="delete"><i class="fa fa-warning" style="margin-right:0px;"></i></a>
+                <a onclick="viewprobtag({{$order->order_id}})" style="margin-top: 5px" class="btn btn-md btn-danger" data-toggle="modal" data-target="#myModal" id="delete"><i class="fa fa-warning" style="margin-right:0px;"></i></a>
                 @endif
             </td>
           </tr>

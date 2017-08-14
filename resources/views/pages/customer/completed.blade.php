@@ -51,9 +51,9 @@ completed
                 @endif
             </td>
             <td>
-              <a href="{{url('/')}}/cust/order-detail/{{$prog->order_id}}"><div role="button" class="btn btn-info btn-sm">
-                  Details
-              </div></a>
+              <a href="{{url('/')}}/cust/order-detail/{{$prog->order_id}}" class="btn btn-info btn-md">
+                  <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+              </a>
             </td>
           </tr>
           @endforeach
@@ -64,7 +64,8 @@ completed
 <script>
 	$(document).ready(function() {
 		$('#example').DataTable({
-			responsive: true
+			responsive: true,
+      "aaSorting": [],
 		});
 	} );
 </script>

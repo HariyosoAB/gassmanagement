@@ -1,4 +1,4 @@
-@extends('master.master')
+ style="padding-top:20px"@extends('master.master')
 
 @section('judul')
 <i class="fa fa-clock-o"></i> Orders Waiting for Execution
@@ -33,34 +33,33 @@
         <tbody>
           @foreach($orders as $order)
           <tr @isset($order->order_delayed_until) class="danger" @endisset >
-            <td>{{$order->order_swo}}</td>
-            <td>{{$order->order_start}}
+            <td style="padding-top:20px">{{$order->order_swo}}</td>
+            <td style="padding-top:20px">{{$order->order_start}}
               @isset($order->order_delayed_until)
               <br>
                 <strong style="color:red;">  Delayed Until {{$order->order_delayed_until}}</strong>
               @endisset
           </td>
-            <td>{{$order->order_end}}
+            <td style="padding-top:20px">{{$order->order_end}}
               @isset($order->order_delayed_end)
               <br>
                 <strong style="color:red;">  Delayed Until {{$order->order_delayed_end}}</strong>
               @endisset
             </td>
-            <td>{{$order->equipment_model}} (No: {{$order->em_no_inventory}})</td>
-            <td>{{$order->maintenance_description}}</td>
-            <td>{{$order->airline_type}}</td>
-            <td><span class="label @if($order->order_urgency == 1) label-danger @elseif($order->order_urgency == 2) label-warning @elseif($order->order_urgency == 3) label-success @else label-default @endif">{{$order->urgency_level}}</span></td>
+            <td style="padding-top:20px">{{$order->equipment_model}} (No: {{$order->em_no_inventory}})</td>
+            <td style="padding-top:20px">{{$order->maintenance_description}}</td>
+            <td style="padding-top:20px">{{$order->airline_type}}</td>
+            <td style="padding-top:20px"><span class="label @if($order->order_urgency == 1) label-danger @elseif($order->order_urgency == 2) label-warning @elseif($order->order_urgency == 3) label-success @else label-default @endif">{{$order->urgency_level}}</span></td>
             <td>
-                <a href="{{url('/')}}/occ/execute/{{$order->order_id}}"><div class="btn btn-sm btn-primary">
-                  Execute
-                </div>
+                <a href="{{url('/')}}/occ/execute/{{$order->order_id}}" style="margin-top: 5px" class="btn btn-md btn-primary">
+                  <i class="fa fa-check" aria-hidden="true"></i>
               </a>
-              <a onclick="cancellation({{$order->order_id}})" ><div class="btn btn-sm btn-danger">
-                Cancel Order
-              </div></a>
-                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}"><div role="button" class="btn btn-info btn-sm">
-                  Details
-                </div></a>
+              <a onclick="cancellation({{$order->order_id}})" style="margin-top: 5px" class="btn btn-md btn-danger" >
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </a>
+                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}" style="margin-top: 5px" class="btn btn-md btn-info">
+                  <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                </a>
             </td>
           </tr>
           @endforeach
