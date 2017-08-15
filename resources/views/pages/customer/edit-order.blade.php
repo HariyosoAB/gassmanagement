@@ -148,6 +148,7 @@ edit order
 		<div class="row">
 			<div class="form-group col-md-4">
 				<button type="submit" class="btn btn-primary">Submit</button>
+				<a href="{{url()->previous()}}" style="margin-left:5px" class="btn btn-info">Back</a>
 			</div>
 		</div>
 	</div>

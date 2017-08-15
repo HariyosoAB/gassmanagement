@@ -196,7 +196,7 @@ body{
 	color: #5B646B;
 }
 
-a{
+.nav2 a, .nav a{
 	text-decoration: none;
 	float: left;
 	padding-right: 5px;
@@ -241,7 +241,7 @@ label{
 	font-family: montserrat-tebel !important;
 }
 
-.fa{
+.nav .fa, .nav2 .fa{
 	margin-right: 10px;
 }
 
