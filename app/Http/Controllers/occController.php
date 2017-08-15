@@ -787,4 +787,11 @@ class occController extends Controller
         return view('pages/occ/modal-problemtagging',$data);
       }
 
+      //CRUD STARTS HERE
+      public function actable(){
+        $data['datas'] = DB::table('actype')->get();
+        $data['nav'] = "settings-occ";
+        return view('pages/occ/tabel-ac',$data);
+      }
+
     }

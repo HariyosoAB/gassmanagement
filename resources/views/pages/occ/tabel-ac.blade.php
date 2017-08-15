@@ -1,7 +1,7 @@
 @extends('master.master')
 
 @section('judul')
-<i class="fa fa-check"></i> Orders Completed
+<i class="fa fa-check"></i> AC Type Data
 @stop
 
 @section('content')
@@ -24,9 +24,12 @@
             <td>{{$data->actype_code}}</td>
             <td>{{$data->actype_description}}</td>
             <td>
-                <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}"><div role="button" class="btn btn-info btn-sm">
-                  Details
-                </div></a>
+              <a onclick="" style="margin-top: 5px" class="btn btn-md btn-danger">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </a>
+              <a href="" style="margin-top: 5px" class="btn btn-md btn-info">
+                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+              </a>
             </td>
           </tr>
           @endforeach

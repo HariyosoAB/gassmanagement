@@ -66,4 +66,6 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::post('/realloc/{id}','occController@reallocateOrder');
     Route::get('/checkused/{id}/{date}','occController@checkUsed');
 
+    Route::get('/actable','occController@actable');
+
 });
