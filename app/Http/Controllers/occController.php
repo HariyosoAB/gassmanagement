@@ -165,7 +165,7 @@ class occController extends Controller
     $now = $now->toDateTimeString();
 
     foreach($request->reason as $key => $value){
-      $cek = ProblemTagging::where('order_id' , '=',$id);
+      $cek = ProblemTagging::where('order_id' , '=',$id)->get();
       if(isset($cek))
       {
         $new = true;
@@ -174,6 +174,7 @@ class occController extends Controller
             $new= false;
           }
         }
+      //  dd($new);
       }
       if ($new) {
         $pt = new ProblemTagging;
@@ -787,11 +788,137 @@ class occController extends Controller
         return view('pages/occ/modal-problemtagging',$data);
       }
 
+
+
+
       //CRUD STARTS HERE
       public function actable(){
-        $data['datas'] = DB::table('actype')->get();
+        $data['datas'] = DB::table('actype')->orderBy('actype_id','desc')->get();
         $data['nav'] = "settings-occ";
         return view('pages/occ/tabel-ac',$data);
       }
+
+      public function formAC($id){
+        $data['nav'] = "settings-occ";
+        $data['data'] = DB::table('actype')->where('actype_id',$id)->first();
+        return view('pages/occ/modal-ac',$data);
+      }
+
+      public function insertAC(Request $request){
+        try {
+          DB::table('actype')->insert([
+              ['actype_code' => $request->code, 'actype_description' => $request->description]
+          ]);
+        } catch (Exception $e) {
+          return Redirect('occ/actable')->with('failed','Failed to save AC Type Data');
+        }
+        return Redirect('occ/actable')->with('success','AC Type Data saved successfully');
+      }
+
+      public function editAC($id,Request $request){
+        try {
+          DB::table('actype')->where('actype_id', '=',$id)->update(['actype_code' => $request->code, 'actype_description'=> $request->description]);
+        } catch (Exception $e) {
+          return Redirect('occ/actable')->with('failed','AC Type Data failed to update');
+        }
+        return Redirect('occ/actable')->with('success','AC Type Data edited successfully');
+      }
+
+      public function deleteAC($id){
+        try {
+          DB::table('actype')->where('actype_id', '=',$id)->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+          return Redirect('occ/actable')->with('failed','Unable to delete data, this data is used in an order');
+        } catch (PDOException $e) {
+          return Redirect('occ/actable')->with('failed','Unable to delete data, this data is used in an order');
+        }
+          return Redirect('occ/actable')->with('success','AC Type Data Deleted Successfully');
+      }
+
+      public function manpowertable(){
+        $data['datas'] = DB::table('manpower')->orderBy('manpower_id','desc')->get();
+        $data['nav'] = "settings-occ";
+        return view('pages/occ/tabel-manpower',$data);
+      }
+
+      public function formManpower($id){
+        $data['nav'] = "settings-occ";
+        $data['data'] = DB::table('manpower')->where('manpower_id',$id)->first();
+        return view('pages/occ/modal-manpower',$data);
+      }
+
+      public function insertManpower(Request $request){
+        try {
+          DB::table('manpower')->insert([
+              ['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg,'manpower_status' => 0 , 'manpower_capability'=> $request->capability]
+          ]);
+        } catch (Exception $e) {
+          return Redirect('occ/mantable')->with('failed','Failed to save Manpower Data');
+        }
+        return Redirect('occ/mantable')->with('success','Manpower Data saved successfully');
+      }
+
+      public function editManpower($id,Request $request){
+        try {
+          DB::table('manpower')->where('manpower_id', '=',$id)->update(['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg, 'manpower_capability'=> $request->capability]);
+        } catch (Exception $e) {
+          return Redirect('occ/mantable')->with('failed','Manpower Data failed to update');
+        }
+        return Redirect('occ/mantable')->with('success','Manpower Data edited successfully');
+      }
+
+      public function deleteManpower($id){
+        try {
+          DB::table('manpower')->where('manpower_id', '=',$id)->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+          return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
+        } catch (PDOException $e) {
+          return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
+        }
+          return Redirect('occ/mantable')->with('success','Manpower Data Deleted Successfully');
+      }
+
+      // public function rootcausetable(){
+      //   $data['datas'] = DB::table('manpower')->orderBy('manpower_id','desc')->get();
+      //   $data['nav'] = "settings-occ";
+      //   return view('pages/occ/tabel-manpower',$data);
+      // }
+      //
+      // public function formRootCause($id){
+      //   $data['nav'] = "settings-occ";
+      //   $data['data'] = DB::table('manpower')->where('manpower_id',$id)->first();
+      //   return view('pages/occ/modal-manpower',$data);
+      // }
+      //
+      // public function insertRootCause(Request $request){
+      //   try {
+      //     DB::table('manpower')->insert([
+      //         ['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg,'manpower_status' => 0 , 'manpower_capability'=> $request->capability]
+      //     ]);
+      //   } catch (Exception $e) {
+      //     return Redirect('occ/mantable')->with('failed','Failed to save Manpower Data');
+      //   }
+      //   return Redirect('occ/mantable')->with('success','Manpower Data saved successfully');
+      // }
+      //
+      // public function editRootCause($id,Request $request){
+      //   try {
+      //     DB::table('manpower')->where('manpower_id', '=',$id)->update(['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg, 'manpower_capability'=> $request->capability]);
+      //   } catch (Exception $e) {
+      //     return Redirect('occ/mantable')->with('failed','Manpower Data failed to update');
+      //   }
+      //   return Redirect('occ/mantable')->with('success','Manpower Data edited successfully');
+      // }
+      //
+      // public function deleteRootCause($id){
+      //   try {
+      //     DB::table('manpower')->where('manpower_id', '=',$id)->delete();
+      //   } catch (\Illuminate\Database\QueryException $e) {
+      //     return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
+      //   } catch (PDOException $e) {
+      //     return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
+      //   }
+      //     return Redirect('occ/mantable')->with('success','Manpower Data Deleted Successfully');
+      // }
 
     }
