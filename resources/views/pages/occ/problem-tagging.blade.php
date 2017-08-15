@@ -60,7 +60,7 @@
             <label>This order is late in execution finish time</label>
           @endif
           <p>Please insert the reason of delay</p>
-          <select id="reasondelay" class="form-control"multiple="multiple" name="reason[]" required>
+          <select id="reasondelay" class="form-control" name="reason[]" required>
               <option value=""></option>
               @foreach($problems as $problem)
                 <option value="{{$problem->rc_id}}">{{$problem->rc_name}}</option>

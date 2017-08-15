@@ -73,7 +73,7 @@
   @foreach($alloc as $al)
   <tr>
     <td>
-      {{$al->em_no_inventory}}
+      <a target="_blank" href="{{url('/')}}/occ/checkused/{{$al->em_id}}/{{$date}}">{{$al->em_no_inventory}}</a>
     </td>
     @if($al->et_timeslot != null)
     @for ($i = 0; $i < 48; $i++)

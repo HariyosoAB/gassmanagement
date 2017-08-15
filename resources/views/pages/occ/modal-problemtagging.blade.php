@@ -54,6 +54,9 @@
               @foreach($problem as $prob)
                 <p class="label label-danger" style="font-size:15px;">{{$prob->rc_name}}</p>
               @endforeach
+              @if(empty($problem[0]))
+                Pending
+              @endif
             </div>
 
         </div>
