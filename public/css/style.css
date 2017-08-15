@@ -202,6 +202,12 @@ body{
 	padding-right: 5px;
 }
 
+#profil-menu a{
+	text-decoration: none;
+	float: left;
+	padding-right: 5px;
+}
+
 .sub-menu div a{
 	margin: 20px 30px;
 	text-decoration: none;

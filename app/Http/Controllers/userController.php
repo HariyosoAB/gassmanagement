@@ -14,7 +14,7 @@ class userController extends Controller
         }elseif(Auth::user()->user_role == 2){
           return Redirect::to('/occ/preview-order');
         }elseif(Auth::user()->user_role == 3){
-          return view('pages/tes');
+          return view('/management/graph');
         }
       }
       else {

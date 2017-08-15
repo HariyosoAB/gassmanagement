@@ -37,7 +37,7 @@
             <td style="padding-top:20px">{{$order->order_start}}
               @isset($order->order_delayed_until)
               <br>
-                <strong style="color:red;">  Delayed Until {{$order->order_delayed_until}}</strong>
+                <p><strong style="color:red;">  Delayed Until {{$order->order_delayed_until}}</strong></p>
               @endisset
           </td>
             <td style="padding-top:20px">{{$order->order_end}}

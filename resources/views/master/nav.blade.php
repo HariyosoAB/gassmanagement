@@ -21,9 +21,9 @@
 		@endif
 		<!-- manager -->
 		@if(Auth::user()->user_role==3)
-		<button id="order-man" autofocus>Order</button>
-		<button id="history-man">History</button>
-		<button id="report">Report</button>
+		<button id="report" autofocus>Report</button><script>
+			<?php if($nav=="report") echo "window.onload = function () {document.querySelector('#report').click();}";?>
+		</script>
 		@endif
 	</div>
 	<div class="sub-menu">
@@ -58,13 +58,10 @@
 		@endif
 		<!-- manager -->
 		@if(Auth::user()->user_role == 3)
-		<div id="sub-menu-order-man">
-		</div>
-		<div id="sub-menu-history-man" style="display:none">
-			<a href="">On-Progress</a>
-			<a href="">Completed</a>
-		</div>
-		<div id="sub-menu-report" style="display:none">
+		<div id="sub-menu-report">
+			<a href="">Daily</a>
+			<a href="">Weekly</a>
+			<a href="">Monthly</a>
 		</div>
 		@endif
 	</div>
@@ -103,9 +100,12 @@
 		@endif
 		<!-- manager -->
 		@if(Auth::user()->user_role==3)
-		<button id="order-man" autofocus>Order</button>
-		<button id="history-man">History</button>
-		<button id="report">Report</button>
+		<button id="report2" autofocus>report</button>
+		<div class="sub-menu-history-cus2" id="sub-menu-report2" style="display:none">
+			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Daily</a>
+			<a href=""><i class="fa fa-plane" aria-hidden="true"></i>Weekly</a>
+			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Monthly</a>
+		</div>
 		@endif
 	</div>
 </div>
