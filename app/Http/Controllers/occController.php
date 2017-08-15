@@ -736,6 +736,26 @@ class occController extends Controller
     return view('pages/occ/all-allocation',$data);
     }
 
+    public function checkUsed($id,$date){
+      $query ="SELECT * FROM order_f,equipment,equipment_many,actype,airline,maintenance,urgency
+       WHERE equipment.equipment_id = order_f.order_equipment
+       and equipment_many.em_id = order_f.order_em
+       and actype.actype_id = order_f.order_ac_type
+       and airline.airline_id = order_f.order_airline
+       and maintenance.maintenance_id = order_f.order_maintenance_type
+       and urgency.urgency_id = order_f.order_urgency and
+      (DATE(order_delayed_until) = '".$date."' or ( DATE(order_start) = '".$date."' and order_delayed_until is NULL)) AND order_status != 1
+      and order_em = ".$id."
+      ORDER BY order_id DESC";
+      $order = DB::select($query);
+      $data['order'] = $order;
+      $data['nav'] = 'alokasi-occ';
+      $data['date']= $date;
+      $data['eq'] = DB::table('equipment_many')->join('equipment','equipment_many.em_equipment','equipment.equipment_id')->where('equipment_many.em_id',$id)->first();
+      //dd($order);
+      return view('pages.occ.checkused',$data);
+    }
+
     public function allocationajax($id,$date){
       $date = Carbon::parse($date);
       //  dd($now);
