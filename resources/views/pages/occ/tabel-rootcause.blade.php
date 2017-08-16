@@ -9,7 +9,7 @@
         <h5 class="modal-title judul"><i class="fa fa-plus" style="margin-right:10px"></i>Insert Root Cause</h5>
       </div>
       <div class="modal-body">
-        <form  action="{{url('/')}}/occ/insert-manpower" method="post">
+        <form  action="{{url('/')}}/occ/insert-rootcause" method="post">
           <div class="row">
             <div class="col-md-8">
               <div class="form-group">
@@ -89,7 +89,12 @@
           <tr>
             <td>{{$data->rc_name}}</td>
             <td>{{$data->rc_description}}</td>
-            <td>{{$data->rc_pemutihan}}</td>
+            <td>@if($data->rc_pemutihan == 0)
+                    Internal
+                @else
+                    External
+                @endif
+            </td>
             <td>
               <a  onclick="edit({{$data->rc_id}})" data-toggle="modal" data-target="#editModal" style="margin-top: 5px" class="btn btn-md btn-primary">
                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>

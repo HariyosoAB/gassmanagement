@@ -878,47 +878,47 @@ class occController extends Controller
           return Redirect('occ/mantable')->with('success','Manpower Data Deleted Successfully');
       }
 
-      // public function rootcausetable(){
-      //   $data['datas'] = DB::table('manpower')->orderBy('manpower_id','desc')->get();
-      //   $data['nav'] = "settings-occ";
-      //   return view('pages/occ/tabel-manpower',$data);
-      // }
-      //
-      // public function formRootCause($id){
-      //   $data['nav'] = "settings-occ";
-      //   $data['data'] = DB::table('manpower')->where('manpower_id',$id)->first();
-      //   return view('pages/occ/modal-manpower',$data);
-      // }
-      //
-      // public function insertRootCause(Request $request){
-      //   try {
-      //     DB::table('manpower')->insert([
-      //         ['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg,'manpower_status' => 0 , 'manpower_capability'=> $request->capability]
-      //     ]);
-      //   } catch (Exception $e) {
-      //     return Redirect('occ/mantable')->with('failed','Failed to save Manpower Data');
-      //   }
-      //   return Redirect('occ/mantable')->with('success','Manpower Data saved successfully');
-      // }
-      //
-      // public function editRootCause($id,Request $request){
-      //   try {
-      //     DB::table('manpower')->where('manpower_id', '=',$id)->update(['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg, 'manpower_capability'=> $request->capability]);
-      //   } catch (Exception $e) {
-      //     return Redirect('occ/mantable')->with('failed','Manpower Data failed to update');
-      //   }
-      //   return Redirect('occ/mantable')->with('success','Manpower Data edited successfully');
-      // }
-      //
-      // public function deleteRootCause($id){
-      //   try {
-      //     DB::table('manpower')->where('manpower_id', '=',$id)->delete();
-      //   } catch (\Illuminate\Database\QueryException $e) {
-      //     return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
-      //   } catch (PDOException $e) {
-      //     return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
-      //   }
-      //     return Redirect('occ/mantable')->with('success','Manpower Data Deleted Successfully');
-      // }
+      public function rootcausetable(){
+        $data['datas'] = DB::table('root_cause')->orderBy('rc_id','desc')->get();
+        $data['nav'] = "settings-occ";
+        return view('pages/occ/tabel-rootcause',$data);
+      }
+
+      public function formRootCause($id){
+        $data['nav'] = "settings-occ";
+        $data['data'] = DB::table('root_cause')->where('rc_id',$id)->first();
+        return view('pages/occ/modal-rootcause',$data);
+      }
+
+      public function insertRootCause(Request $request){
+        try {
+          DB::table('root_cause')->insert([
+              ['rc_name' => $request->nama, 'rc_description' => $request->description,'rc_pemutihan' => $request->type ]
+          ]);
+        } catch (Exception $e) {
+          return Redirect('occ/rootcausetable')->with('failed','Failed to save Root Cause Data');
+        }
+        return Redirect('occ/rootcausetable')->with('success','Root Cause Data saved successfully');
+      }
+
+      public function editRootCause($id,Request $request){
+        try {
+          DB::table('root_cause')->where('rc_id', '=',$id)->update(['rc_name' => $request->nama, 'rc_description' => $request->description,'rc_pemutihan' => $request->type ]);
+        } catch (Exception $e) {
+          return Redirect('occ/rootcausetable')->with('failed','Root Cause Data failed to update');
+        }
+        return Redirect('occ/rootcausetable')->with('success','Root Cause Data edited successfully');
+      }
+
+      public function deleteRootCause($id){
+        try {
+          DB::table('root_cause')->where('rc_id', '=',$id)->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+          return Redirect('occ/rootcausetable')->with('failed','Unable to delete data, this data is used in an order');
+        } catch (PDOException $e) {
+          return Redirect('occ/rootcausetable')->with('failed','Unable to delete data, this data is used in an order');
+        }
+          return Redirect('occ/rootcausetable')->with('success','Root Cause Data Deleted Successfully');
+      }
 
     }
