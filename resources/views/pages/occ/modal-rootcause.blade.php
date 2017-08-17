@@ -5,7 +5,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h5 class="modal-title judul"><i class="fa fa-plus" style="margin-right:10px"></i>Insert Root Cause</h5>
+      <h5 class="modal-title judul"><i class="fa fa-pencil" style="margin-right:10px"></i>Update Root Cause</h5>
     </div>
     <div class="modal-body">
         <div class="row">
