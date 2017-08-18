@@ -66,6 +66,27 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::post('/realloc/{id}','occController@reallocateOrder');
     Route::get('/checkused/{id}/{date}','occController@checkUsed');
 
+
+
+//  CRUD AC
+    Route::get('/actable','occController@actable');
+    Route::post('/insert-ac','occController@insertAC');
+    Route::get('/edit-ac/{id}','occController@formAC');
+    Route::post('/edit-ac/{id}','occController@editAC');
+    Route::get('/delete-ac/{id}','occController@deleteAC');
+//  CRUD MANPOWER
+    Route::get('/mantable','occController@manpowertable');
+    Route::post('/insert-manpower','occController@insertManpower');
+    Route::get('/edit-manpower/{id}','occController@formManpower');
+    Route::post('/edit-manpower/{id}','occController@editManpower');
+    Route::get('/delete-manpower/{id}','occController@deleteManpower');
+//  CRUD ROOTCAUSE
+    Route::get('/rootcausetable','occController@rootcausetable');
+    Route::post('/insert-rootcause','occController@insertRootCause');
+    Route::get('/edit-rootcause/{id}','occController@formRootCause');
+    Route::post('/edit-rootcause/{id}','occController@editRootCause');
+    Route::get('/delete-rootcause/{id}','occController@deleteRootCause');
+
 });
 
 Route::group(['middleware' => 'ManagementArea', 'prefix' => 'management'],function(){

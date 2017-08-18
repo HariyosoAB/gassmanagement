@@ -51,9 +51,9 @@
 			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Equipment Data</a>
 			<a href=""><i class="fa fa-plane" aria-hidden="true"></i>Airline Data</a>
 			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Urgency Data</a>
-			<a href=""><i class="fa fa-bomb" aria-hidden="true"></i>Root Cause Data</a>
-			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Man Power Data</a>
-			<a href=""><i class="fa fa-code-fork" aria-hidden="true"></i>AC Type Data</a>
+			<a href="{{url('/')}}/occ/rootcausetable"><i class="fa fa-bomb" aria-hidden="true"></i>Root Cause Data</a>
+			<a href="{{url('/')}}/occ/mantable"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Man Power Data</a>
+			<a href="{{url('/')}}/occ/actable"><i class="fa fa-code-fork" aria-hidden="true"></i>AC Type Data</a>
 		</div>
 		@endif
 		<!-- manager -->
