@@ -86,6 +86,23 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::get('/edit-rootcause/{id}','occController@formRootCause');
     Route::post('/edit-rootcause/{id}','occController@editRootCause');
     Route::get('/delete-rootcause/{id}','occController@deleteRootCause');
+//  CRUD AIRLINE
+    Route::get('/airlinetable','occController@airlinetable');
+    Route::post('/insert-airline','occController@insertAirline');
+    Route::get('/edit-airline/{id}','occController@formAirline');
+    Route::post('/edit-airline/{id}','occController@editAirline');
+    Route::get('/delete-airline/{id}','occController@deleteAirline');
+//  CRUD EQUIPMENT
+    Route::get('/equipmenttable','occController@equipmenttable');
+    Route::post('/insert-equipment','occController@insertEquipment');
+    Route::post('/add-equipment/{id}','occController@addEquipment');
+    Route::get('/many-equipment/{id}','occController@manyEquipment');
+    Route::get('/edit-equipment/{id}','occController@formEquipment');
+    Route::post('/edit-equipment/{id}','occController@editEquipment');
+    Route::get('/edit-many/{id}','occController@formMany');
+    Route::post('/edit-many/{id}','occController@editMany');
+    Route::get('/delete-equipment/{id}','occController@deleteEquipment');
+    Route::get('/delete-many/{id}','occController@deleteMany');
 
 });
 
