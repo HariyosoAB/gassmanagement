@@ -41,9 +41,11 @@
             <td style="padding-top:20px">{{$order->airline_type}}</td>
             <td style="padding-top:20px"><span class="label @if($order->order_urgency == 1) label-danger @elseif($order->order_urgency == 2) label-warning @elseif($order->order_urgency == 3) label-success @else label-default @endif">{{$order->urgency_level}}</span></td>
             <td>
+              @if(Auth::user()->user_role == 2)
                 <a href="{{url('/')}}/occ/finish/{{$order->order_id}}" style="margin-top: 5px" class="btn btn-md btn-primary">
                   <i class="fa fa-check" aria-hidden="true"></i>
                 </a>
+              @endif
                 <a href="{{url('/')}}/occ/order-detail/{{$order->order_id}}" style="margin-top: 5px" class="btn btn-info btn-md">
                   <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                 </a>

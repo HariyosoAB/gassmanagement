@@ -59,5 +59,6 @@ class Kernel extends HttpKernel
         'CustomerArea' => \App\Http\Middleware\CustomerArea::class,
         'OccArea' => \App\Http\Middleware\OccArea::class,
         'ManagementArea' => \App\Http\Middleware\ManagementArea::class,
+        'omMiddleware' => \App\Http\Middleware\omMiddleware::class,
     ];
 }

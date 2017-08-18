@@ -121,7 +121,7 @@
   function viewprobtag(id){
     $('#loading').show();
     $.get("{{url('/')}}/occ/probtag/"+id,function (data){
-      //console.log(data);
+      console.log(data);
         $('#loading').hide();
         $("#myModal").html(data);
 

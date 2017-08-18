@@ -21,7 +21,11 @@
 		@endif
 		<!-- manager -->
 		@if(Auth::user()->user_role==3)
-		<button id="report" autofocus>Report</button><script>
+		<button id="report" <?php if($nav=="order") echo "class='active'";?>>Report</button>
+		<button id="history-occ"><i class="fa fa-history" aria-hidden="true"></i>History</button>
+		<button id="alokasi-occ" onclick="window.location.href='{{url('')}}/occ/allocation'" <?php if($nav=="alokasi-occ") echo "class='active'";?>><i class="fa fa-pie-chart" aria-hidden="true"></i>Allocation</button>
+		<script>
+			<?php if($nav=="history-occ") echo "window.onload = function () {document.querySelector('#history-occ').click();}";?>
 			<?php if($nav=="report") echo "window.onload = function () {document.querySelector('#report').click();}";?>
 		</script>
 		@endif
@@ -57,11 +61,19 @@
 		@endif
 		<!-- manager -->
 		@if(Auth::user()->user_role == 3)
-		<div id="sub-menu-report">
+		<div id="sub-menu-report" style="display:none">
 			<a href="{{url('')}}/management/daily">Daily</a>
 			<a href="{{url('')}}/management/weekly">Weekly</a>
 			<a href="{{url('')}}/management/monthly">Monthly</a>
 		</div>
+		<div id="sub-menu-history-occ" style="display:none">
+			<a href="{{url('')}}/occ/wait-exec"><i class="fa fa-clock-o" aria-hidden="true"></i>Waiting for Execution</a>
+			<a href="{{url('')}}/occ/on-progress"><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
+			<a href="{{url('')}}/occ/completed"><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
+			<a href="{{url('')}}/occ/canceled"><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
+			<a href="{{url('')}}/occ/all-order"><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
+		</div>
+		<div id="sub-menu-alokasi-occ" style="display:none"></div>
 		@endif
 	</div>
 </div>
@@ -90,12 +102,11 @@
 		<button id="alokasi-occ2"><i class="fa fa-pie-chart" aria-hidden="true"></i>Allocation</button>
 		<button id="settings-occ2"><i class="fa fa-cogs" aria-hidden="true"></i>Settings</button>
 		<div class="sub-menu-history-cus2" id="sub-menu-settings-occ2" style="display:none">
-			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Equipment Data</a>
-			<a href=""><i class="fa fa-plane" aria-hidden="true"></i>Airline Data</a>
-			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Urgency Data</a>
-			<a href=""><i class="fa fa-bomb" aria-hidden="true"></i>Root Cause Data</a>
-			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Man Power Data</a>
-			<a href=""><i class="fa fa-code-fork" aria-hidden="true"></i>AC Type Data</a>
+			<a href="{{url('/')}}/occ/equipmenttable"><i class="fa fa-wrench" aria-hidden="true"></i>Equipment Data</a>
+			<a href="{{url('/')}}/occ/airlinetable"><i class="fa fa-plane" aria-hidden="true"></i>Airline Data</a>
+			<a href="{{url('/')}}/occ/rootcausetable"><i class="fa fa-bomb" aria-hidden="true"></i>Root Cause Data</a>
+			<a href="{{url('/')}}/occ/mantable"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Man Power Data</a>
+			<a href="{{url('/')}}/occ/actable"><i class="fa fa-code-fork" aria-hidden="true"></i>AC Type Data</a>
 		</div>
 		@endif
 		<!-- manager -->
@@ -106,6 +117,15 @@
 			<a href="{{url('')}}/management/weekly"><i class="fa fa-plane" aria-hidden="true"></i>Weekly</a>
 			<a href="{{url('')}}/management/monthly"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Monthly</a>
 		</div>
+		<button id="history-occ2"><i class="fa fa-history" aria-hidden="true"></i>History</button>
+		<div class="sub-menu-history-cus2" id="sub-menu-history-occ2" style="display:none">
+			<a href="{{url('')}}/occ/wait-exec"><i class="fa fa-clock-o" aria-hidden="true"></i>Waiting for Execution</a>
+			<a href="{{url('')}}/occ/on-progress"><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
+			<a href="{{url('')}}/occ/completed"><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
+			<a href="{{url('')}}/occ/canceled"><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
+			<a href="{{url('')}}/occ/all-order"><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
+		</div>
+		<button id="alokasi-occ2"><i class="fa fa-pie-chart" aria-hidden="true"></i>Allocation</button>
 		@endif
 	</div>
 </div>

@@ -38,13 +38,13 @@ Route::group(['middleware' => 'CustomerArea', 'prefix' => 'cust'],function(){
 });
 
 Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
-    Route::get('/wait-exec','occController@waitExec');
+    // Route::get('/wait-exec','occController@waitExec');
     Route::get('/preview-order','occController@previewOrder');
-    Route::get('/on-progress','occController@onprogressTable');
-    Route::get('/completed','occController@completedTable');
-    Route::get('/canceled','occController@canceledTable');
-    Route::get('/all-order','occController@allTable');
-    Route::get('/order-detail/{id}','occController@detail');
+    // Route::get('/on-progress','occController@onprogressTable');
+    // Route::get('/completed','occController@completedTable');
+    // Route::get('/canceled','occController@canceledTable');
+    // Route::get('/all-order','occController@allTable');
+    // Route::get('/order-detail/{id}','occController@detail');
 
     Route::get('/allocate/{id}','occController@allocateForm');
     Route::post('/allocate/{id}','occController@allocateOrder');
@@ -58,10 +58,10 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::get('/checkallocation/{id}/{date}','occController@checkAllocation');
     Route::post('/cancel/{id}','occController@cancel');
 
-    Route::get('/allocation/{id}/{date}','occController@allocationajax');
-    Route::get('/allocation','occController@allocation');
+    // Route::get('/allocation/{id}/{date}','occController@allocationajax');
+    // Route::get('/allocation','occController@allocation');
 
-    Route::get('/probtag/{id}','occController@modalproblem');
+    // Route::get('/probtag/{id}','occController@modalproblem');
 
     Route::post('/realloc/{id}','occController@reallocateOrder');
     Route::get('/checkused/{id}/{date}','occController@checkUsed');
@@ -106,6 +106,19 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
 
 });
 
+Route::group(['middleware' => 'omMiddleware', 'prefix' => 'occ'],function(){
+    Route::get('/wait-exec','occController@waitExec');
+    Route::get('/on-progress','occController@onprogressTable');
+    Route::get('/completed','occController@completedTable');
+    Route::get('/canceled','occController@canceledTable');
+    Route::get('/all-order','occController@allTable');
+
+    Route::get('/allocation/{id}/{date}','occController@allocationajax');
+    Route::get('/allocation','occController@allocation');
+
+    Route::get('/probtag/{id}','occController@modalproblem');
+});
+
 Route::group(['middleware' => 'ManagementArea', 'prefix' => 'management'],function(){
     Route::get('/daily', function(){
         $data['nav'] = "report";
@@ -120,6 +133,10 @@ Route::group(['middleware' => 'ManagementArea', 'prefix' => 'management'],functi
     });
     Route::get('/order-detail/{id}','managementController@detail');
     Route::get('/export-day/{waktu}','managementController@export_day');
+    Route::get('/export-week/{waktu}','managementController@export_week');
+    Route::get('/export-month/{waktu}','managementController@export_month');
     Route::post('/graph1','managementController@graph1');
+    Route::post('/graph2','managementController@graph2');
+    Route::post('/graph3','managementController@graph3');
 
 });
