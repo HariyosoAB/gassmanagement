@@ -67,3 +67,14 @@ Route::group(['middleware' => 'OccArea', 'prefix' => 'occ'],function(){
     Route::get('/checkused/{id}/{date}','occController@checkUsed');
 
 });
+
+Route::group(['middleware' => 'ManagementArea', 'prefix' => 'management'],function(){
+    Route::get('/daily', function(){
+        $data['nav'] = "report";
+        return view('pages.management.input', $data);
+    });
+    Route::get('/order-detail/{id}','managementController@detail');
+    Route::get('/export-day/{waktu}','managementController@export_day');
+    Route::post('/graph1','managementController@graph1');
+
+});
