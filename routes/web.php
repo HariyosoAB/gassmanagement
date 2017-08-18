@@ -117,6 +117,8 @@ Route::group(['middleware' => 'omMiddleware', 'prefix' => 'occ'],function(){
     Route::get('/allocation','occController@allocation');
 
     Route::get('/probtag/{id}','occController@modalproblem');
+
+    Route::get('/order-detail/{id}','occController@detail');
 });
 
 Route::group(['middleware' => 'ManagementArea', 'prefix' => 'management'],function(){
