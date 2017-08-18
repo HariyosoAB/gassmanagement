@@ -94,6 +94,13 @@ Route::group(['middleware' => 'ManagementArea', 'prefix' => 'management'],functi
         $data['nav'] = "report";
         return view('pages.management.input', $data);
     });
+    Route::get('/weekly', function(){
+        $data['nav'] = "report";
+        return view('pages.management.input2', $data);
+    });Route::get('/monthly', function(){
+        $data['nav'] = "report";
+        return view('pages.management.input3', $data);
+    });
     Route::get('/order-detail/{id}','managementController@detail');
     Route::get('/export-day/{waktu}','managementController@export_day');
     Route::post('/graph1','managementController@graph1');

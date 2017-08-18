@@ -59,9 +59,9 @@
 		<!-- manager -->
 		@if(Auth::user()->user_role == 3)
 		<div id="sub-menu-report">
-			<a href="">Daily</a>
-			<a href="">Weekly</a>
-			<a href="">Monthly</a>
+			<a href="{{url('')}}/management/daily">Daily</a>
+			<a href="{{url('')}}/management/weekly">Weekly</a>
+			<a href="{{url('')}}/management/monthly">Monthly</a>
 		</div>
 		@endif
 	</div>
@@ -82,10 +82,11 @@
 		<button id="order-occ"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Review Order</button>
 		<button id="history-occ2"><i class="fa fa-history" aria-hidden="true"></i>History</button>
 		<div class="sub-menu-history-cus2" id="sub-menu-history-occ2" style="display:none">
-			<a href=""><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
-			<a href=""><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
-			<a href=""><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
-			<a href=""><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
+			<a href="{{url('')}}/occ/wait-exec"><i class="fa fa-clock-o" aria-hidden="true"></i>Waiting for Execution</a>
+			<a href="{{url('')}}/occ/on-progress"><i class="fa fa-refresh" aria-hidden="true"></i>On-Progress</a>
+			<a href="{{url('')}}/occ/completed"><i class="fa fa-check" aria-hidden="true"></i>Completed</a>
+			<a href="{{url('')}}/occ/canceled"><i class="fa fa-times" aria-hidden="true"></i>Canceled</a>
+			<a href="{{url('')}}/occ/all-order"><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
 		</div>
 		<button id="alokasi-occ2"><i class="fa fa-pie-chart" aria-hidden="true"></i>Allocation</button>
 		<button id="settings-occ2"><i class="fa fa-cogs" aria-hidden="true"></i>Settings</button>
@@ -102,9 +103,9 @@
 		@if(Auth::user()->user_role==3)
 		<button id="report2" autofocus>report</button>
 		<div class="sub-menu-history-cus2" id="sub-menu-report2" style="display:none">
-			<a href=""><i class="fa fa-wrench" aria-hidden="true"></i>Daily</a>
-			<a href=""><i class="fa fa-plane" aria-hidden="true"></i>Weekly</a>
-			<a href=""><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Monthly</a>
+			<a href="{{url('')}}/management/daily"><i class="fa fa-wrench" aria-hidden="true"></i>Daily</a>
+			<a href="{{url('')}}/management/weekly"><i class="fa fa-plane" aria-hidden="true"></i>Weekly</a>
+			<a href="{{url('')}}/management/monthly"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Monthly</a>
 		</div>
 		@endif
 	</div>
