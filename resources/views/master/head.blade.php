@@ -32,7 +32,11 @@
     <!-- aos -->
     <script src="{{url('')}}/plugin/aos-master/dist/aos.js"></script>
     
+    <!-- select2 -->
     <script src="{{url('')}}/plugin/select2/select2.min.js"></script>
+
+    <!-- chartjs -->
+    <script src="{{url('')}}/plugin/chartjs/Chart.min.js"></script>
 
     <!-- daterangepicker -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
