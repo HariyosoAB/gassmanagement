@@ -9,26 +9,14 @@ use App\OrderManpower;
 use App\Notification;
 use App\EquipmentTimeslot;
 use DB;
-use Auth;
 use Carbon\Carbon;
 class occController extends Controller
 {
-  public $data;
-  protected $user;
-  public function __construct()
-  {
-    $this->middleware(function ($request, $next) {
-         $this->data['unread'] = Notification::where('notification_read',0)->where('notification_user',Auth::user()->user_id)->count();
-         //$this->data['notif'] = Notification::where('notification_user',Auth::user()->user_id)->take(10)->get();
-          return $next($request);
-       });
-  }
-
   public function detail($id){
 
-      $this->data['nav'] = "preview";
-      // $this->data['fields'] = Order::find($id);
-      $this->data['fields'] = DB::table('order_f')
+      $data['nav'] = "preview";
+      // $data['fields'] = Order::find($id);
+      $data['fields'] = DB::table('order_f')
       ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
       ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
       ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
@@ -40,18 +28,18 @@ class occController extends Controller
       ->where("order_f.order_id", "=", $id)
       ->get();
 
-      $this->data['manpower'] = DB::table('order_manpower')
+      $data['manpower'] = DB::table('order_manpower')
       ->join('manpower', 'manpower.manpower_id', '=', 'order_manpower.manpower_id')
       ->where('order_manpower.order_id', '=', $id)
       ->get();
 
-    //   dd($this->data);
+      // dd($data);
 
-      return view('pages/customer/detail-order',$this->data);
+      return view('pages/customer/detail-order',$data);
 
-    $this->data['nav'] = "preview";
-    // $this->data['fields'] = Order::find($id);
-    $this->data['fields'] = DB::table('order_f')
+    $data['nav'] = "preview";
+    // $data['fields'] = Order::find($id);
+    $data['fields'] = DB::table('order_f')
     ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
     ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
     ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
@@ -63,12 +51,12 @@ class occController extends Controller
     ->where("order_f.order_id", "=", $id)
     ->get();
 
-    $this->data['manpower'] = DB::table('order_manpower')
+    $data['manpower'] = DB::table('order_manpower')
     ->join('manpower', 'manpower.manpower_id', '=', 'order_manpower.manpower_id')
     ->where('order_manpower.order_id', '=', $id)
     ->get();
 
-    return view('pages/customer/detail-order',$this->data);
+    return view('pages/customer/detail-order',$data);
 
   }
 
@@ -138,11 +126,6 @@ class occController extends Controller
     $order->order_status = 9;
     $order->order_cancellation = $request->reason;
     $order->save();
-    $notif = new Notification;
-    $notif->notification_user = $order->order_user;
-    $notif->notification_text = 'Your Order with SWO Number: '.$order->order_swo.' is cancelled';
-    $notif->notification_timestamp = Carbon::now('Asia/Jakarta');
-    $notif->save();
     if($skrg == 1){
       return Redirect('occ/wait-exec');
     }
@@ -212,11 +195,6 @@ class occController extends Controller
         ->from('order_manpower')
         ->where('order_id','=',$order->order_id);
       })->update(['manpower_status' => 1]);
-      $notif = new Notification;
-      $notif->notification_user = $order->order_user;
-      $notif->notification_text = 'Your Order with SWO Number: '.$order->order_swo.' is executed';
-      $notif->notification_timestamp = Carbon::now('Asia/Jakarta');
-      $notif->save();
       return Redirect('/occ/wait-exec');
     }
     else if ($request->type == 'finish'){
@@ -229,11 +207,6 @@ class occController extends Controller
         ->from('order_manpower')
         ->where('order_id','=',$order->order_id);
       })->update(['manpower_status' => 0]);
-      $notif = new Notification;
-      $notif->notification_user = $order->order_user;
-      $notif->notification_text = 'Your Order with SWO Number: '.$order->order_swo.' is finished';
-      $notif->notification_timestamp = Carbon::now('Asia/Jakarta');
-      $notif->save();
       return Redirect('/occ/on-progress');
     }
   }
@@ -251,13 +224,13 @@ class occController extends Controller
       //bug here
       if($execTime->gt($startTime) && $totalDuration > 15)
       {
-        $this->data['order'] = $order;
-        $this->data['time'] = Carbon::now('Asia/Jakarta');
-        $this->data['problems'] = DB::table('root_cause')->get();
-        $this->data['time'] = $this->data['time']->toDateTimeString();
-        $this->data['delay'] = "finish";
-        $this->data['nav'] = "history-occ";
-        return view('pages.occ.problem-tagging',$this->data);
+        $data['order'] = $order;
+        $data['time'] = Carbon::now('Asia/Jakarta');
+        $data['problems'] = DB::table('root_cause')->get();
+        $data['time'] = $data['time']->toDateTimeString();
+        $data['delay'] = "finish";
+        $data['nav'] = "history-occ";
+        return view('pages.occ.problem-tagging',$data);
       }
       else
       {
@@ -273,7 +246,7 @@ class occController extends Controller
 
         $notif = new Notification;
         $notif->notification_user = $order->order_user;
-        $notif->notification_text = 'Order with SWO Number: '.$order->order_swo.' is finished';
+        $notif->notification_text = 'Order with SWO Number: '.$order->order_swo.'is finished';
         $notif->notification_timestamp = Carbon::now('Asia/Jakarta');
         $notif->save();
         return Redirect('/occ/on-progress');
@@ -291,7 +264,7 @@ class occController extends Controller
     if($order->order_status == 5 || $order->order_status == 10)
     {
       $equipment = DB::table('equipment_many')->where('em_id','=',$order->order_em)->get();
-      $this->data['mantabrak'] = DB::table('order_f')
+      $data['mantabrak'] = DB::table('order_f')
       ->join('order_manpower','order_f.order_id','=','order_manpower.order_id')
       ->join('manpower','order_manpower.manpower_id','=','manpower.manpower_id')
       ->where('manpower.manpower_status','=','1')
@@ -301,12 +274,12 @@ class occController extends Controller
         ->from('order_manpower')
         ->where('order_id','=',$order->order_id);
       })->get();
-      //  dd($this->data['mantabrak']);
+      //  dd($data['mantabrak']);
       //  dd($manpower);
 
 
       if($equipment[0]->em_status_on_service == 1){
-        $this->data['eqtabrak'] = DB::table('order_f')
+        $data['eqtabrak'] = DB::table('order_f')
         ->join('equipment','equipment.equipment_id','=','order_f.order_equipment')
         ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
         ->where('order_f.order_status','=',2)
@@ -314,33 +287,28 @@ class occController extends Controller
         ->get();
       }
 
-      if(empty($this->data['mantabrak'][0]) && $equipment[0]->em_status_on_service == 0){
+      if(empty($data['mantabrak'][0]) && $equipment[0]->em_status_on_service == 0){
 
         if ($this->checkLateExec($order)) {
-          $notif = new Notification;
-          $notif->notification_user = $order->order_user;
-          $notif->notification_text = 'Your Order with SWO Number: '.$order->order_swo.' is executed';
-          $notif->notification_timestamp = Carbon::now('Asia/Jakarta');
-          $notif->save();
           return Redirect('/occ/wait-exec');
         }
         else {
-          $this->data['order'] = $order;
-          $this->data['time'] = Carbon::now('Asia/Jakarta');
-          $this->data['problems'] = DB::table('root_cause')->get();
-          $this->data['time'] = $this->data['time']->toDateTimeString();
-          $this->data['delay'] = "execute";
-          $this->data['nav'] = "history-occ";
-          return view('pages.occ.problem-tagging',$this->data);
+          $data['order'] = $order;
+          $data['time'] = Carbon::now('Asia/Jakarta');
+          $data['problems'] = DB::table('root_cause')->get();
+          $data['time'] = $data['time']->toDateTimeString();
+          $data['delay'] = "execute";
+          $data['nav'] = "history-occ";
+          return view('pages.occ.problem-tagging',$data);
         }
       }
       else {
-        $this->data['order'] = $order;
-        $this->data['manpower'] = DB::table('manpower')->get();
-        $this->data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$order->order_equipment)->get();
-        $this->data['nav'] = "history-occ";
-        //dd($this->data);
-        return view('pages.occ.in-use',$this->data);
+        $data['order'] = $order;
+        $data['manpower'] = DB::table('manpower')->get();
+        $data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$order->order_equipment)->get();
+        $data['nav'] = "history-occ";
+        //dd($data);
+        return view('pages.occ.in-use',$data);
       }
     }
     return redirect('/occ/wait-exec');
@@ -434,17 +402,12 @@ class occController extends Controller
     //   $pt->save();
     // }
     $order->save();
-    $notif = new Notification;
-    $notif->notification_user = $order->order_user;
-    $notif->notification_text = 'Your Order with SWO Number: '.$order->order_swo.' is Delayed';
-    $notif->notification_timestamp = Carbon::now('Asia/Jakarta');
-    $notif->save();
     return redirect('/occ/wait-exec');
   }
 
   public function waitExec(){
-    $this->data['nav'] = "history-occ";
-    $this->data['orders'] = DB::table('order_f')
+    $data['nav'] = "history-occ";
+    $data['orders'] = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
@@ -455,11 +418,11 @@ class occController extends Controller
     ->orWhere('order_f.order_status','=','10')
     ->orderBy('order_id','desc')
     ->get();
-    return view('pages/occ/wait-exec',$this->data);
+    return view('pages/occ/wait-exec',$data);
   }
   public function previewOrder(){
-    $this->data['nav'] = "preview";
-    $this->data['orders'] = DB::table('order_f')
+    $data['nav'] = "preview";
+    $data['orders'] = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
@@ -467,12 +430,12 @@ class occController extends Controller
     ->where('order_f.order_status','=','1')
     ->orderBy('order_f.order_id','desc')
     ->get();
-    return view('pages/occ/preview-order', $this->data);
+    return view('pages/occ/preview-order', $data);
   }
 
   public function onprogressTable(){
-    $this->data['nav'] = "history-occ";
-    $this->data['orders'] = DB::table('order_f')
+    $data['nav'] = "history-occ";
+    $data['orders'] = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
@@ -482,12 +445,12 @@ class occController extends Controller
     ->where('order_f.order_status','=','2')
     ->orderBy('order_id','desc')
     ->get();
-    return view('pages/occ/on-progress', $this->data);
+    return view('pages/occ/on-progress', $data);
   }
 
   public function completedTable(){
-    $this->data['nav'] = "history-occ";
-    $this->data['orders'] = DB::table('order_f')
+    $data['nav'] = "history-occ";
+    $data['orders'] = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
@@ -497,12 +460,12 @@ class occController extends Controller
     ->where('order_f.order_status','=','3')
     ->orderBy('order_id','desc')
     ->get();
-    return view('pages/occ/completed', $this->data);
+    return view('pages/occ/completed', $data);
   }
 
   public function canceledTable(){
-    $this->data['nav'] = "history-occ";
-    $this->data['orders'] = DB::table('order_f')
+    $data['nav'] = "history-occ";
+    $data['orders'] = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
@@ -510,24 +473,24 @@ class occController extends Controller
     ->where('order_f.order_status','=','9')
     ->orderBy('order_id','desc')
     ->get();
-    return view('pages/occ/canceled', $this->data);
+    return view('pages/occ/canceled', $data);
   }
 
   public function allTable(){
-    $this->data['nav'] = "history-occ";
-    $this->data['orders'] = DB::table('order_f')
+    $data['nav'] = "history-occ";
+    $data['orders'] = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
     ->orderBy('order_id','desc')
     ->get();
-    return view('pages/occ/all-order', $this->data);
+    return view('pages/occ/all-order', $data);
   }
 
   public function allocateForm($id){
-    $this->data['nav'] = "preview";
-    $this->data['orders'] = DB::table('order_f')
+    $data['nav'] = "preview";
+    $data['orders'] = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
@@ -536,13 +499,13 @@ class occController extends Controller
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
     ->where('order_f.order_id','=',$id)
     ->get();
-    //   dd($this->data);
-    if($this->data['orders'][0]->order_status ==1)
+    //   dd($data);
+    if($data['orders'][0]->order_status ==1)
     {
-      $this->data['urgency'] = DB::table('urgency')->get();
-      $this->data['manpower'] = DB::table('manpower')->orderBy('manpower_capability','desc')->get();
-      $this->data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$this->data['orders'][0]->order_equipment)->get();
-      return view('pages/occ/review-form',$this->data);
+      $data['urgency'] = DB::table('urgency')->get();
+      $data['manpower'] = DB::table('manpower')->orderBy('manpower_capability','desc')->get();
+      $data['equipment'] = DB::table('equipment_many')->where('em_equipment','=',$data['orders'][0]->order_equipment)->get();
+      return view('pages/occ/review-form',$data);
     }
     else {
       return redirect('occ/preview-order');
@@ -652,13 +615,13 @@ class occController extends Controller
         return Redirect('occ/wait-exec');
       }
       else{
-        $this->data['order'] = $order;
-        $this->data['time'] = Carbon::now('Asia/Jakarta');
-        $this->data['problems'] = DB::table('root_cause')->get();
-        $this->data['time'] = $this->data['time']->toDateTimeString();
-        $this->data['delay'] = "execute";
-        $this->data['nav'] = "history-occ";
-        return view('pages.occ.problem-tagging',$this->data);
+        $data['order'] = $order;
+        $data['time'] = Carbon::now('Asia/Jakarta');
+        $data['problems'] = DB::table('root_cause')->get();
+        $data['time'] = $data['time']->toDateTimeString();
+        $data['delay'] = "execute";
+        $data['nav'] = "history-occ";
+        return view('pages.occ.problem-tagging',$data);
       }
     }
     else {
@@ -691,19 +654,9 @@ class occController extends Controller
         $order->order_delayed_end = $request->delayend;
         $order->order_status = 10;
         $this->changeAlloc($order,"delayed");
-        $notif = new Notification;
-        $notif->notification_user = $order->order_user;
-        $notif->notification_text = 'Your Order with SWO Number: '.$order->order_swo.' is delayed';
-        $notif->notification_timestamp = Carbon::now('Asia/Jakarta');
-        $notif->save();
       }
       else {
         $this->changeAlloc($order,"allocation");
-        $notif = new Notification;
-        $notif->notification_user = $order->order_user;
-        $notif->notification_text = 'Your Order with SWO Number: '.$order->order_swo.' has been approved';
-        $notif->notification_timestamp = Carbon::now('Asia/Jakarta');
-        $notif->save();
       }
       $order->save();
 
@@ -783,12 +736,12 @@ class occController extends Controller
   }
 
   public function checkAllocation($id,$date){
-    $this->data['equipment'] = DB::table('equipment')->get();
-    $this->data['nav'] = 'alokasi-occ';
-    $this->data['id'] = $id;
-    $this->data['date'] = $date;
-    //dd($this->data);
-    return view('pages/occ/all-allocation',$this->data);
+    $data['equipment'] = DB::table('equipment')->get();
+    $data['nav'] = 'alokasi-occ';
+    $data['id'] = $id;
+    $data['date'] = $date;
+    //dd($data);
+    return view('pages/occ/all-allocation',$data);
     }
 
     public function checkUsed($id,$date){
@@ -803,19 +756,19 @@ class occController extends Controller
       and order_em = ".$id."
       ORDER BY order_id DESC";
       $order = DB::select($query);
-      $this->data['order'] = $order;
-      $this->data['nav'] = 'alokasi-occ';
-      $this->data['date']= $date;
-      $this->data['eq'] = DB::table('equipment_many')->join('equipment','equipment_many.em_equipment','equipment.equipment_id')->where('equipment_many.em_id',$id)->first();
+      $data['order'] = $order;
+      $data['nav'] = 'alokasi-occ';
+      $data['date']= $date;
+      $data['eq'] = DB::table('equipment_many')->join('equipment','equipment_many.em_equipment','equipment.equipment_id')->where('equipment_many.em_id',$id)->first();
       //dd($order);
-      return view('pages.occ.checkused',$this->data);
+      return view('pages.occ.checkused',$data);
     }
 
     public function allocationajax($id,$date){
       $date = Carbon::parse($date);
       //  dd($now);
       $date = $date->format('Y-m-d');
-      $this->data['date'] = $date;
+      $data['date'] = $date;
       $query = "SELECT * FROM equipment e
       INNER JOIN equipment_many em on e.equipment_id = em.em_equipment
       LEFT JOIN (
@@ -823,23 +776,23 @@ class occController extends Controller
         ) t on t.et_equipment = em.em_id
         WHERE e.equipment_id = ".$id."
         ";
-        $this->data['alloc'] = DB::select($query);
-        return view('pages/occ/allocatable',$this->data);
-        //dd($this->data);
+        $data['alloc'] = DB::select($query);
+        return view('pages/occ/allocatable',$data);
+        //dd($data);
       }
 
       public function allocation(){
-        $this->data['equipment'] = DB::table('equipment')->get();
-        $this->data['nav'] = 'alokasi-occ';
-        //dd($this->data);
-        return view('pages/occ/all-allocation',$this->data);
+        $data['equipment'] = DB::table('equipment')->get();
+        $data['nav'] = 'alokasi-occ';
+        //dd($data);
+        return view('pages/occ/all-allocation',$data);
       }
 
       public function modalproblem($id){
-        $this->data['problem'] = ProblemTagging::distinct()->select('rc_name')->where('order_id',$id)->join('root_cause','problem_tagging.pt_root_cause','=','rc_id')->get();
-        //  dd($this->data);
-        $this->data['order'] = Order::find($id);
-        return view('pages/occ/modal-problemtagging',$this->data);
+        $data['problem'] = ProblemTagging::distinct()->select('rc_name')->where('order_id',$id)->join('root_cause','problem_tagging.pt_root_cause','=','rc_id')->get();
+        //  dd($data);
+        $data['order'] = Order::find($id);
+        return view('pages/occ/modal-problemtagging',$data);
       }
 
 
@@ -849,15 +802,15 @@ class occController extends Controller
 
       //CRUD AC
       public function actable(){
-        $this->data['datas'] = DB::table('actype')->orderBy('actype_id','desc')->get();
-        $this->data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-ac',$this->data);
+        $data['datas'] = DB::table('actype')->orderBy('actype_id','desc')->get();
+        $data['nav'] = "settings-occ";
+        return view('pages/occ/tabel-ac',$data);
       }
 
       public function formAC($id){
-        $this->data['nav'] = "settings-occ";
-        $this->data['data'] = DB::table('actype')->where('actype_id',$id)->first();
-        return view('pages/occ/modal-ac',$this->data);
+        $data['nav'] = "settings-occ";
+        $data['data'] = DB::table('actype')->where('actype_id',$id)->first();
+        return view('pages/occ/modal-ac',$data);
       }
 
       public function insertAC(Request $request){
@@ -893,15 +846,15 @@ class occController extends Controller
 
       //CRUD MANPOWER
       public function manpowertable(){
-        $this->data['datas'] = DB::table('manpower')->orderBy('manpower_id','desc')->get();
-        $this->data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-manpower',$this->data);
+        $data['datas'] = DB::table('manpower')->orderBy('manpower_id','desc')->get();
+        $data['nav'] = "settings-occ";
+        return view('pages/occ/tabel-manpower',$data);
       }
 
       public function formManpower($id){
-        $this->data['nav'] = "settings-occ";
-        $this->data['data'] = DB::table('manpower')->where('manpower_id',$id)->first();
-        return view('pages/occ/modal-manpower',$this->data);
+        $data['nav'] = "settings-occ";
+        $data['data'] = DB::table('manpower')->where('manpower_id',$id)->first();
+        return view('pages/occ/modal-manpower',$data);
       }
 
       public function insertManpower(Request $request){
@@ -937,15 +890,15 @@ class occController extends Controller
 
       //CRUD ROOTCAUSE
       public function rootcausetable(){
-        $this->data['datas'] = DB::table('root_cause')->orderBy('rc_id','desc')->get();
-        $this->data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-rootcause',$this->data);
+        $data['datas'] = DB::table('root_cause')->orderBy('rc_id','desc')->get();
+        $data['nav'] = "settings-occ";
+        return view('pages/occ/tabel-rootcause',$data);
       }
 
       public function formRootCause($id){
-        $this->data['nav'] = "settings-occ";
-        $this->data['data'] = DB::table('root_cause')->where('rc_id',$id)->first();
-        return view('pages/occ/modal-rootcause',$this->data);
+        $data['nav'] = "settings-occ";
+        $data['data'] = DB::table('root_cause')->where('rc_id',$id)->first();
+        return view('pages/occ/modal-rootcause',$data);
       }
 
       public function insertRootCause(Request $request){
@@ -981,15 +934,15 @@ class occController extends Controller
 
       //CRUD AIRLINE
       public function airlinetable(){
-        $this->data['datas'] = DB::table('airline')->orderBy('airline_id','desc')->get();
-        $this->data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-airline',$this->data);
+        $data['datas'] = DB::table('airline')->orderBy('airline_id','desc')->get();
+        $data['nav'] = "settings-occ";
+        return view('pages/occ/tabel-airline',$data);
       }
 
       public function formAirline($id){
-        $this->data['nav'] = "settings-occ";
-        $this->data['data'] = DB::table('airline')->where('airline_id',$id)->first();
-        return view('pages/occ/modal-airline',$this->data);
+        $data['nav'] = "settings-occ";
+        $data['data'] = DB::table('airline')->where('airline_id',$id)->first();
+        return view('pages/occ/modal-airline',$data);
       }
 
       public function insertAirline(Request $request){
@@ -1025,15 +978,15 @@ class occController extends Controller
 
       //CRUD EQUIPMENT
       public function equipmenttable(){
-        $this->data['datas'] = DB::table('equipment')->orderBy('equipment_id','desc')->get();
-        $this->data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-equipment',$this->data);
+        $data['datas'] = DB::table('equipment')->orderBy('equipment_id','desc')->get();
+        $data['nav'] = "settings-occ";
+        return view('pages/occ/tabel-equipment',$data);
       }
 
       public function formEquipment($id){
-        $this->data['nav'] = "settings-occ";
-        $this->data['data'] = DB::table('equipment')->where('equipment_id',$id)->first();
-        return view('pages/occ/modal-equipment',$this->data);
+        $data['nav'] = "settings-occ";
+        $data['data'] = DB::table('equipment')->where('equipment_id',$id)->first();
+        return view('pages/occ/modal-equipment',$data);
       }
 
       public function insertEquipment(Request $request){
@@ -1078,15 +1031,15 @@ class occController extends Controller
       }
       public function manyEquipment($id){
         $dat= DB::table('equipment')->where('equipment_id',$id)->first();
-        $this->data['model'] = $dat->equipment_model;
-        $this->data['datas'] = DB::table('equipment_many')->where('em_equipment',$id)->orderBy('em_id','desc')->get();
-      //  dd($this->data);
-        return view('pages/occ/tabel-many',$this->data);
+        $data['model'] = $dat->equipment_model;
+        $data['datas'] = DB::table('equipment_many')->where('em_equipment',$id)->orderBy('em_id','desc')->get();
+      //  dd($data);
+        return view('pages/occ/tabel-many',$data);
       }
       public function formMany($id){
-        $this->data['data']= DB::table('equipment_many')->where('em_id',$id)->first();
-      //  dd($this->data);
-        return view('pages/occ/modal-many',$this->data);
+        $data['data']= DB::table('equipment_many')->where('em_id',$id)->first();
+      //  dd($data);
+        return view('pages/occ/modal-many',$data);
       }
       public function editMany($id,Request $request){
         try {
