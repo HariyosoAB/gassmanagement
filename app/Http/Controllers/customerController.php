@@ -25,13 +25,13 @@ class customerController extends Controller
     }
     public function orderForm(){
         $this->data['nav'] = "order";
-        $this->data['maintenance'] = DB::table('maintenance')->get();
-        $this->data['airline'] = DB::table('airline')->get();
-        $this->data['units'] = DB::table('unit')->get();
-        $this->data['actype'] = DB::table('actype')->get();
-        $this->data['equipment'] = DB::table('equipment')->get();
-        $this->data['station'] = DB::table('station')->get();
-        $this->data['urgency'] = DB::table('urgency')->get();
+        $this->data['maintenance'] = DB::table('maintenance')->where('maintenance_softdel',0)->get();
+        $this->data['airline'] = DB::table('airline')->where('airline_softdel',0)->get();
+        $this->data['units'] = DB::table('unit')->where('unit_softdel',0)->get();
+        $this->data['actype'] = DB::table('actype')->where('actype_softdel',0)->get();
+        $this->data['equipment'] = DB::table('equipment')->where('equipment_softdel',0)->get();
+        $this->data['station'] = DB::table('station')->where('station_softdel',0)->get();
+        $this->data['urgency'] = DB::table('urgency')->where('urgency_softdel',0)->get();
 
         return view('pages/customer/create-order', $this->data);
     }
@@ -64,13 +64,13 @@ class customerController extends Controller
     public function editForm($id){
       $this->data['nav'] = "order";
       $this->data['fields'] = Order::find($id);
-      $this->data['maintenance'] = DB::table('maintenance')->get();
-      $this->data['airline'] = DB::table('airline')->get();
-      $this->data['units'] = DB::table('unit')->get();
-      $this->data['actype'] = DB::table('actype')->get();
-      $this->data['equipment'] = DB::table('equipment')->get();
-      $this->data['station'] = DB::table('station')->get();
-      $this->data['urgency'] = DB::table('urgency')->get();
+      $this->data['maintenance'] = DB::table('maintenance')->where('maintenance_softdel',0)->get();
+      $this->data['airline'] = DB::table('airline')->where('airline_softdel',0)->get();
+      $this->data['units'] = DB::table('unit')->where('unit_softdel',0)->get();
+      $this->data['actype'] = DB::table('actype')->where('actype_softdel',0)->get();
+      $this->data['equipment'] = DB::table('equipment')->where('equipment_softdel',0)->get();
+      $this->data['station'] = DB::table('station')->where('station_softdel',0)->get();
+      $this->data['urgency'] = DB::table('urgency')->where('urgency_softdel',0)->get();
 
       return view('pages/customer/edit-order',$this->data);
     }
@@ -153,7 +153,7 @@ class customerController extends Controller
         $order->order_note = $request->note;
         $order->order_status = 1;
         $order->save();
-        
+
         return Redirect('/cust/on-progress')->with('success','You have created a new order');
     }
     public function viewprogress()
