@@ -119,6 +119,8 @@ Route::group(['middleware' => 'omMiddleware', 'prefix' => 'occ'],function(){
     Route::get('/probtag/{id}','occController@modalproblem');
 
     Route::get('/order-detail/{id}','occController@detail');
+    Route::get('/ajaxAllTable', 'occController@ajaxAllTable');
+    Route::get('/ajaxCompleted', 'occController@ajaxCompleted');
 });
 
 Route::group(['middleware' => 'ManagementArea', 'prefix' => 'management'],function(){
@@ -129,10 +131,12 @@ Route::group(['middleware' => 'ManagementArea', 'prefix' => 'management'],functi
     Route::get('/weekly', function(){
         $data['nav'] = "report";
         return view('pages.management.input2', $data);
-    });Route::get('/monthly', function(){
+    });
+    Route::get('/monthly', function(){
         $data['nav'] = "report";
         return view('pages.management.input3', $data);
     });
+    Route::get('/pantau', 'managementController@pantau');
     Route::get('/order-detail/{id}','managementController@detail');
     Route::get('/export-day/{waktu}','managementController@export_day');
     Route::get('/export-week/{waktu}','managementController@export_week');

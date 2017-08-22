@@ -9,6 +9,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class managementController extends Controller
 {
+	public function pantau(){
+		$data['hasil'] = DB::select("select * from order_f LEFT JOIN equipment_many ON order_f.order_em = equipment_many.em_id left join equipment on order_f.order_equipment=equipment.equipment_id left join maintenance on maintenance.maintenance_id=order_f.order_maintenance_type where order_f.order_status !=3 and order_f.order_status != 9 order by order_f.order_start asc limit 10");
+		// dd($data['hasil']);
+        return view('pages.management.pantau', $data);
+	}
+
 	public function graph1(Request $request){
 		$data['nav'] = 'report';
     	// $waktu = Carbon::now('Asia/Jakarta')->format('Y-m-d');

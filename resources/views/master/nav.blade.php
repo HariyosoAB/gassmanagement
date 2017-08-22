@@ -21,13 +21,14 @@
 		@endif
 		<!-- manager -->
 		@if(Auth::user()->user_role==3)
-		<button id="report" <?php if($nav=="order") echo "class='active'";?>>Report</button>
+		<button id="report" <?php if($nav=="order") echo "class='active'";?>><i class="fa fa-area-chart" aria-hidden="true"></i>Report</button>
 		<button id="history-occ"><i class="fa fa-history" aria-hidden="true"></i>History</button>
 		<button id="alokasi-occ" onclick="window.location.href='{{url('')}}/occ/allocation'" <?php if($nav=="alokasi-occ") echo "class='active'";?>><i class="fa fa-pie-chart" aria-hidden="true"></i>Allocation</button>
 		<script>
 			<?php if($nav=="history-occ") echo "window.onload = function () {document.querySelector('#history-occ').click();}";?>
 			<?php if($nav=="report") echo "window.onload = function () {document.querySelector('#report').click();}";?>
 		</script>
+		<button id="pantau" onclick="window.location.href='{{url('')}}/management/pantau'"><i class="fa fa-tachometer" aria-hidden="true"></i>Pantau</button>
 		@endif
 	</div>
 	<div class="sub-menu">
@@ -111,7 +112,7 @@
 		@endif
 		<!-- manager -->
 		@if(Auth::user()->user_role==3)
-		<button id="report2" autofocus>report</button>
+		<button id="report2" autofocus><i class="fa fa-area-chart" aria-hidden="true"></i>report</button>
 		<div class="sub-menu-history-cus2" id="sub-menu-report2" style="display:none">
 			<a href="{{url('')}}/management/daily"><i class="fa fa-wrench" aria-hidden="true"></i>Daily</a>
 			<a href="{{url('')}}/management/weekly"><i class="fa fa-plane" aria-hidden="true"></i>Weekly</a>
@@ -126,6 +127,7 @@
 			<a href="{{url('')}}/occ/all-order"><i class="fa fa-list" aria-hidden="true"></i>All Order</a>
 		</div>
 		<button id="alokasi-occ2"><i class="fa fa-pie-chart" aria-hidden="true"></i>Allocation</button>
+		<button id="pantau" onclick="window.location.href='{{url('')}}/management/pantau'"><i class="fa fa-tachometer" aria-hidden="true"></i>Pantau</button>
 		@endif
 	</div>
 </div>

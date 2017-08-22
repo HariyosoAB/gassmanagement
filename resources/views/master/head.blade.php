@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="{{url('')}}/plugin/bootstrap/css/bootstrap.min.css">
 
     <!-- daterangepicker -->
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="{{url('/')}}/plugin/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" type="text/css" href="{{url('/')}}/plugin/sweetalert/sweetalert2.min.css" />
 
     <!-- datatables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css" />
+    <link rel="stylesheet" href="{{url('/')}}/plugin/datatables/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" href="{{url('/')}}/plugin/datatables/responsive.dataTables.min.css" />
 
     <!-- aos -->
     <link rel="stylesheet" href="{{url('')}}/plugin/aos-master/dist/aos.css" />
@@ -39,11 +39,11 @@
     <script src="{{url('')}}/plugin/chartjs/Chart.min.js"></script>
 
     <!-- daterangepicker -->
-    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <script type="text/javascript" src="{{url('/')}}/plugin/daterangepicker/moment.min.js"></script>
+    <script type="text/javascript" src="{{url('/')}}/plugin/daterangepicker/daterangepicker.js"></script>
 
     <!-- datatbles -->
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="{{url('/')}}/plugin/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="{{url('/')}}/plugin/datatables/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{url('/')}}/plugin/datatables/dataTables.responsive.min.js"></script>
 </head>

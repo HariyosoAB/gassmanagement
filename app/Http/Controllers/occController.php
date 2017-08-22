@@ -9,32 +9,34 @@ use App\OrderManpower;
 use App\EquipmentTimeslot;
 use DB;
 use Carbon\Carbon;
+use Yajra\Datatables\Datatables;
+
 class occController extends Controller
 {
   public function detail($id){
 
-      $data['nav'] = "preview";
+    $data['nav'] = "preview";
       // $data['fields'] = Order::find($id);
-      $data['fields'] = DB::table('order_f')
-      ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
-      ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
-      ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
-      ->join("actype", "actype.actype_id", "=", "order_f.order_ac_type")
-      ->join("equipment", "equipment.equipment_id", "=", "order_f.order_equipment")
-      ->join("station", "station.station_id", "=", "order_f.order_address")
-      ->join("urgency", "urgency.urgency_id", "=", "order_f.order_urgency")
-      ->leftjoin("equipment_many", "equipment_many.em_id", "=", "order_f.order_em")
-      ->where("order_f.order_id", "=", $id)
-      ->get();
+    $data['fields'] = DB::table('order_f')
+    ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
+    ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
+    ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
+    ->join("actype", "actype.actype_id", "=", "order_f.order_ac_type")
+    ->join("equipment", "equipment.equipment_id", "=", "order_f.order_equipment")
+    ->join("station", "station.station_id", "=", "order_f.order_address")
+    ->join("urgency", "urgency.urgency_id", "=", "order_f.order_urgency")
+    ->leftjoin("equipment_many", "equipment_many.em_id", "=", "order_f.order_em")
+    ->where("order_f.order_id", "=", $id)
+    ->get();
 
-      $data['manpower'] = DB::table('order_manpower')
-      ->join('manpower', 'manpower.manpower_id', '=', 'order_manpower.manpower_id')
-      ->where('order_manpower.order_id', '=', $id)
-      ->get();
+    $data['manpower'] = DB::table('order_manpower')
+    ->join('manpower', 'manpower.manpower_id', '=', 'order_manpower.manpower_id')
+    ->where('order_manpower.order_id', '=', $id)
+    ->get();
 
       // dd($data);
 
-      return view('pages/customer/detail-order',$data);
+    return view('pages/customer/detail-order',$data);
 
     $data['nav'] = "preview";
     // $data['fields'] = Order::find($id);
@@ -443,17 +445,55 @@ class occController extends Controller
 
   public function completedTable(){
     $data['nav'] = "history-occ";
-    $data['orders'] = DB::table('order_f')
+    // $data['orders'] = DB::table('order_f')
+    // ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
+    // ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
+    // ->join('actype','order_f.order_ac_type','=','actype.actype_id')
+    // ->join('airline','airline.airline_id','=','order_f.order_airline')
+    // ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
+    // ->join('urgency','urgency.urgency_id','order_f.order_urgency')
+    // ->where('order_f.order_status','=','3')
+    // ->orderBy('order_id','desc')
+    // ->get();
+    return view('pages/occ/completed', $data);
+  }
+
+  public function ajaxCompleted(){
+    $cek = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
-    ->join('equipment_many','equipment_many.em_id','=','order_f.order_em')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
-    ->join('urgency','urgency.urgency_id','order_f.order_urgency')
     ->where('order_f.order_status','=','3')
     ->orderBy('order_id','desc')
     ->get();
-    return view('pages/occ/completed', $data);
+
+    foreach($cek as $key){
+      if($key->order_status == 3)
+      {
+        $datetime1 = strtotime($key->order_start);
+        $datetime2 = strtotime($key->order_execute_at);
+        $interval  = $datetime2 - $datetime1;
+        $minutes   = round($interval / 60);
+              //echo $minutes;
+
+        $datetime1 = strtotime($key->order_end);
+        $datetime2 = strtotime($key->order_finished_at);
+        $interval  = $datetime2 - $datetime1;
+        $minutes2   = round($interval / 60);
+              //echo ".".$minutes2;
+
+
+
+        if(isset($key->order_delayed_until) || $minutes > 15 || $minutes2 > 15){
+          $key->order_status = "Completed - Delayed";
+        }else{
+          $key->order_status = "Completed - Ontime";
+        }
+      }
+    }
+
+    return Datatables::of($cek)->make(true);
   }
 
   public function canceledTable(){
@@ -471,14 +511,51 @@ class occController extends Controller
 
   public function allTable(){
     $data['nav'] = "history-occ";
-    $data['orders'] = DB::table('order_f')
+    // $data['orders'] = DB::table('order_f')
+    // ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
+    // ->join('actype','order_f.order_ac_type','=','actype.actype_id')
+    // ->join('airline','airline.airline_id','=','order_f.order_airline')
+    // ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
+    // ->orderBy('order_id','desc')
+    // ->get();
+    return view('pages/occ/all-order', $data);
+  }
+
+  public function ajaxAllTable(){
+    $cek = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
     ->join('maintenance','maintenance.maintenance_id','=','order_f.order_maintenance_type')
     ->orderBy('order_id','desc')
     ->get();
-    return view('pages/occ/all-order', $data);
+
+    foreach($cek as $key){
+      if($key->order_status == 3)
+      {
+        $datetime1 = strtotime($key->order_start);
+        $datetime2 = strtotime($key->order_execute_at);
+        $interval  = $datetime2 - $datetime1;
+        $minutes   = round($interval / 60);
+              //echo $minutes;
+
+        $datetime1 = strtotime($key->order_end);
+        $datetime2 = strtotime($key->order_finished_at);
+        $interval  = $datetime2 - $datetime1;
+        $minutes2   = round($interval / 60);
+              //echo ".".$minutes2;
+
+
+
+        if(isset($key->order_delayed_until) || $minutes > 15 || $minutes2 > 15){
+          $key->order_status = "Completed - Delayed";
+        }else{
+          $key->order_status = "Completed - Ontime";
+        }
+      }
+    }
+
+    return Datatables::of($cek)->make(true);
   }
 
   public function allocateForm($id){
@@ -735,58 +812,58 @@ class occController extends Controller
     $data['date'] = $date;
     //dd($data);
     return view('pages/occ/all-allocation',$data);
-    }
+  }
 
-    public function checkUsed($id,$date){
-      $query ="SELECT * FROM order_f,equipment,equipment_many,actype,airline,maintenance,urgency
-       WHERE equipment.equipment_id = order_f.order_equipment
-       and equipment_many.em_id = order_f.order_em
-       and actype.actype_id = order_f.order_ac_type
-       and airline.airline_id = order_f.order_airline
-       and maintenance.maintenance_id = order_f.order_maintenance_type
-       and urgency.urgency_id = order_f.order_urgency and
-      (DATE(order_delayed_until) = '".$date."' or ( DATE(order_start) = '".$date."' and order_delayed_until is NULL)) AND order_status != 1
-      and order_em = ".$id."
-      ORDER BY order_id DESC";
-      $order = DB::select($query);
-      $data['order'] = $order;
-      $data['nav'] = 'alokasi-occ';
-      $data['date']= $date;
-      $data['eq'] = DB::table('equipment_many')->join('equipment','equipment_many.em_equipment','equipment.equipment_id')->where('equipment_many.em_id',$id)->first();
+  public function checkUsed($id,$date){
+    $query ="SELECT * FROM order_f,equipment,equipment_many,actype,airline,maintenance,urgency
+    WHERE equipment.equipment_id = order_f.order_equipment
+    and equipment_many.em_id = order_f.order_em
+    and actype.actype_id = order_f.order_ac_type
+    and airline.airline_id = order_f.order_airline
+    and maintenance.maintenance_id = order_f.order_maintenance_type
+    and urgency.urgency_id = order_f.order_urgency and
+    (DATE(order_delayed_until) = '".$date."' or ( DATE(order_start) = '".$date."' and order_delayed_until is NULL)) AND order_status != 1
+    and order_em = ".$id."
+    ORDER BY order_id DESC";
+    $order = DB::select($query);
+    $data['order'] = $order;
+    $data['nav'] = 'alokasi-occ';
+    $data['date']= $date;
+    $data['eq'] = DB::table('equipment_many')->join('equipment','equipment_many.em_equipment','equipment.equipment_id')->where('equipment_many.em_id',$id)->first();
       //dd($order);
-      return view('pages.occ.checkused',$data);
-    }
+    return view('pages.occ.checkused',$data);
+  }
 
-    public function allocationajax($id,$date){
-      $date = Carbon::parse($date);
+  public function allocationajax($id,$date){
+    $date = Carbon::parse($date);
       //  dd($now);
-      $date = $date->format('Y-m-d');
-      $data['date'] = $date;
-      $query = "SELECT * FROM equipment e
-      INNER JOIN equipment_many em on e.equipment_id = em.em_equipment
-      LEFT JOIN (
-        SELECT * FROM equipment_timeslot where et_date = '".$date."'
-        ) t on t.et_equipment = em.em_id
-        WHERE e.equipment_id = ".$id."
-        ";
-        $data['alloc'] = DB::select($query);
-        return view('pages/occ/allocatable',$data);
+    $date = $date->format('Y-m-d');
+    $data['date'] = $date;
+    $query = "SELECT * FROM equipment e
+    INNER JOIN equipment_many em on e.equipment_id = em.em_equipment
+    LEFT JOIN (
+      SELECT * FROM equipment_timeslot where et_date = '".$date."'
+      ) t on t.et_equipment = em.em_id
+WHERE e.equipment_id = ".$id."
+";
+$data['alloc'] = DB::select($query);
+return view('pages/occ/allocatable',$data);
         //dd($data);
-      }
+}
 
-      public function allocation(){
-        $data['equipment'] = DB::table('equipment')->get();
-        $data['nav'] = 'alokasi-occ';
+public function allocation(){
+  $data['equipment'] = DB::table('equipment')->get();
+  $data['nav'] = 'alokasi-occ';
         //dd($data);
-        return view('pages/occ/all-allocation',$data);
-      }
+  return view('pages/occ/all-allocation',$data);
+}
 
-      public function modalproblem($id){
-        $data['problem'] = ProblemTagging::distinct()->select('rc_name')->where('order_id',$id)->join('root_cause','problem_tagging.pt_root_cause','=','rc_id')->get();
+public function modalproblem($id){
+  $data['problem'] = ProblemTagging::distinct()->select('rc_name')->where('order_id',$id)->join('root_cause','problem_tagging.pt_root_cause','=','rc_id')->get();
         //  dd($data);
-        $data['order'] = Order::find($id);
-        return view('pages/occ/modal-problemtagging',$data);
-      }
+  $data['order'] = Order::find($id);
+  return view('pages/occ/modal-problemtagging',$data);
+}
 
 
 
@@ -794,264 +871,264 @@ class occController extends Controller
       //CRUD STARTS HERE
 
       //CRUD AC
-      public function actable(){
-        $data['datas'] = DB::table('actype')->orderBy('actype_id','desc')->get();
-        $data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-ac',$data);
-      }
+public function actable(){
+  $data['datas'] = DB::table('actype')->orderBy('actype_id','desc')->get();
+  $data['nav'] = "settings-occ";
+  return view('pages/occ/tabel-ac',$data);
+}
 
-      public function formAC($id){
-        $data['nav'] = "settings-occ";
-        $data['data'] = DB::table('actype')->where('actype_id',$id)->first();
-        return view('pages/occ/modal-ac',$data);
-      }
+public function formAC($id){
+  $data['nav'] = "settings-occ";
+  $data['data'] = DB::table('actype')->where('actype_id',$id)->first();
+  return view('pages/occ/modal-ac',$data);
+}
 
-      public function insertAC(Request $request){
-        try {
-          DB::table('actype')->insert([
-              ['actype_code' => $request->code, 'actype_description' => $request->description]
-          ]);
-        } catch (Exception $e) {
-          return Redirect('occ/actable')->with('failed','Failed to save AC Type Data');
-        }
-        return Redirect('occ/actable')->with('success','AC Type Data saved successfully');
-      }
+public function insertAC(Request $request){
+  try {
+    DB::table('actype')->insert([
+      ['actype_code' => $request->code, 'actype_description' => $request->description]
+      ]);
+  } catch (Exception $e) {
+    return Redirect('occ/actable')->with('failed','Failed to save AC Type Data');
+  }
+  return Redirect('occ/actable')->with('success','AC Type Data saved successfully');
+}
 
-      public function editAC($id,Request $request){
-        try {
-          DB::table('actype')->where('actype_id', '=',$id)->update(['actype_code' => $request->code, 'actype_description'=> $request->description]);
-        } catch (Exception $e) {
-          return Redirect('occ/actable')->with('failed','AC Type Data failed to update');
-        }
-        return Redirect('occ/actable')->with('success','AC Type Data edited successfully');
-      }
+public function editAC($id,Request $request){
+  try {
+    DB::table('actype')->where('actype_id', '=',$id)->update(['actype_code' => $request->code, 'actype_description'=> $request->description]);
+  } catch (Exception $e) {
+    return Redirect('occ/actable')->with('failed','AC Type Data failed to update');
+  }
+  return Redirect('occ/actable')->with('success','AC Type Data edited successfully');
+}
 
-      public function deleteAC($id){
-        try {
-          DB::table('actype')->where('actype_id', '=',$id)->delete();
-        } catch (\Illuminate\Database\QueryException $e) {
-          return Redirect('occ/actable')->with('failed','Unable to delete data, this data is used in an order');
-        } catch (PDOException $e) {
-          return Redirect('occ/actable')->with('failed','Unable to delete data, this data is used in an order');
-        }
-          return Redirect('occ/actable')->with('success','AC Type Data Deleted Successfully');
-      }
+public function deleteAC($id){
+  try {
+    DB::table('actype')->where('actype_id', '=',$id)->delete();
+  } catch (\Illuminate\Database\QueryException $e) {
+    return Redirect('occ/actable')->with('failed','Unable to delete data, this data is used in an order');
+  } catch (PDOException $e) {
+    return Redirect('occ/actable')->with('failed','Unable to delete data, this data is used in an order');
+  }
+  return Redirect('occ/actable')->with('success','AC Type Data Deleted Successfully');
+}
 
       //CRUD MANPOWER
-      public function manpowertable(){
-        $data['datas'] = DB::table('manpower')->orderBy('manpower_id','desc')->get();
-        $data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-manpower',$data);
-      }
+public function manpowertable(){
+  $data['datas'] = DB::table('manpower')->orderBy('manpower_id','desc')->get();
+  $data['nav'] = "settings-occ";
+  return view('pages/occ/tabel-manpower',$data);
+}
 
-      public function formManpower($id){
-        $data['nav'] = "settings-occ";
-        $data['data'] = DB::table('manpower')->where('manpower_id',$id)->first();
-        return view('pages/occ/modal-manpower',$data);
-      }
+public function formManpower($id){
+  $data['nav'] = "settings-occ";
+  $data['data'] = DB::table('manpower')->where('manpower_id',$id)->first();
+  return view('pages/occ/modal-manpower',$data);
+}
 
-      public function insertManpower(Request $request){
-        try {
-          DB::table('manpower')->insert([
-              ['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg,'manpower_status' => 0 , 'manpower_capability'=> $request->capability]
-          ]);
-        } catch (Exception $e) {
-          return Redirect('occ/mantable')->with('failed','Failed to save Manpower Data');
-        }
-        return Redirect('occ/mantable')->with('success','Manpower Data saved successfully');
-      }
+public function insertManpower(Request $request){
+  try {
+    DB::table('manpower')->insert([
+      ['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg,'manpower_status' => 0 , 'manpower_capability'=> $request->capability]
+      ]);
+  } catch (Exception $e) {
+    return Redirect('occ/mantable')->with('failed','Failed to save Manpower Data');
+  }
+  return Redirect('occ/mantable')->with('success','Manpower Data saved successfully');
+}
 
-      public function editManpower($id,Request $request){
-        try {
-          DB::table('manpower')->where('manpower_id', '=',$id)->update(['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg, 'manpower_capability'=> $request->capability]);
-        } catch (Exception $e) {
-          return Redirect('occ/mantable')->with('failed','Manpower Data failed to update');
-        }
-        return Redirect('occ/mantable')->with('success','Manpower Data edited successfully');
-      }
+public function editManpower($id,Request $request){
+  try {
+    DB::table('manpower')->where('manpower_id', '=',$id)->update(['manpower_nama' => $request->nama, 'manpower_no_pegawai' => $request->no_peg, 'manpower_capability'=> $request->capability]);
+  } catch (Exception $e) {
+    return Redirect('occ/mantable')->with('failed','Manpower Data failed to update');
+  }
+  return Redirect('occ/mantable')->with('success','Manpower Data edited successfully');
+}
 
-      public function deleteManpower($id){
-        try {
-          DB::table('manpower')->where('manpower_id', '=',$id)->delete();
-        } catch (\Illuminate\Database\QueryException $e) {
-          return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
-        } catch (PDOException $e) {
-          return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
-        }
-          return Redirect('occ/mantable')->with('success','Manpower Data Deleted Successfully');
-      }
+public function deleteManpower($id){
+  try {
+    DB::table('manpower')->where('manpower_id', '=',$id)->delete();
+  } catch (\Illuminate\Database\QueryException $e) {
+    return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
+  } catch (PDOException $e) {
+    return Redirect('occ/mantable')->with('failed','Unable to delete data, this data is used in an order');
+  }
+  return Redirect('occ/mantable')->with('success','Manpower Data Deleted Successfully');
+}
 
       //CRUD ROOTCAUSE
-      public function rootcausetable(){
-        $data['datas'] = DB::table('root_cause')->orderBy('rc_id','desc')->get();
-        $data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-rootcause',$data);
-      }
+public function rootcausetable(){
+  $data['datas'] = DB::table('root_cause')->orderBy('rc_id','desc')->get();
+  $data['nav'] = "settings-occ";
+  return view('pages/occ/tabel-rootcause',$data);
+}
 
-      public function formRootCause($id){
-        $data['nav'] = "settings-occ";
-        $data['data'] = DB::table('root_cause')->where('rc_id',$id)->first();
-        return view('pages/occ/modal-rootcause',$data);
-      }
+public function formRootCause($id){
+  $data['nav'] = "settings-occ";
+  $data['data'] = DB::table('root_cause')->where('rc_id',$id)->first();
+  return view('pages/occ/modal-rootcause',$data);
+}
 
-      public function insertRootCause(Request $request){
-        try {
-          DB::table('root_cause')->insert([
-              ['rc_name' => $request->nama, 'rc_description' => $request->description,'rc_pemutihan' => $request->type ]
-          ]);
-        } catch (Exception $e) {
-          return Redirect('occ/rootcausetable')->with('failed','Failed to save Root Cause Data');
-        }
-        return Redirect('occ/rootcausetable')->with('success','Root Cause Data saved successfully');
-      }
+public function insertRootCause(Request $request){
+  try {
+    DB::table('root_cause')->insert([
+      ['rc_name' => $request->nama, 'rc_description' => $request->description,'rc_pemutihan' => $request->type ]
+      ]);
+  } catch (Exception $e) {
+    return Redirect('occ/rootcausetable')->with('failed','Failed to save Root Cause Data');
+  }
+  return Redirect('occ/rootcausetable')->with('success','Root Cause Data saved successfully');
+}
 
-      public function editRootCause($id,Request $request){
-        try {
-          DB::table('root_cause')->where('rc_id', '=',$id)->update(['rc_name' => $request->nama, 'rc_description' => $request->description,'rc_pemutihan' => $request->type ]);
-        } catch (Exception $e) {
-          return Redirect('occ/rootcausetable')->with('failed','Root Cause Data failed to update');
-        }
-        return Redirect('occ/rootcausetable')->with('success','Root Cause Data edited successfully');
-      }
+public function editRootCause($id,Request $request){
+  try {
+    DB::table('root_cause')->where('rc_id', '=',$id)->update(['rc_name' => $request->nama, 'rc_description' => $request->description,'rc_pemutihan' => $request->type ]);
+  } catch (Exception $e) {
+    return Redirect('occ/rootcausetable')->with('failed','Root Cause Data failed to update');
+  }
+  return Redirect('occ/rootcausetable')->with('success','Root Cause Data edited successfully');
+}
 
-      public function deleteRootCause($id){
-        try {
-          DB::table('root_cause')->where('rc_id', '=',$id)->delete();
-        } catch (\Illuminate\Database\QueryException $e) {
-          return Redirect('occ/rootcausetable')->with('failed','Unable to delete data, this data is used in an order');
-        } catch (PDOException $e) {
-          return Redirect('occ/rootcausetable')->with('failed','Unable to delete data, this data is used in an order');
-        }
-          return Redirect('occ/rootcausetable')->with('success','Root Cause Data Deleted Successfully');
-      }
+public function deleteRootCause($id){
+  try {
+    DB::table('root_cause')->where('rc_id', '=',$id)->delete();
+  } catch (\Illuminate\Database\QueryException $e) {
+    return Redirect('occ/rootcausetable')->with('failed','Unable to delete data, this data is used in an order');
+  } catch (PDOException $e) {
+    return Redirect('occ/rootcausetable')->with('failed','Unable to delete data, this data is used in an order');
+  }
+  return Redirect('occ/rootcausetable')->with('success','Root Cause Data Deleted Successfully');
+}
 
       //CRUD AIRLINE
-      public function airlinetable(){
-        $data['datas'] = DB::table('airline')->orderBy('airline_id','desc')->get();
-        $data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-airline',$data);
-      }
+public function airlinetable(){
+  $data['datas'] = DB::table('airline')->orderBy('airline_id','desc')->get();
+  $data['nav'] = "settings-occ";
+  return view('pages/occ/tabel-airline',$data);
+}
 
-      public function formAirline($id){
-        $data['nav'] = "settings-occ";
-        $data['data'] = DB::table('airline')->where('airline_id',$id)->first();
-        return view('pages/occ/modal-airline',$data);
-      }
+public function formAirline($id){
+  $data['nav'] = "settings-occ";
+  $data['data'] = DB::table('airline')->where('airline_id',$id)->first();
+  return view('pages/occ/modal-airline',$data);
+}
 
-      public function insertAirline(Request $request){
-        try {
-          DB::table('airline')->insert([
-              ['airline_type' => $request->nama, 'airline_description' => $request->description]
-          ]);
-        } catch (Exception $e) {
-          return Redirect('occ/airlinetable')->with('failed','Failed to save Airline Data');
-        }
-        return Redirect('occ/airlinetable')->with('success','Airline Data saved successfully');
-      }
+public function insertAirline(Request $request){
+  try {
+    DB::table('airline')->insert([
+      ['airline_type' => $request->nama, 'airline_description' => $request->description]
+      ]);
+  } catch (Exception $e) {
+    return Redirect('occ/airlinetable')->with('failed','Failed to save Airline Data');
+  }
+  return Redirect('occ/airlinetable')->with('success','Airline Data saved successfully');
+}
 
-      public function editAirline($id,Request $request){
-        try {
-          DB::table('airline')->where('airline_id', '=',$id)->update(['airline_type' => $request->nama, 'airline_description' => $request->description]);
-        } catch (Exception $e) {
-          return Redirect('occ/airlinetable')->with('failed','Airline Data failed to update');
-        }
-        return Redirect('occ/airlinetable')->with('success','Airline Data edited successfully');
-      }
+public function editAirline($id,Request $request){
+  try {
+    DB::table('airline')->where('airline_id', '=',$id)->update(['airline_type' => $request->nama, 'airline_description' => $request->description]);
+  } catch (Exception $e) {
+    return Redirect('occ/airlinetable')->with('failed','Airline Data failed to update');
+  }
+  return Redirect('occ/airlinetable')->with('success','Airline Data edited successfully');
+}
 
-      public function deleteAirline($id){
-        try {
-          DB::table('airline')->where('airline_id', '=',$id)->delete();
-        } catch (\Illuminate\Database\QueryException $e) {
-          return Redirect('occ/airlinetable')->with('failed','Unable to delete data, this data is used in an order');
-        } catch (PDOException $e) {
-          return Redirect('occ/airlinetable')->with('failed','Unable to delete data, this data is used in an order');
-        }
-          return Redirect('occ/airlinetable')->with('success','Airline Data Deleted Successfully');
-      }
+public function deleteAirline($id){
+  try {
+    DB::table('airline')->where('airline_id', '=',$id)->delete();
+  } catch (\Illuminate\Database\QueryException $e) {
+    return Redirect('occ/airlinetable')->with('failed','Unable to delete data, this data is used in an order');
+  } catch (PDOException $e) {
+    return Redirect('occ/airlinetable')->with('failed','Unable to delete data, this data is used in an order');
+  }
+  return Redirect('occ/airlinetable')->with('success','Airline Data Deleted Successfully');
+}
 
       //CRUD EQUIPMENT
-      public function equipmenttable(){
-        $data['datas'] = DB::table('equipment')->orderBy('equipment_id','desc')->get();
-        $data['nav'] = "settings-occ";
-        return view('pages/occ/tabel-equipment',$data);
-      }
+public function equipmenttable(){
+  $data['datas'] = DB::table('equipment')->orderBy('equipment_id','desc')->get();
+  $data['nav'] = "settings-occ";
+  return view('pages/occ/tabel-equipment',$data);
+}
 
-      public function formEquipment($id){
-        $data['nav'] = "settings-occ";
-        $data['data'] = DB::table('equipment')->where('equipment_id',$id)->first();
-        return view('pages/occ/modal-equipment',$data);
-      }
+public function formEquipment($id){
+  $data['nav'] = "settings-occ";
+  $data['data'] = DB::table('equipment')->where('equipment_id',$id)->first();
+  return view('pages/occ/modal-equipment',$data);
+}
 
-      public function insertEquipment(Request $request){
-        try {
-          DB::table('equipment')->insert([
-              ['equipment_lc' => $request->nama, 'equipment_description' => $request->description, 'equipment_model' => $request->model]
-          ]);
-        } catch (Exception $e) {
-          return Redirect('occ/equipmenttable')->with('failed','Failed to save Equipment Data');
-        }
-        return Redirect('occ/equipmenttable')->with('success','Equipment Data saved successfully');
-      }
+public function insertEquipment(Request $request){
+  try {
+    DB::table('equipment')->insert([
+      ['equipment_lc' => $request->nama, 'equipment_description' => $request->description, 'equipment_model' => $request->model]
+      ]);
+  } catch (Exception $e) {
+    return Redirect('occ/equipmenttable')->with('failed','Failed to save Equipment Data');
+  }
+  return Redirect('occ/equipmenttable')->with('success','Equipment Data saved successfully');
+}
 
-      public function editEquipment($id,Request $request){
-        try {
-          DB::table('equipment')->where('equipment_id', '=',$id)->update(['equipment_lc' => $request->nama, 'equipment_description' => $request->description, 'equipment_model' => $request->model]);
-        } catch (Exception $e) {
-          return Redirect('occ/equipmenttable')->with('failed','Equipment Data failed to update');
-        }
-        return Redirect('occ/equipmenttable')->with('success','Equipment Data edited successfully');
-      }
+public function editEquipment($id,Request $request){
+  try {
+    DB::table('equipment')->where('equipment_id', '=',$id)->update(['equipment_lc' => $request->nama, 'equipment_description' => $request->description, 'equipment_model' => $request->model]);
+  } catch (Exception $e) {
+    return Redirect('occ/equipmenttable')->with('failed','Equipment Data failed to update');
+  }
+  return Redirect('occ/equipmenttable')->with('success','Equipment Data edited successfully');
+}
 
-      public function deleteEquipment($id){
-        try {
-          DB::table('equipment')->where('equipment_id', '=',$id)->delete();
-        } catch (\Illuminate\Database\QueryException $e) {
-          return Redirect('occ/equipmenttable')->with('failed','Unable to delete data, this data is used in an order');
-        } catch (PDOException $e) {
-          return Redirect('occ/equipmenttable')->with('failed','Unable to delete data, this data is used in an order');
-        }
-          return Redirect('occ/equipmenttable')->with('success','Equipment Data Deleted Successfully');
-      }
-      public function addEquipment($id, Request $request){
-        try {
-          DB::table('equipment_many')->insert([
-              ['em_no_inventory' => $request->inv, 'em_part_number' => $request->part, 'em_status_on_service' => 0 ,'em_servicable' => $request->servicable,'em_equipment' => $id]
-          ]);
-        } catch (Exception $e) {
-          return Redirect('occ/equipmenttable')->with('failed','Failed to save Inventory Data');
-        }
-        return Redirect('occ/equipmenttable')->with('success','Inventory Data saved successfully');
-      }
-      public function manyEquipment($id){
-        $dat= DB::table('equipment')->where('equipment_id',$id)->first();
-        $data['model'] = $dat->equipment_model;
-        $data['datas'] = DB::table('equipment_many')->where('em_equipment',$id)->orderBy('em_id','desc')->get();
+public function deleteEquipment($id){
+  try {
+    DB::table('equipment')->where('equipment_id', '=',$id)->delete();
+  } catch (\Illuminate\Database\QueryException $e) {
+    return Redirect('occ/equipmenttable')->with('failed','Unable to delete data, this data is used in an order');
+  } catch (PDOException $e) {
+    return Redirect('occ/equipmenttable')->with('failed','Unable to delete data, this data is used in an order');
+  }
+  return Redirect('occ/equipmenttable')->with('success','Equipment Data Deleted Successfully');
+}
+public function addEquipment($id, Request $request){
+  try {
+    DB::table('equipment_many')->insert([
+      ['em_no_inventory' => $request->inv, 'em_part_number' => $request->part, 'em_status_on_service' => 0 ,'em_servicable' => $request->servicable,'em_equipment' => $id]
+      ]);
+  } catch (Exception $e) {
+    return Redirect('occ/equipmenttable')->with('failed','Failed to save Inventory Data');
+  }
+  return Redirect('occ/equipmenttable')->with('success','Inventory Data saved successfully');
+}
+public function manyEquipment($id){
+  $dat= DB::table('equipment')->where('equipment_id',$id)->first();
+  $data['model'] = $dat->equipment_model;
+  $data['datas'] = DB::table('equipment_many')->where('em_equipment',$id)->orderBy('em_id','desc')->get();
       //  dd($data);
-        return view('pages/occ/tabel-many',$data);
-      }
-      public function formMany($id){
-        $data['data']= DB::table('equipment_many')->where('em_id',$id)->first();
+  return view('pages/occ/tabel-many',$data);
+}
+public function formMany($id){
+  $data['data']= DB::table('equipment_many')->where('em_id',$id)->first();
       //  dd($data);
-        return view('pages/occ/modal-many',$data);
-      }
-      public function editMany($id,Request $request){
-        try {
-          DB::table('equipment_many')->where('em_id', '=',$id)->update(['em_no_inventory' => $request->inv, 'em_servicable' => $request->servicable, 'em_part_number' => $request->part]);
-        } catch (Exception $e) {
-          return Redirect('occ/equipmenttable')->with('failed','Inventory Data failed to update');
-        }
-        return Redirect('occ/equipmenttable')->with('success','Inventory Data edited successfully');
-      }
-      public function deleteMany($id){
-        try {
-          DB::table('equipment_many')->where('em_id', '=',$id)->delete();
-        } catch (\Illuminate\Database\QueryException $e) {
-          return Redirect('occ/equipmenttable')->with('failed','Unable to delete data, this data is used in an order');
-        } catch (PDOException $e) {
-          return Redirect('occ/equipmenttable')->with('failed','Unable to delete data, this data is used in an order');
-        }
-          return Redirect('occ/equipmenttable')->with('success','Inventory Data Deleted Successfully');
-      }
+  return view('pages/occ/modal-many',$data);
+}
+public function editMany($id,Request $request){
+  try {
+    DB::table('equipment_many')->where('em_id', '=',$id)->update(['em_no_inventory' => $request->inv, 'em_servicable' => $request->servicable, 'em_part_number' => $request->part]);
+  } catch (Exception $e) {
+    return Redirect('occ/equipmenttable')->with('failed','Inventory Data failed to update');
+  }
+  return Redirect('occ/equipmenttable')->with('success','Inventory Data edited successfully');
+}
+public function deleteMany($id){
+  try {
+    DB::table('equipment_many')->where('em_id', '=',$id)->delete();
+  } catch (\Illuminate\Database\QueryException $e) {
+    return Redirect('occ/equipmenttable')->with('failed','Unable to delete data, this data is used in an order');
+  } catch (PDOException $e) {
+    return Redirect('occ/equipmenttable')->with('failed','Unable to delete data, this data is used in an order');
+  }
+  return Redirect('occ/equipmenttable')->with('success','Inventory Data Deleted Successfully');
+}
 
 
-    }
+}
