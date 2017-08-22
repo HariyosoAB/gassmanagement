@@ -528,7 +528,6 @@ class occController extends Controller
 
   public function ajaxAllTable(){
     $cek = DB::table('order_f')
-    $this->data['orders'] = DB::table('order_f')
     ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
     ->join('actype','order_f.order_ac_type','=','actype.actype_id')
     ->join('airline','airline.airline_id','=','order_f.order_airline')
