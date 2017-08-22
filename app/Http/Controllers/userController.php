@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth,Redirect;
 use App\User;
 use App\Notification;
+use Hash;
 class userController extends Controller
 {
     public function showlogin(){
@@ -62,6 +63,44 @@ class userController extends Controller
         $user->user_role = 1;
         $user->save();
         return Redirect::to('/login')->with('success','You have successfully created a new account');
+    }
+    public function formEditAccount($id){
+    //  dd(Auth::user()->user_id);
+    if(Auth::check()){
+      if(Auth::user()->user_id == $id)
+      {
+      //  dd(session('failed'));
+        $data['user'] = User::find($id);
+        $data['nav'] = "";
+        return view('pages.edit-profile',$data);
+      }
+
+    }
+    return Redirect::to('/login');
+
+    }
+    public function editAccount($id,Request $request){
+      $user = user::find($id);
+      $user->user_nama= $request->name;
+      $user->user_no_pegawai = $request->id;
+      $user->user_unit = $request->unit;
+      $user->user_subunit = $request->subunit;
+      $user->user_telp = $request->number;
+      if(isset($request->newpassword)){
+        if(Hash::check($request->oldpassword, $user->password))
+        {
+                $user->password = bcrypt($request->newpassword);
+        }
+        else
+        {
+                return Redirect::to('/editaccount/'.$id)->with('failed','Old password does not match');
+        }
+      }
+      $user->user_jabatan =$request->position;
+      $user->user_email = $request->email;
+      $user->save();
+      return Redirect::to('/editaccount/'.$id)->with('success','Data updated successfully');
+
     }
     public function getNotif(){
       $data['notif'] = Notification::where('notification_user',Auth::user()->user_id)->where('notification_read',0)->take(10)->orderBy('notification_id','desc')->get();
