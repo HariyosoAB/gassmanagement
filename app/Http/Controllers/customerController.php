@@ -10,26 +10,36 @@ use Redirect;
 use Auth;
 use DB;
 use Carbon\Carbon;
+use App\Notification;
 class customerController extends Controller
 {
+    public $data;
+    protected $user;
+    public function __construct()
+    {
+      $this->middleware(function ($request, $next) {
+           $this->data['unread'] = Notification::where('notification_read',0)->where('notification_user',Auth::user()->user_id)->count();
+           //$this->data['notif'] = Notification::where('notification_user',Auth::user()->user_id)->take(10)->get();
+            return $next($request);
+         });
+    }
     public function orderForm(){
-        $data['nav'] = "order";
-        $data['maintenance'] = DB::table('maintenance')->get();
-        $data['airline'] = DB::table('airline')->get();
-        $data['units'] = DB::table('unit')->get();
-        $data['actype'] = DB::table('actype')->get();
-        $data['equipment'] = DB::table('equipment')->get();
-        $data['station'] = DB::table('station')->get();
-        $data['urgency'] = DB::table('urgency')->get();
+        $this->data['nav'] = "order";
+        $this->data['maintenance'] = DB::table('maintenance')->where('maintenance_softdel',0)->get();
+        $this->data['airline'] = DB::table('airline')->where('airline_softdel',0)->get();
+        $this->data['units'] = DB::table('unit')->where('unit_softdel',0)->get();
+        $this->data['actype'] = DB::table('actype')->where('actype_softdel',0)->get();
+        $this->data['equipment'] = DB::table('equipment')->where('equipment_softdel',0)->get();
+        $this->data['station'] = DB::table('station')->where('station_softdel',0)->get();
+        $this->data['urgency'] = DB::table('urgency')->where('urgency_softdel',0)->get();
 
-
-        return view('pages/customer/create-order', $data);
+        return view('pages/customer/create-order', $this->data);
     }
 
     public function detailForm($id){
-      $data['nav'] = "history";
-      // $data['fields'] = Order::find($id);
-      $data['fields'] = DB::table('order_f')
+      $this->data['nav'] = "history";
+      // $this->data['fields'] = Order::find($id);
+      $this->data['fields'] = DB::table('order_f')
       ->join("maintenance", "maintenance.maintenance_id", "=", "order_f.order_maintenance_type")
       ->join("airline", "airline.airline_id", "=", "order_f.order_airline")
       ->join("unit", "unit.unit_id", "=", "order_f.order_unit")
@@ -39,30 +49,30 @@ class customerController extends Controller
       ->join("urgency", "urgency.urgency_id", "=", "order_f.order_urgency")
       ->where("order_f.order_id", "=", $id)
       ->get();
-      // dd($data['fields']);
-      // $data['maintenance'] = DB::table('maintenance')->get();
-      // $data['airline'] = DB::table('airline')->get();
-      // $data['units'] = DB::table('unit')->get();
-      // $data['actype'] = DB::table('actype')->get();
-      // $data['equipment'] = DB::table('equipment')->get();
-      // $data['station'] = DB::table('station')->get();
-      // $data['urgency'] = DB::table('urgency')->get();
+      // dd($this->data['fields']);
+      // $this->data['maintenance'] = DB::table('maintenance')->get();
+      // $this->data['airline'] = DB::table('airline')->get();
+      // $this->data['units'] = DB::table('unit')->get();
+      // $this->data['actype'] = DB::table('actype')->get();
+      // $this->data['equipment'] = DB::table('equipment')->get();
+      // $this->data['station'] = DB::table('station')->get();
+      // $this->data['urgency'] = DB::table('urgency')->get();
 
-      return view('pages/customer/detail-order',$data);
+      return view('pages/customer/detail-order',$this->data);
     }
 
     public function editForm($id){
-      $data['nav'] = "order";
-      $data['fields'] = Order::find($id);
-      $data['maintenance'] = DB::table('maintenance')->get();
-      $data['airline'] = DB::table('airline')->get();
-      $data['units'] = DB::table('unit')->get();
-      $data['actype'] = DB::table('actype')->get();
-      $data['equipment'] = DB::table('equipment')->get();
-      $data['station'] = DB::table('station')->get();
-      $data['urgency'] = DB::table('urgency')->get();
+      $this->data['nav'] = "order";
+      $this->data['fields'] = Order::find($id);
+      $this->data['maintenance'] = DB::table('maintenance')->where('maintenance_softdel',0)->get();
+      $this->data['airline'] = DB::table('airline')->where('airline_softdel',0)->get();
+      $this->data['units'] = DB::table('unit')->where('unit_softdel',0)->get();
+      $this->data['actype'] = DB::table('actype')->where('actype_softdel',0)->get();
+      $this->data['equipment'] = DB::table('equipment')->where('equipment_softdel',0)->get();
+      $this->data['station'] = DB::table('station')->where('station_softdel',0)->get();
+      $this->data['urgency'] = DB::table('urgency')->where('urgency_softdel',0)->get();
 
-      return view('pages/customer/edit-order',$data);
+      return view('pages/customer/edit-order',$this->data);
     }
 
 
@@ -148,7 +158,7 @@ class customerController extends Controller
     }
     public function viewprogress()
     {
-      $data['progress'] = DB::table('order_f')
+      $this->data['progress'] = DB::table('order_f')
         ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
         ->join('actype','order_f.order_ac_type','=','actype.actype_id')
         ->join('urgency','order_f.order_urgency','=','urgency.urgency_id')
@@ -157,12 +167,12 @@ class customerController extends Controller
         ->where('order_f.order_user','=',Auth::user()->user_id)
         ->orderBy('order_f.order_id','desc')
         ->get();
-      return view('pages.customer.progress',$data);
+      return view('pages.customer.progress',$this->data);
     }
 
     public function onprogressTable(){
-        $data['nav'] = "history";
-        $data['progress'] = DB::table('order_f')
+        $this->data['nav'] = "history";
+        $this->data['progress'] = DB::table('order_f')
           ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
           ->join('actype','order_f.order_ac_type','=','actype.actype_id')
           ->join('airline','airline.airline_id','=','order_f.order_airline')
@@ -171,7 +181,7 @@ class customerController extends Controller
           ->where('order_f.order_user','=',Auth::user()->user_id)
           ->orderBy('order_f.order_id','desc')
           ->get();
-        return view('pages/customer/on-progress', $data);
+        return view('pages/customer/on-progress', $this->data);
     }
 
     public function cancel($id,Request $request){
@@ -239,8 +249,8 @@ class customerController extends Controller
     }
 
     public function completedTable(){
-        $data['nav'] = "history";
-        $data['progress'] = DB::table('order_f')
+        $this->data['nav'] = "history";
+        $this->data['progress'] = DB::table('order_f')
           ->join('equipment','order_f.order_equipment','=','equipment.equipment_id')
           ->join('actype','order_f.order_ac_type','=','actype.actype_id')
           ->join('urgency','order_f.order_urgency','=','urgency.urgency_id')
@@ -249,6 +259,6 @@ class customerController extends Controller
           ->where('order_f.order_user','=',Auth::user()->user_id)
           ->orderBy('order_f.order_id','desc')
           ->get();
-        return view('pages/customer/completed', $data);
+        return view('pages/customer/completed', $this->data);
     }
 }

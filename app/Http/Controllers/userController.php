@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth,Redirect;
 use App\User;
+use App\Notification;
 class userController extends Controller
 {
     public function showlogin(){
@@ -61,6 +62,12 @@ class userController extends Controller
         $user->user_role = 1;
         $user->save();
         return Redirect::to('/login')->with('success','You have successfully created a new account');
+    }
+    public function getNotif(){
+      $data['notif'] = Notification::where('notification_user',Auth::user()->user_id)->where('notification_read',0)->take(10)->orderBy('notification_id','desc')->get();
+      $data['many'] = Notification::where('notification_read',0)->where('notification_user',Auth::user()->user_id)->count();
+      Notification::where('notification_user',Auth::user()->user_id)->where('notification_read',0)->update(['notification_read' => 1 ]);;
+      return view('master.notif',$data);
     }
 
 }

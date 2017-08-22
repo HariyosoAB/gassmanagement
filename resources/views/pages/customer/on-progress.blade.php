@@ -52,7 +52,7 @@ on progress
           @endif
         </td>
         <td>
-            @if($prog->order_status == 1 || $prog->order_status ==5 )
+            @if($prog->order_status == 1 || $prog->order_status ==5 || $prog->order_status == 10 )
             <a id="cancel" onclick="cancellation({{$prog->order_id}})" style="margin-top: 5px" class="btn btn-danger btn-md">
              <i class="fa fa-times" aria-hidden="true"></i>
            </a>

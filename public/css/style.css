@@ -19,7 +19,7 @@ div{
 }
 
 body{
-	background-color: #2D3238 !important; 
+	background-color: #2D3238 !important;
 }
 
 .outter{
@@ -48,7 +48,7 @@ body{
 	position: relative;
 	float: left;
 	font-size: 40px;
-	font-family: bebas;			
+	font-family: bebas;
 	color: #EFEFEF;
 	padding: 40px;
 	padding-right: 0;
@@ -73,8 +73,27 @@ body{
 }
 
 .notif button i{
-	font-size: 20px; 
+	font-size: 20px;
 	margin-left: 20px;
+}
+
+#notif-menu{
+	display: none;
+	position: absolute;
+	width: 300px;
+	background-color: white;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+	top: 90px;
+	right: 150px;
+	padding:10px;
+
+}
+
+#notif-menu li{
+	width: 100%;
+	font-size: 15px;
+	text-decoration: none;
+	color: grey;
 }
 
 #profil-menu{
@@ -259,6 +278,9 @@ label{
 	.mobile{
 		display: block;
 	}
+	#notif-menu{
+		right: 40px;
+	}
 }
 
 @media screen and (max-width: 768px) {
@@ -316,10 +338,14 @@ label{
 	.notif{
 		padding: 55px 10px;
 	}
+	#notif-menu{
+		right: 40px;
+	}
 }
 
 @media screen and (min-width: 769px) {
 	.nav2{
 		display: none !important;
 	}
+
 }

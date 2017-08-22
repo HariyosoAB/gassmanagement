@@ -23,6 +23,7 @@ Route::get('tes', function(){
 Route::get('login','userController@showlogin');
 Route::post('login','userController@login');
 Route::post('register','userController@register');
+Route::get('getnotif','userController@getNotif');
 
 Route::get('logout','userController@logout');
 
