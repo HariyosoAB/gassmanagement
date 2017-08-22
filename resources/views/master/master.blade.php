@@ -6,11 +6,13 @@
 		<div class="logo desktop"><p>GMF Aircraft Support Services</p></div>
 		<div class="logo mobile"><p>GASS</p></div>
 		<div class="notif">
+			@if(Auth::user()->user_role==1)
 			<i class="fa fa-bell" onclick="read()" role="button">
 				@if($unread > 0)
 				<span id="jmlnotif"class="badge" style="background-color:  #ff3333">{{$unread}}</span>
 				@endif
 			</i>
+			@endif
 			<button id="profil">Hi, <?php $nama = explode(' ', Auth::user()->user_nama); echo $nama[0];  ?></button><button id="nav-mobile"><i class="fa fa-bars" aria-hidden="true"></i></button>
 			<div id="notif-menu">
 				<ul class="profil-menu">
@@ -36,7 +38,7 @@
 		</div>
 
 			<div id="profil-menu">
-				<a href=""><div class="profil-menu">Change Profile</div></a>
+				<a href="{{url('/')}}/editaccount/{{Auth::user()->user_id}}"><div class="profil-menu">Edit Profile</div></a>
 				<a href="{{url('')}}/logout"><div class="profil-menu">Log Out</div></a>
 			</div>
 		</div>
